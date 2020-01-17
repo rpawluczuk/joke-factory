@@ -35,6 +35,11 @@ public class InMemoryJokeRepository implements JokeRepository {
     }
 
     @Override
+    public void createJoke(Joke joke) {
+        jokes.put(joke.getTitle(), joke);
+    }
+
+    @Override
     public String toString() {
         return "JokeRepository{" +
                 "jokes=" + jokes +

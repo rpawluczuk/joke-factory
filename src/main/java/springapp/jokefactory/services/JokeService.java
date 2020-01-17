@@ -21,4 +21,7 @@ public class JokeService {
         return new ArrayList<>(jokeRepository.getAllJokes());
     }
 
+    public void saveJoke(Joke joke) {
+        jokeRepository.createJoke(joke);
+    }
 }

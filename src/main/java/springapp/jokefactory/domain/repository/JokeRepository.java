@@ -13,4 +13,6 @@ public interface JokeRepository {
     Joke getJoke(String title);
 
     void deleteJoke(String title);
+
+    void createJoke(Joke joke);
 }
