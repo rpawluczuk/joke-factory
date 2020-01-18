@@ -24,6 +24,7 @@
             <td th:text="${joke.title}"></td>
             <td th:text="${joke.content}"></td>
             <td><a th:href="${'/joke?id='+joke.id}">Preview</a></td>
+            <td><a th:href="${'/joke/delete/'+joke.id}">Delete</a></td>
         </tr>
         </tbody>
     </table>

@@ -15,10 +15,12 @@
         <div class="form-group">
             <label class="control-label">title:</label>
             <input type="text" class="form-control" th:field="*{title}"/>
+            <p th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></p>
         </div>
         <div class="form-group">
             <label class="control-label">content:</label>
             <input type="text" class="form-control" th:field="*{content}"/>
+            <p th:if="${#fields.hasErrors('content')}" th:errors="*{content}"></p>
         </div>
         <div class="row">
             <button type="submit" class="btn btn-default">Create joke</button>

@@ -28,4 +28,8 @@ public class JokeService {
     public Joke getJoke(Integer id) {
         return jokeRepository.getJokeById(id);
     }
+
+    public void deleteJoke(Integer id) {
+        jokeRepository.deleteJoke(id);
+    }
 }

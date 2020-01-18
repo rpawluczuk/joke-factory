@@ -1,9 +1,16 @@
 package springapp.jokefactory.domain;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
 public class Joke {
 
     private int id;
+
+    @NotNull
+    @Size(min = 2, max = 50)
     private String title;
+    @NotNull
     private String content;
     private String author;
 
