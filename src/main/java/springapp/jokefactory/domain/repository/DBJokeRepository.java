@@ -4,6 +4,7 @@ import springapp.jokefactory.domain.Joke;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.Collection;
+import java.util.Optional;
 
 public class DBJokeRepository implements JokeRepository {
 
@@ -20,19 +21,25 @@ public class DBJokeRepository implements JokeRepository {
     }
 
     @Override
-    public Joke getJoke(String title) {
+    public Optional<Joke> getJoke(String title) {
         System.out.println("Here will be database connection");
         throw new NotImplementedException();
     }
 
     @Override
-    public void deleteJoke(String title) {
+    public void deleteJoke(Integer id) {
         System.out.println("Here will be database connection");
         throw new NotImplementedException();
     }
 
     @Override
     public void createJoke(Joke joke) {
+        System.out.println("Here will be database connection");
+        throw new NotImplementedException();
+    }
+
+    @Override
+    public Joke getJokeById(Integer id) {
         System.out.println("Here will be database connection");
         throw new NotImplementedException();
     }

@@ -2,17 +2,21 @@ package springapp.jokefactory.domain;
 
 public class Joke {
 
+    private int id;
     private String title;
-
     private String content;
+    private String author;
 
     private Structure structure;
 
-    public Joke() {}
+    public Joke() {
+        this.author = "unknown";
+    }
 
     public Joke(String title, String content) {
         this.title = title;
         this.content = content;
+        this.author = "unknown";
     }
 
     @Override
@@ -35,6 +39,14 @@ public class Joke {
         return result;
     }
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
     public String getTitle() {
         return title;
     }
@@ -49,6 +61,14 @@ public class Joke {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
     }
 
     public Structure getStructure() {

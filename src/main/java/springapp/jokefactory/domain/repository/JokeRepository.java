@@ -3,6 +3,7 @@ package springapp.jokefactory.domain.repository;
 import springapp.jokefactory.domain.Joke;
 
 import java.util.Collection;
+import java.util.Optional;
 
 public interface JokeRepository {
 
@@ -10,9 +11,11 @@ public interface JokeRepository {
 
     Collection<Joke> getAllJokes();
 
-    Joke getJoke(String title);
+    Optional<Joke> getJoke(String title);
 
-    void deleteJoke(String title);
+    void deleteJoke(Integer id);
 
     void createJoke(Joke joke);
+
+    Joke getJokeById(Integer id);
 }

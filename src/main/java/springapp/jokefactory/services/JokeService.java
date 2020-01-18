@@ -24,4 +24,8 @@ public class JokeService {
     public void saveJoke(Joke joke) {
         jokeRepository.createJoke(joke);
     }
+
+    public Joke getJoke(Integer id) {
+        return jokeRepository.getJokeById(id);
+    }
 }

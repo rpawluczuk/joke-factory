@@ -15,13 +15,15 @@
         <thead>
         <tr>
             <td>Joke title</td>
-            <td>content</td>
+            <td>Content</td>
+            <td></td>
         </tr>
         </thead>
         <tbody th:each="joke:${jokes}">
         <tr>
             <td th:text="${joke.title}"></td>
             <td th:text="${joke.content}"></td>
+            <td><a th:href="${'/joke?id='+joke.id}">Preview</a></td>
         </tr>
         </tbody>
     </table>
