@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import springapp.jokefactory.domain.Joke;
 import springapp.jokefactory.services.JokeService;
+import springapp.jokefactory.services.StructureService;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -18,18 +19,21 @@ import java.util.List;
 public class JokeController {
 
     @Autowired
-    JokeService service;
+    JokeService jokeService;
+
+    @Autowired
+    StructureService structureService;
 
     @RequestMapping("/jokes")
     public String getJokes(Model model){
-        List<Joke> allJokes = service.getAllJokes();
+        List<Joke> allJokes = jokeService.getAllJokes();
         model.addAttribute("jokes", allJokes);
         return "jokes";
     }
 
     @RequestMapping("/joke")
     public String getJoke(@RequestParam("id") Integer id, Model model){
-        Joke joke = service.getJoke(id);
+        Joke joke = jokeService.getJoke(id);
         model.addAttribute("joke", joke);
         return "joke";
     }
@@ -49,14 +53,14 @@ public class JokeController {
             });
             return "jokeform";
         } else {
-            service.saveJoke(joke);
+            jokeService.saveJoke(joke);
             return "redirect:/jokes";
         }
     }
 
     @RequestMapping(value = "/joke/delete/{id}")
     public String deleteJoke(@PathVariable("id") Integer id){
-        service.deleteJoke(id);
+        jokeService.deleteJoke(id);
         return "redirect:/jokes";
     }
 }
