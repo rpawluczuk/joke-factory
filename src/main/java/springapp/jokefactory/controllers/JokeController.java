@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import springapp.jokefactory.domain.Joke;
+import springapp.jokefactory.domain.Structure;
 import springapp.jokefactory.services.JokeService;
 import springapp.jokefactory.services.StructureService;
 
@@ -41,6 +42,8 @@ public class JokeController {
     @RequestMapping("/newjoke")
     public String createJoke(Model model){
         model.addAttribute("joke", new Joke());
+        List<Structure> allStructures = structureService.getAllStructures();
+        model.addAttribute("structures", allStructures);
         return "jokeform";
     }
 

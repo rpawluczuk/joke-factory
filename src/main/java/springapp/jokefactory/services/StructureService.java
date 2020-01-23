@@ -6,7 +6,7 @@ import springapp.jokefactory.domain.Structure;
 import springapp.jokefactory.domain.repository.StructureRepository;
 import springapp.jokefactory.domain.repository.JokeRepository;
 
-import java.util.List;
+import java.util.ArrayList;
 
 @Service
 public class StructureService {
@@ -17,8 +17,7 @@ public class StructureService {
     @Autowired
     StructureRepository structureRepository;
 
-    public void assignStructure(String structureName, String jokeTitle){
-        List<Structure> allStructures = structureRepository.getAllStrctures();
-        jokeRepository.getJoke(jokeTitle);
+    public ArrayList<Structure> getAllStructures(){
+        return new ArrayList<Structure>(structureRepository.getAllStructures());
     }
 }

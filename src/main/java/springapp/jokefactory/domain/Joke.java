@@ -14,7 +14,7 @@ public class Joke {
     private String content;
     private String author;
 
-    private Structure structure;
+    private Integer structureId;
 
     public Joke() {
         this.author = "unknown";
@@ -33,16 +33,20 @@ public class Joke {
 
         Joke joke = (Joke) o;
 
+        if (getId() != joke.getId()) return false;
+        if (getStructureId() != joke.getStructureId()) return false;
         if (!getTitle().equals(joke.getTitle())) return false;
         if (!getContent().equals(joke.getContent())) return false;
-        return getStructure() != null ? getStructure().equals(joke.getStructure()) : joke.getStructure() == null;
+        return getAuthor() != null ? getAuthor().equals(joke.getAuthor()) : joke.getAuthor() == null;
     }
 
     @Override
     public int hashCode() {
-        int result = getTitle().hashCode();
+        int result = getId();
+        result = 31 * result + getTitle().hashCode();
         result = 31 * result + getContent().hashCode();
-        result = 31 * result + (getStructure() != null ? getStructure().hashCode() : 0);
+        result = 31 * result + (getAuthor() != null ? getAuthor().hashCode() : 0);
+        result = 31 * result + getStructureId();
         return result;
     }
 
@@ -78,11 +82,11 @@ public class Joke {
         this.author = author;
     }
 
-    public Structure getStructure() {
-        return structure;
+    public Integer getStructureId() {
+        return structureId;
     }
 
-    public void setStructure(Structure structure) {
-        this.structure = structure;
+    public void setStructureId(Integer structureId) {
+        this.structureId = structureId;
     }
 }

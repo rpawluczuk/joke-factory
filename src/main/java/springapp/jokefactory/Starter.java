@@ -26,5 +26,8 @@ public class Starter implements CommandLineRunner {
     public void run(String... args) throws Exception {
         jokeRepository.createJoke("joke1", "content1");
         jokeRepository.createJoke("joke2", "content2");
+
+        structureRepository.createStrcture(1, "Structure1", "Description1");
+        structureRepository.createStrcture(2, "Structure2", "Description2");
     }
 }
