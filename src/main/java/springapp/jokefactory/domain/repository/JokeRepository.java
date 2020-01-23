@@ -18,4 +18,6 @@ public interface JokeRepository {
     void createJoke(Joke joke);
 
     Joke getJokeById(Integer id);
+
+    Joke assignStructure(Joke joke);
 }

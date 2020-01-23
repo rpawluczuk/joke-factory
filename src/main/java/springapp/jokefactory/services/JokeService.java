@@ -32,4 +32,8 @@ public class JokeService {
     public void deleteJoke(Integer id) {
         jokeRepository.deleteJoke(id);
     }
+
+    public Joke assignStructure(Joke joke) {
+        return jokeRepository.assignStructure(joke);
+    }
 }

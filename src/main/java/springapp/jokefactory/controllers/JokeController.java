@@ -29,6 +29,8 @@ public class JokeController {
     public String getJokes(Model model){
         List<Joke> allJokes = jokeService.getAllJokes();
         model.addAttribute("jokes", allJokes);
+        List<Structure> allStructures = structureService.getAllStructures();
+        model.addAttribute("structures", allStructures);
         return "jokes";
     }
 
@@ -56,6 +58,7 @@ public class JokeController {
             });
             return "jokeform";
         } else {
+            jokeService.assignStructure(joke);
             jokeService.saveJoke(joke);
             return "redirect:/jokes";
         }

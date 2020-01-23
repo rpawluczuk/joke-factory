@@ -15,6 +15,7 @@ public class Joke {
     private String author;
 
     private Integer structureId;
+    private Structure structure;
 
     public Joke() {
         this.author = "unknown";
@@ -88,5 +89,13 @@ public class Joke {
 
     public void setStructureId(Integer structureId) {
         this.structureId = structureId;
+    }
+
+    public Structure getStructure() {
+        return structure;
+    }
+
+    public void setStructure(Structure structure) {
+        this.structure = structure;
     }
 }

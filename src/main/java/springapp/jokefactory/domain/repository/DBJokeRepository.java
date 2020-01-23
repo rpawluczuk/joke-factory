@@ -43,4 +43,10 @@ public class DBJokeRepository implements JokeRepository {
         System.out.println("Here will be database connection");
         throw new NotImplementedException();
     }
+
+    @Override
+    public Joke assignStructure(Joke joke) {
+        System.out.println("Here will be database connection");
+        throw new NotImplementedException();
+    }
 }

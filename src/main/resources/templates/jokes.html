@@ -16,6 +16,7 @@
         <tr>
             <td>Joke title</td>
             <td>Content</td>
+            <td>Structure</td>
             <td></td>
         </tr>
         </thead>
@@ -23,6 +24,10 @@
         <tr>
             <td th:text="${joke.title}"></td>
             <td th:text="${joke.content}"></td>
+            <td>
+                <span th:if="${joke.structure==null}" th:text="'Not assigned'"></span>
+                <span th:if="${joke.structure!=null}" th:text="${joke.structure.name}"></span>
+            </td>
             <td><a th:href="${'/joke?id='+joke.id}">Preview</a></td>
             <td><a th:href="${'/joke/delete/'+joke.id}">Delete</a></td>
         </tr>
