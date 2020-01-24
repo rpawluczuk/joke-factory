@@ -6,8 +6,7 @@ public class Structure {
     private String name;
     private String description;
 
-    public Structure(Integer id, String name, String description) {
-        this.id = id;
+    public Structure(String name, String description) {
         this.name = name;
         this.description = description;
     }

@@ -22,15 +22,16 @@
             <input type="text" class="form-control" th:field="*{content}"/>
             <p th:if="${#fields.hasErrors('content')}" th:errors="*{content}"></p>
         </div>
-        <div>
-            <select th:field="*{structureId}">
+        <div class="form-group">
+            <label class="control-label">structure:</label>
+            <select class="form-control" th:field="*{structureId}">
                 <option th:each="structure:${structures}"
                         th:value="${structure.id}"
                         th:text="${structure.name}"></option>
             </select>
         </div>
         <div class="row">
-            <button type="submit" class="btn btn-default">Create joke</button>
+            <button type="submit" class="btn btn-dark">Create joke</button>
         </div>
     </form>
 </div>

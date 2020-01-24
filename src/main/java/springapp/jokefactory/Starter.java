@@ -28,8 +28,8 @@ public class Starter implements CommandLineRunner {
         jokeRepository.createJoke("joke1", "content1");
         jokeRepository.createJoke("joke2", "content2");
 
-        structureRepository.createStrcture(1, "Structure1", "Description1");
-        structureRepository.createStrcture(2, "Structure2", "Description2");
+        structureRepository.createStrcture("Structure1", "Description1");
+        structureRepository.createStrcture("Structure2", "Description2");
 
         Joke joke1 = jokeRepository.getJokeById(1);
         joke1.setStructureId(1);
