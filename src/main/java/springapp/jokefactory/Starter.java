@@ -33,6 +33,5 @@ public class Starter implements CommandLineRunner {
 
         Joke joke1 = jokeRepository.getJokeById(1);
         joke1.setStructureId(1);
-        jokeRepository.assignStructure(joke1);
     }
 }

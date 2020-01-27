@@ -24,7 +24,7 @@
         </div>
         <div class="form-group">
             <label class="control-label">structure:</label>
-            <select class="form-control" th:field="*{structureId}">
+            <select class="form-control" th:field="*{structure}">
                 <option th:each="structure:${structures}"
                         th:value="${structure.id}"
                         th:text="${structure.name}"></option>

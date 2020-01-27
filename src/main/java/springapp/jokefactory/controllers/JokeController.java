@@ -58,7 +58,6 @@ public class JokeController {
             });
             return "jokeform";
         } else {
-            jokeService.assignStructure(joke);
             jokeService.saveJoke(joke);
             return "redirect:/jokes";
         }

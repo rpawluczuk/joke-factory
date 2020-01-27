@@ -1,9 +1,6 @@
 package springapp.jokefactory.domain.repository;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import springapp.jokefactory.domain.Joke;
-import springapp.jokefactory.domain.Structure;
-import springapp.jokefactory.services.StructureService;
 import springapp.jokefactory.utils.Ids;
 
 import java.util.*;
@@ -12,9 +9,6 @@ import java.util.*;
 public class InMemoryJokeRepository implements JokeRepository {
 
     Map<Integer, Joke> jokes = new HashMap<>();
-
-    @Autowired
-    StructureService structureService;
 
     public InMemoryJokeRepository() {
     }
@@ -51,18 +45,6 @@ public class InMemoryJokeRepository implements JokeRepository {
     @Override
     public Joke getJokeById(Integer id) {
         return jokes.get(id);
-    }
-
-    @Override
-    public Joke assignStructure(Joke joke) {
-        List<Structure> allStructures = structureService.getAllStructures();
-        for (Structure structure : allStructures) {
-            if (joke.getStructureId().equals(structure.getId())){
-                joke.setStructure(structure);
-                return joke;
-            }
-        }
-        return joke;
     }
 
     @Override

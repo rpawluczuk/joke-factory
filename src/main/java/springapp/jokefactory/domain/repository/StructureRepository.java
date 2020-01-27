@@ -14,7 +14,6 @@ public class StructureRepository {
 
     public void createStrcture(String name, String description) {
         Structure newStructure = new Structure(name, description);
-        Set<Integer> idsSet = new TreeSet<>();
         newStructure.setId(Ids.generateNewId(structures.keySet()));
         structures.put(newStructure.getId(), newStructure);
     }
@@ -25,5 +24,9 @@ public class StructureRepository {
 
     public void deleteStructure(Structure structure){
         structures.remove(structure);
+    }
+
+    public Structure getStructure(Integer id) {
+        return structures.get(id);
     }
 }
