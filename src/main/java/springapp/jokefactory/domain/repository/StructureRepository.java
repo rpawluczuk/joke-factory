@@ -10,20 +10,17 @@ import java.util.*;
 @Repository
 public class StructureRepository {
 
-    List<Structure> structures = new ArrayList<>();
+    Map<Integer, Structure> structures = new HashMap<>();
 
     public void createStrcture(String name, String description) {
         Structure newStructure = new Structure(name, description);
         Set<Integer> idsSet = new TreeSet<>();
-        for (Structure structure : structures) {
-            idsSet.add(structure.getId());
-        }
-        newStructure.setId(Ids.generateNewId(idsSet));
-        structures.add(newStructure);
+        newStructure.setId(Ids.generateNewId(structures.keySet()));
+        structures.put(newStructure.getId(), newStructure);
     }
 
     public Collection<Structure> getAllStructures() {
-        return structures;
+        return structures.values();
     }
 
     public void deleteStructure(Structure structure){
