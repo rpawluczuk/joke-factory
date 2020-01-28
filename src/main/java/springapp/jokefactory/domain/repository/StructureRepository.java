@@ -22,8 +22,8 @@ public class StructureRepository {
         return structures.values();
     }
 
-    public void deleteStructure(Structure structure){
-        structures.remove(structure);
+    public void deleteStructure(Integer id){
+        structures.remove(id);
     }
 
     public Structure getStructure(Integer id) {

@@ -20,12 +20,14 @@
         <tr>
             <td>Structure name</td>
             <td>Description</td>
+            <td></td>
         </tr>
         </thead>
         <tbody th:each="structure:${structures}">
         <tr>
             <td th:text="${structure.name}"></td>
             <td th:text="${structure.description}"></td>
+            <td><a th:href="${'/structure/delete/'+structure.id}">Delete</a></td>
         </tr>
         </tbody>
     </table>

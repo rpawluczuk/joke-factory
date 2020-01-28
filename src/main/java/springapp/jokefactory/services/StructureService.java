@@ -24,4 +24,8 @@ public class StructureService {
     public void saveStructure(Structure structure) {
         structureRepository.saveStructure(structure);
     }
+
+    public void deleteStructure(Integer id) {
+        structureRepository.deleteStructure(id);
+    }
 }
