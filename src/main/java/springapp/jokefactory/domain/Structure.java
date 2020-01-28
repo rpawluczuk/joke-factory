@@ -6,6 +6,9 @@ public class Structure {
     private String name;
     private String description;
 
+    public Structure() {
+    }
+
     public Structure(String name, String description) {
         this.name = name;
         this.description = description;

@@ -29,4 +29,9 @@ public class StructureRepository {
     public Structure getStructure(Integer id) {
         return structures.get(id);
     }
+
+    public void saveStructure(Structure newStructure) {
+        newStructure.setId(Ids.generateNewId(structures.keySet()));
+        structures.put(newStructure.getId(), newStructure);
+    }
 }

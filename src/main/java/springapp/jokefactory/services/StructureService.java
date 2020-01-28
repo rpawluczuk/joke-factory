@@ -20,4 +20,8 @@ public class StructureService {
     public ArrayList<Structure> getAllStructures(){
         return new ArrayList<Structure>(structureRepository.getAllStructures());
     }
+
+    public void saveStructure(Structure structure) {
+        structureRepository.saveStructure(structure);
+    }
 }
