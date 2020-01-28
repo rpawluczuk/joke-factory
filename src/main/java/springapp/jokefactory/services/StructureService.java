@@ -2,6 +2,7 @@ package springapp.jokefactory.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import springapp.jokefactory.domain.Joke;
 import springapp.jokefactory.domain.Structure;
 import springapp.jokefactory.domain.repository.StructureRepository;
 import springapp.jokefactory.domain.repository.JokeRepository;
@@ -19,6 +20,10 @@ public class StructureService {
 
     public ArrayList<Structure> getAllStructures(){
         return new ArrayList<Structure>(structureRepository.getAllStructures());
+    }
+
+    public Structure getStructure(Integer id) {
+        return structureRepository.getStructure(id);
     }
 
     public void saveStructure(Structure structure) {

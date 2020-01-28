@@ -40,8 +40,9 @@ public class StructureController {
             bindingResult.getAllErrors().forEach(error -> {
                 System.out.println(error.getObjectName() + " " + error.getDefaultMessage());
             });
-            return "jokeform";
+            return "structurecreation";
         } else {
+
             structureService.saveStructure(structure);
             return "redirect:/structures";
         }
@@ -51,5 +52,12 @@ public class StructureController {
     public String deleteStructures(@PathVariable("id") Integer id){
         structureService.deleteStructure(id);
         return "redirect:/structures";
+    }
+
+    @RequestMapping(value = "/structure/edit/{id}")
+    public String editStructures(@PathVariable("id") Integer id, Model model){
+        Structure structureToEdit = structureService.getStructure(id);
+        model.addAttribute("structure", structureToEdit);
+        return "structureedit";
     }
 }

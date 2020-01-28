@@ -31,7 +31,9 @@ public class StructureRepository {
     }
 
     public void saveStructure(Structure newStructure) {
-        newStructure.setId(Ids.generateNewId(structures.keySet()));
+        if (newStructure.getId() == null) {
+            newStructure.setId(Ids.generateNewId(structures.keySet()));
+        }
         structures.put(newStructure.getId(), newStructure);
     }
 }
