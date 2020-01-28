@@ -22,7 +22,7 @@ public class JokeService {
     }
 
     public void saveJoke(Joke joke) {
-        jokeRepository.createJoke(joke);
+        jokeRepository.saveJoke(joke);
     }
 
     public Joke getJoke(Integer id) {

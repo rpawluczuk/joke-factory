@@ -15,7 +15,7 @@ public interface JokeRepository {
 
     void deleteJoke(Integer id);
 
-    void createJoke(Joke joke);
+    void saveJoke(Joke joke);
 
     Joke getJokeById(Integer id);
 }

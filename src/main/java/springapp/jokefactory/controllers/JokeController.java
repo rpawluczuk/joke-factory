@@ -68,4 +68,13 @@ public class JokeController {
         jokeService.deleteJoke(id);
         return "redirect:/jokes";
     }
+
+    @RequestMapping(value = "/joke/edit/{id}")
+    public String editStructures(@PathVariable("id") Integer id, Model model){
+        Joke jokeToEdit = jokeService.getJoke(id);
+        model.addAttribute("joke", jokeToEdit);
+        List<Structure> allStructures = structureService.getAllStructures();
+        model.addAttribute("structures", allStructures);
+        return "jokeedit";
+    }
 }

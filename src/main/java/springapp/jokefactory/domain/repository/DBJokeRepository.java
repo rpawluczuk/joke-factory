@@ -33,7 +33,7 @@ public class DBJokeRepository implements JokeRepository {
     }
 
     @Override
-    public void createJoke(Joke joke) {
+    public void saveJoke(Joke joke) {
         System.out.println("Here will be database connection");
         throw new NotImplementedException();
     }

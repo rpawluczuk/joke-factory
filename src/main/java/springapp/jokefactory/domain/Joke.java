@@ -5,7 +5,7 @@ import javax.validation.constraints.Size;
 
 public class Joke {
 
-    private int id;
+    private Integer id;
 
     @NotNull
     @Size(min = 2, max = 50)
@@ -27,35 +27,11 @@ public class Joke {
         this.author = "unknown";
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Joke)) return false;
-
-        Joke joke = (Joke) o;
-
-        if (getId() != joke.getId()) return false;
-        if (getStructureId() != joke.getStructureId()) return false;
-        if (!getTitle().equals(joke.getTitle())) return false;
-        if (!getContent().equals(joke.getContent())) return false;
-        return getAuthor() != null ? getAuthor().equals(joke.getAuthor()) : joke.getAuthor() == null;
-    }
-
-    @Override
-    public int hashCode() {
-        int result = getId();
-        result = 31 * result + getTitle().hashCode();
-        result = 31 * result + getContent().hashCode();
-        result = 31 * result + (getAuthor() != null ? getAuthor().hashCode() : 0);
-        result = 31 * result + getStructureId();
-        return result;
-    }
-
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

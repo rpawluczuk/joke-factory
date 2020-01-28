@@ -21,8 +21,10 @@ public class InMemoryJokeRepository implements JokeRepository {
     }
 
     @Override
-    public void createJoke(Joke newJoke) {
-        newJoke.setId(Ids.generateNewId(jokes.keySet()));
+    public void saveJoke(Joke newJoke) {
+        if (newJoke.getId() == null) {
+            newJoke.setId(Ids.generateNewId(jokes.keySet()));
+        }
         jokes.put(newJoke.getId(), newJoke);
     }
 
