@@ -40,8 +40,8 @@ public class InMemoryJokeRepository implements JokeRepository {
     }
 
     @Override
-    public void deleteJoke(Integer id) {
-        jokes.remove(id);
+    public void deleteJoke(Joke joke) {
+        jokes.remove(joke.getId());
     }
 
     @Override

@@ -9,6 +9,8 @@ import springapp.jokefactory.domain.repository.JokeRepository;
 import springapp.jokefactory.domain.repository.StructureRepository;
 import springapp.jokefactory.services.StructureService;
 
+import javax.transaction.Transactional;
+
 @Component
 @Scope("singleton")
 public class Starter implements CommandLineRunner {
@@ -24,6 +26,7 @@ public class Starter implements CommandLineRunner {
 
 
     @Override
+    @Transactional
     public void run(String... args) throws Exception {
         jokeRepository.createJoke("joke1", "content1");
         jokeRepository.createJoke("joke2", "content2");

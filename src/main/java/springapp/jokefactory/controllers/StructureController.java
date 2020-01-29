@@ -50,7 +50,8 @@ public class StructureController {
 
     @RequestMapping(value = "/structure/delete/{id}")
     public String deleteStructures(@PathVariable("id") Integer id){
-        structureService.deleteStructure(id);
+        Structure structureToDelete = structureService.getStructure(id);
+        structureService.deleteStructure(structureToDelete);
         return "redirect:/structures";
     }
 

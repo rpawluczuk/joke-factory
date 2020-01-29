@@ -5,35 +5,38 @@ import springapp.jokefactory.domain.Joke;
 import springapp.jokefactory.domain.Structure;
 import springapp.jokefactory.utils.Ids;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.transaction.Transactional;
 import java.util.*;
 
 @Repository
 public class StructureRepository {
 
-    Map<Integer, Structure> structures = new HashMap<>();
+    @PersistenceContext
+    private EntityManager entityManager;
 
+    @Transactional
     public void createStrcture(String name, String description) {
         Structure newStructure = new Structure(name, description);
-        newStructure.setId(Ids.generateNewId(structures.keySet()));
-        structures.put(newStructure.getId(), newStructure);
+        entityManager.persist(newStructure);
     }
 
-    public Collection<Structure> getAllStructures() {
-        return structures.values();
+    public List<Structure> getAllStructures() {
+        return entityManager.createQuery("from Structure", Structure.class).getResultList();
     }
 
-    public void deleteStructure(Integer id){
-        structures.remove(id);
+    @Transactional
+    public void deleteStructure(Structure structure){
+        entityManager.remove(structure);
     }
 
     public Structure getStructure(Integer id) {
-        return structures.get(id);
+        return entityManager.find(Structure.class, id);
     }
 
-    public void saveStructure(Structure newStructure) {
-        if (newStructure.getId() == null) {
-            newStructure.setId(Ids.generateNewId(structures.keySet()));
-        }
-        structures.put(newStructure.getId(), newStructure);
+    @Transactional
+    public void saveStructure(Structure structure) {
+        entityManager.merge(structure);
     }
 }

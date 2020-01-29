@@ -29,7 +29,7 @@ public class JokeService {
         return jokeRepository.getJokeById(id);
     }
 
-    public void deleteJoke(Integer id) {
-        jokeRepository.deleteJoke(id);
+    public void deleteJoke(Joke joke) {
+        jokeRepository.deleteJoke(joke);
     }
 }

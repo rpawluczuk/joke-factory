@@ -3,44 +3,51 @@ package springapp.jokefactory.domain.repository;
 import springapp.jokefactory.domain.Joke;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.transaction.Transactional;
 import java.util.Collection;
 import java.util.Optional;
 
 public class DBJokeRepository implements JokeRepository {
 
+    @PersistenceContext
+    private EntityManager entityManager;
+
     @Override
+    @Transactional
     public void createJoke(String title, String content) {
-        System.out.println("Here will be database connection");
-        throw new NotImplementedException();
+        Joke joke = new Joke(title, content);
+        entityManager.persist(joke);
     }
 
     @Override
     public Collection<Joke> getAllJokes() {
-        System.out.println("Here will be database connection");
-        throw new NotImplementedException();
+        return entityManager.createQuery("from Joke", Joke.class).getResultList();
     }
 
     @Override
     public Optional<Joke> getJoke(String title) {
-        System.out.println("Here will be database connection");
-        throw new NotImplementedException();
+        Joke jokeByTitle = entityManager.createQuery("from Joke j where j.title=:title", Joke.class)
+                .setParameter("name", title).getSingleResult();
+
+        return Optional.ofNullable(jokeByTitle);
     }
 
     @Override
-    public void deleteJoke(Integer id) {
-        System.out.println("Here will be database connection");
-        throw new NotImplementedException();
+    @Transactional
+    public void deleteJoke(Joke joke) {
+        entityManager.remove(joke);
     }
 
     @Override
+    @Transactional
     public void saveJoke(Joke joke) {
-        System.out.println("Here will be database connection");
-        throw new NotImplementedException();
+        entityManager.merge(joke);
     }
 
     @Override
     public Joke getJokeById(Integer id) {
-        System.out.println("Here will be database connection");
-        throw new NotImplementedException();
+        return entityManager.find(Joke.class, id);
     }
 }

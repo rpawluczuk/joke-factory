@@ -13,7 +13,7 @@ public interface JokeRepository {
 
     Optional<Joke> getJoke(String title);
 
-    void deleteJoke(Integer id);
+    void deleteJoke(Joke joke);
 
     void saveJoke(Joke joke);
 

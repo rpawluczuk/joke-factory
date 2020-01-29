@@ -65,7 +65,8 @@ public class JokeController {
 
     @RequestMapping(value = "/joke/delete/{id}")
     public String deleteJoke(@PathVariable("id") Integer id){
-        jokeService.deleteJoke(id);
+        Joke jokeToDelete = jokeService.getJoke(id);
+        jokeService.deleteJoke(jokeToDelete);
         return "redirect:/jokes";
     }
 

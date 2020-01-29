@@ -30,7 +30,7 @@ public class StructureService {
         structureRepository.saveStructure(structure);
     }
 
-    public void deleteStructure(Integer id) {
-        structureRepository.deleteStructure(id);
+    public void deleteStructure(Structure structure) {
+        structureRepository.deleteStructure(structure);
     }
 }
