@@ -1,10 +1,14 @@
 package springapp.jokefactory.domain;
 
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+@Entity
 public class Joke {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
     @NotNull
@@ -14,7 +18,7 @@ public class Joke {
     private String content;
     private String author;
 
-    private Integer structureId;
+    @ManyToOne
     private Structure structure;
 
     public Joke() {
@@ -57,14 +61,6 @@ public class Joke {
 
     public void setAuthor(String author) {
         this.author = author;
-    }
-
-    public Integer getStructureId() {
-        return structureId;
-    }
-
-    public void setStructureId(Integer structureId) {
-        this.structureId = structureId;
     }
 
     public Structure getStructure() {
