@@ -10,16 +10,16 @@ import springapp.jokefactory.domain.repository.JokeRepository;
 @Configuration
 public class MainConfig {
 
-    @Bean(name="inMemoryJokeRepository")
+    @Bean(name = "inMemoryJokeRepository")
     @Profile("dev")
-    public JokeRepository createInMemoryRepo(){
+    public JokeRepository createInMemoryRepo() {
         JokeRepository repo = new InMemoryJokeRepository();
         return repo;
     }
 
-    @Bean(name="DBJokeRepository")
+    @Bean(name = "DBJokeRepository")
     @Profile("prod")
-    public JokeRepository createDBRepo(){
+    public JokeRepository createDBRepo() {
         JokeRepository repo = new DBJokeRepository();
         return repo;
     }
