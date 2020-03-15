@@ -1,39 +1,36 @@
-//package springapp.jokefactory.controllers;
-//
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.stereotype.Controller;
-//import org.springframework.ui.Model;
-//import org.springframework.validation.BindingResult;
-//import org.springframework.web.bind.annotation.PathVariable;
-//import org.springframework.web.bind.annotation.RequestMapping;
-//import org.springframework.web.bind.annotation.RequestMethod;
-//import org.springframework.web.bind.annotation.RequestParam;
-//import springapp.jokefactory.domain.Joke;
-//import springapp.jokefactory.domain.Structure;
-//import springapp.jokefactory.services.JokeService;
-//import springapp.jokefactory.services.StructureService;
-//
+package springapp.jokefactory.controllers;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+import springapp.jokefactory.domain.Joke;
+import springapp.jokefactory.domain.Structure;
+import springapp.jokefactory.domain.repository.JokeRepository;
+import springapp.jokefactory.domain.repository.StructureRepository;
+
+import java.util.List;
+
 //import javax.validation.Valid;
-//import java.util.List;
-//
-//@Controller
-//public class JokeController {
-//
-//    @Autowired
-//    JokeService jokeService;
-//
-//    @Autowired
-//    StructureService structureService;
-//
-//    @RequestMapping("/jokes")
-//    public String getJokes(Model model){
-//        List<Joke> allJokes = jokeService.getAllJokes();
-//        model.addAttribute("jokes", allJokes);
-//        List<Structure> allStructures = structureService.getAllStructures();
-//        model.addAttribute("structures", allStructures);
-//        return "jokes";
-//    }
-//
+
+@Controller
+public class JokeController {
+
+    @Autowired
+    JokeRepository jokeRepository;
+
+    @Autowired
+    StructureRepository structureRepostory;
+
+    @RequestMapping("/jokes")
+    public String getJokes(Model model){
+        List<Joke> allJokes = (List<Joke>) jokeRepository.findAll();
+        model.addAttribute("jokes", allJokes);
+        List<Structure> allStructures = (List<Structure>) structureRepostory.findAll();
+        model.addAttribute("structures", allStructures);
+        return "jokes";
+    }
+
 //    @RequestMapping("/joke")
 //    public String getJoke(@RequestParam("id") Integer id, Model model){
 //        Joke joke = jokeService.getJoke(id);
@@ -78,4 +75,4 @@
 //        model.addAttribute("structures", allStructures);
 //        return "jokeedit";
 //    }
-//}
+}

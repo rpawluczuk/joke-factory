@@ -1,15 +1,13 @@
 package springapp.jokefactory;
 
 import org.junit.jupiter.api.Test;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import springapp.jokefactory.domain.Joke;
 import springapp.jokefactory.domain.repository.JokeRepository;
 
-import java.util.Optional;
-
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 
 @SpringBootTest
@@ -25,31 +23,30 @@ class JokeFactoryApplicationTests {
     @Test
     public void testCreate(){
         Joke joke = new Joke();
-        joke.setId(1);
         joke.setTitle("żart o gejach");
         joke.setContent("ten tego");
         joke.setAuthor("Adam Mickiewicz");
-
         jokeRepository.save(joke);
     }
 
     @Test
     public void testRead(){
-        Optional<Joke> joke = jokeRepository.findById(1);
-        assertTrue(joke.isPresent());
-        assertEquals("żart o gejach", joke.get().getTitle());
+        Joke joke = jokeRepository.findById(1).get();
+        assertNotNull(joke);
+        assertEquals("żart o gejach", joke.getTitle());
     }
 
     @Test
     public void testUpdate(){
-        Optional<Joke> joke = jokeRepository.findById(1);
-        assertTrue(joke.isPresent());
-        joke.get().setTitle("Najkrótszy żart o gejach");
-        jokeRepository.save(joke.get());
+        Joke joke = jokeRepository.findById(1).get();
+        joke.setTitle("Najkrótszy żart o gejach");
+        jokeRepository.save(joke);
     }
 
     @Test
     public void testDelete(){
-        jokeRepository.deleteById(1);
+        if (jokeRepository.existsById(1)){
+            jokeRepository.deleteById(1);
+        }
     }
 }

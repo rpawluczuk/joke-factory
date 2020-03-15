@@ -1,31 +1,26 @@
-//package springapp.jokefactory.controllers;
-//
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.stereotype.Controller;
-//import org.springframework.ui.Model;
-//import org.springframework.validation.BindingResult;
-//import org.springframework.web.bind.annotation.PathVariable;
-//import org.springframework.web.bind.annotation.RequestMapping;
-//import org.springframework.web.bind.annotation.RequestMethod;
-//import springapp.jokefactory.domain.Joke;
-//import springapp.jokefactory.domain.Structure;
-//import springapp.jokefactory.services.StructureService;
-//
-//import javax.validation.Valid;
-//import java.util.List;
-//
-//@Controller
-//public class StructureController {
-//
-//    @Autowired
-//    StructureService structureService;
-//
-//    @RequestMapping("/structures")
-//    public String getJokes(Model model){
-//        List<Structure> allStructures = structureService.getAllStructures();
-//        model.addAttribute("structures", allStructures);
-//        return "structures";
-//    }
+package springapp.jokefactory.controllers;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+import springapp.jokefactory.domain.Structure;
+import springapp.jokefactory.domain.repository.StructureRepository;
+
+import java.util.List;
+
+@Controller
+public class StructureController {
+
+    @Autowired
+    StructureRepository structureRepository;
+
+    @RequestMapping("/structures")
+    public String getJokes(Model model){
+        List<Structure> allStructures = (List<Structure>) structureRepository.findAll();
+        model.addAttribute("structures", allStructures);
+        return "structures";
+    }
 //
 //    @RequestMapping("/newstructure")
 //    public String createStructure(Model model){
@@ -60,4 +55,4 @@
 //        model.addAttribute("structure", structureToEdit);
 //        return "structureedit";
 //    }
-//}
+}

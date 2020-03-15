@@ -9,9 +9,10 @@ import javax.persistence.*;
 public class Joke {
 
 
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
+
     @Id
     @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
 //    @NotNull

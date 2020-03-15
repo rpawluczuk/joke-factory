@@ -1,18 +1,10 @@
-//package springapp.jokefactory.domain.repository;
-//
-//import org.springframework.stereotype.Repository;
-//import springapp.jokefactory.domain.Joke;
-//import springapp.jokefactory.domain.Structure;
-//import springapp.jokefactory.utils.Ids;
-//
-//import javax.persistence.EntityManager;
-//import javax.persistence.PersistenceContext;
-//import javax.transaction.Transactional;
-//import java.util.*;
-//
-//@Repository
-//public class StructureRepository {
-//
+package springapp.jokefactory.domain.repository;
+
+import org.springframework.data.repository.CrudRepository;
+import springapp.jokefactory.domain.Structure;
+
+public interface StructureRepository extends CrudRepository<Structure, Integer> {
+
 //    @PersistenceContext
 //    private EntityManager entityManager;
 //
@@ -39,4 +31,4 @@
 //    public void saveStructure(Structure structure) {
 //        entityManager.merge(structure);
 //    }
-//}
+}
