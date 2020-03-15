@@ -1,39 +1,39 @@
-<!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <title>Add joke</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<!--<!DOCTYPE HTML>-->
+<!--<html xmlns:th="http://www.thymeleaf.org">-->
+<!--<head>-->
+<!--    <title>Add joke</title>-->
+<!--    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>-->
 
-    <link rel="stylesheet" th:href="@{/webjars/bootstrap/4.4.1/css/bootstrap.min.css}"/>
+<!--    <link rel="stylesheet" th:href="@{/webjars/bootstrap/4.4.1/css/bootstrap.min.css}"/>-->
 
-    <script th:src="@{/webjars/jquery/3.2.1/jquery.min.css}"></script>
-    <script th:src="@{/webjars/bootstrap/4.4.1/js/bootstrap.min.js}"></script>
-</head>
-<body>
-<div class="container">
-    <form class="form-horizontal" th:object="${joke}" th:action="@{/jokes}" th:method="post">
-        <div class="form-group">
-            <label class="control-label">title:</label>
-            <input type="text" class="form-control" th:field="*{title}"/>
-            <p th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></p>
-        </div>
-        <div class="form-group">
-            <label class="control-label">content:</label>
-            <input type="text" class="form-control" th:field="*{content}"/>
-            <p th:if="${#fields.hasErrors('content')}" th:errors="*{content}"></p>
-        </div>
-        <div class="form-group">
-            <label class="control-label">structure:</label>
-            <select class="form-control" th:field="*{structure}">
-                <option th:each="structure:${structures}"
-                        th:value="${structure.id}"
-                        th:text="${structure.name}"></option>
-            </select>
-        </div>
-        <div class="row">
-            <button type="submit" class="btn btn-dark">Create joke</button>
-        </div>
-    </form>
-</div>
-</body>
-</html>
+<!--    <script th:src="@{/webjars/jquery/3.2.1/jquery.min.css}"></script>-->
+<!--    <script th:src="@{/webjars/bootstrap/4.4.1/js/bootstrap.min.js}"></script>-->
+<!--</head>-->
+<!--<body>-->
+<!--<div class="container">-->
+<!--    <form class="form-horizontal" th:object="${joke}" th:action="@{/jokes}" th:method="post">-->
+<!--        <div class="form-group">-->
+<!--            <label class="control-label">title:</label>-->
+<!--            <input type="text" class="form-control" th:field="*{title}"/>-->
+<!--            <p th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></p>-->
+<!--        </div>-->
+<!--        <div class="form-group">-->
+<!--            <label class="control-label">content:</label>-->
+<!--            <input type="text" class="form-control" th:field="*{content}"/>-->
+<!--            <p th:if="${#fields.hasErrors('content')}" th:errors="*{content}"></p>-->
+<!--        </div>-->
+<!--        <div class="form-group">-->
+<!--            <label class="control-label">structure:</label>-->
+<!--            <select class="form-control" th:field="*{structure}">-->
+<!--                <option th:each="structure:${structures}"-->
+<!--                        th:value="${structure.id}"-->
+<!--                        th:text="${structure.name}"></option>-->
+<!--            </select>-->
+<!--        </div>-->
+<!--        <div class="row">-->
+<!--            <button type="submit" class="btn btn-dark">Create joke</button>-->
+<!--        </div>-->
+<!--    </form>-->
+<!--</div>-->
+<!--</body>-->
+<!--</html>-->

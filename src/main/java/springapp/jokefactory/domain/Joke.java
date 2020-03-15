@@ -1,25 +1,31 @@
 package springapp.jokefactory.domain;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+//import javax.validation.constraints.NotNull;
+//import javax.validation.constraints.Size;
 
 @Entity
+@Table(name = "joke")
 public class Joke {
 
+
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id")
     private Integer id;
 
-    @NotNull
-    @Size(min = 2, max = 50)
+//    @NotNull
+//    @Size(min = 2, max = 50)
+    @Column(name = "title")
     private String title;
-    @NotNull
+//    @NotNull
+    @Column(name = "content")
     private String content;
+    @Column(name = "author")
     private String author;
 
-    @ManyToOne
-    private Structure structure;
+//    @ManyToOne
+//    private Structure structure;
 
     public Joke() {
         this.author = "unknown";
@@ -63,11 +69,11 @@ public class Joke {
         this.author = author;
     }
 
-    public Structure getStructure() {
-        return structure;
-    }
-
-    public void setStructure(Structure structure) {
-        this.structure = structure;
-    }
+//    public Structure getStructure() {
+//        return structure;
+//    }
+//
+//    public void setStructure(Structure structure) {
+//        this.structure = structure;
+//    }
 }
