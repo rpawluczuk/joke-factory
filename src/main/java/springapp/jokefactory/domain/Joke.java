@@ -25,8 +25,9 @@ public class Joke {
     @Column(name = "author")
     private String author;
 
-//    @ManyToOne
-//    private Structure structure;
+    @ManyToOne
+    @JoinColumn(name = "structure_id")
+    private Structure structure;
 
     public Joke() {
         this.author = "unknown";
@@ -70,11 +71,11 @@ public class Joke {
         this.author = author;
     }
 
-//    public Structure getStructure() {
-//        return structure;
-//    }
-//
-//    public void setStructure(Structure structure) {
-//        this.structure = structure;
-//    }
+    public Structure getStructure() {
+        return structure;
+    }
+
+    public void setStructure(Structure structure) {
+        this.structure = structure;
+    }
 }

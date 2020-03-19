@@ -28,19 +28,19 @@
         <tr>
             <td th:text="${joke.title}"></td>
             <td th:text="${joke.content}"></td>
-<!--            <td>-->
-<!--                <span th:if="${joke.structure==null}" th:text="'Not assigned'"></span>-->
-<!--                <span th:if="${joke.structure!=null}" th:text="${joke.structure.name}"></span>-->
-<!--            </td>-->
-<!--            <td><a th:href="${'/joke?id='+joke.id}">Preview</a></td>-->
-<!--            <td><a th:href="${'/joke/delete/'+joke.id}">Delete</a></td>-->
-<!--            <td><a th:href="${'/joke/edit/'+joke.id}">Edit</a></td>-->
+            <td>
+                <span th:if="${joke.structure==null}" th:text="'Not assigned'"></span>
+                <span th:if="${joke.structure!=null}" th:text="${joke.structure.name}"></span>
+            </td>
+            <td><a th:href="${'/joke?id='+joke.id}">Preview</a></td>
+            <td><a th:href="${'/joke/delete/'+joke.id}">Delete</a></td>
+            <td><a th:href="${'/joke/edit/'+joke.id}">Edit</a></td>
         </tr>
         </tbody>
     </table>
-<!--    <div class="row">-->
-<!--        <a href="/newjoke">Create new joke</a>-->
-<!--    </div>-->
+    <div class="row">
+        <a href="/newjoke">Create new joke</a>
+    </div>
 <!--    <div class="row">-->
 <!--        <form action="#" th:action="@{/logout}" method="post">-->
 <!--            <input type="submit" value="Logout"/>-->

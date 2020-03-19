@@ -1,9 +1,8 @@
 package springapp.jokefactory.domain;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 public class Structure {
@@ -14,6 +13,9 @@ public class Structure {
 
     private String name;
     private String description;
+
+    @OneToMany(mappedBy = "structure", cascade = CascadeType.MERGE)
+    private Set<Joke> jokes;
 
     public Structure() {
     }
@@ -45,6 +47,24 @@ public class Structure {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Set<Joke> getJokes() {
+        return jokes;
+    }
+
+    public void setJokes(Set<Joke> jokes) {
+        this.jokes = jokes;
+    }
+
+    public void addJoke(Joke joke){
+        if (joke != null){
+            if (jokes == null){
+                jokes = new HashSet<>();
+            }
+            joke.setStructure(this);
+            jokes.add(joke);
+        }
     }
 
     @Override
