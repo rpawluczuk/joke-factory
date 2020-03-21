@@ -13,6 +13,8 @@ import springapp.jokefactory.domain.repository.JokeRepository;
 import springapp.jokefactory.domain.repository.StructureRepository;
 
 import javax.validation.Valid;
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -47,6 +49,7 @@ public class StructureController {
             });
             return "structurecreation";
         } else {
+            structure.setCreationTime(new Timestamp(new Date().getTime()));
             structureRepository.save(structure);
             return "redirect:/structures";
         }

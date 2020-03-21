@@ -1,6 +1,7 @@
 package springapp.jokefactory.domain;
 
 import javax.persistence.*;
+import java.sql.Timestamp;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -13,6 +14,7 @@ public class Structure {
 
     private String name;
     private String description;
+    private Timestamp creationTime;
 
     @OneToMany(mappedBy = "structure", cascade = CascadeType.MERGE)
     private Set<Joke> jokes;
@@ -55,6 +57,14 @@ public class Structure {
 
     public void setJokes(Set<Joke> jokes) {
         this.jokes = jokes;
+    }
+
+    public Timestamp getCreationTime() {
+        return creationTime;
+    }
+
+    public void setCreationTime(Timestamp creationTime) {
+        this.creationTime = creationTime;
     }
 
     public void addJoke(Joke joke){

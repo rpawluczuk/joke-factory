@@ -14,6 +14,8 @@ import springapp.jokefactory.domain.repository.JokeRepository;
 import springapp.jokefactory.domain.repository.StructureRepository;
 
 import javax.validation.Valid;
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 
 //import javax.validation.Valid;
@@ -60,6 +62,7 @@ public class JokeController {
             });
             return "jokeform";
         } else {
+            joke.setCreationTime(new Timestamp(new Date().getTime()));
             jokeRepository.save(joke);
             return "redirect:/jokes";
         }

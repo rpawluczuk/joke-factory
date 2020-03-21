@@ -1,29 +1,24 @@
 package springapp.jokefactory.domain;
 
 import javax.persistence.*;
+import java.sql.Timestamp;
 //import javax.validation.constraints.NotNull;
 //import javax.validation.constraints.Size;
 
 @Entity
-@Table(name = "joke")
 public class Joke {
 
-
-
     @Id
-    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
 //    @NotNull
 //    @Size(min = 2, max = 50)
-    @Column(name = "title")
     private String title;
 //    @NotNull
-    @Column(name = "content")
     private String content;
-    @Column(name = "author")
     private String author;
+    private Timestamp creationTime;
 
     @ManyToOne
     @JoinColumn(name = "structure_id")
@@ -77,5 +72,13 @@ public class Joke {
 
     public void setStructure(Structure structure) {
         this.structure = structure;
+    }
+
+    public Timestamp getCreationTime() {
+        return creationTime;
+    }
+
+    public void setCreationTime(Timestamp creationTime) {
+        this.creationTime = creationTime;
     }
 }
