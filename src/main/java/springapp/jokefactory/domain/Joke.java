@@ -2,8 +2,6 @@ package springapp.jokefactory.domain;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
-//import javax.validation.constraints.NotNull;
-//import javax.validation.constraints.Size;
 
 @Entity
 public class Joke {
