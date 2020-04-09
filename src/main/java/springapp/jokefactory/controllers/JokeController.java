@@ -8,14 +8,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import springapp.jokefactory.domain.Joke;
-import springapp.jokefactory.domain.Structure;
-import springapp.jokefactory.domain.repository.JokeRepository;
-import springapp.jokefactory.domain.repository.StructureRepository;
+import springapp.jokefactory.entity.Joke;
+import springapp.jokefactory.entity.Structure;
+import springapp.jokefactory.entity.repository.JokeRepository;
+import springapp.jokefactory.entity.repository.StructureRepository;
 
 import javax.validation.Valid;
-import java.sql.Timestamp;
-import java.util.Date;
 import java.util.List;
 
 //import javax.validation.Valid;
@@ -62,7 +60,6 @@ public class JokeController {
             });
             return "jokeform";
         } else {
-            joke.setCreationTime(new Timestamp(new Date().getTime()));
             jokeRepository.save(joke);
             return "redirect:/jokes";
         }

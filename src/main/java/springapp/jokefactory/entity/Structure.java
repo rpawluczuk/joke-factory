@@ -1,4 +1,8 @@
-package springapp.jokefactory.domain;
+package springapp.jokefactory.entity;
+
+import lombok.Data;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -6,6 +10,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
+@Data
 public class Structure {
 
     @Id
@@ -14,7 +19,12 @@ public class Structure {
 
     private String name;
     private String description;
-    private Timestamp creationTime;
+
+    @CreationTimestamp
+    private Timestamp dateCreated;
+
+    @UpdateTimestamp
+    private Timestamp lastUpdated;
 
     @OneToMany(mappedBy = "structure", cascade = CascadeType.MERGE)
     private Set<Joke> jokes;
@@ -25,46 +35,6 @@ public class Structure {
     public Structure(String name, String description) {
         this.name = name;
         this.description = description;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public Set<Joke> getJokes() {
-        return jokes;
-    }
-
-    public void setJokes(Set<Joke> jokes) {
-        this.jokes = jokes;
-    }
-
-    public Timestamp getCreationTime() {
-        return creationTime;
-    }
-
-    public void setCreationTime(Timestamp creationTime) {
-        this.creationTime = creationTime;
     }
 
     public void addJoke(Joke joke){
