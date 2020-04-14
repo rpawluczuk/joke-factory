@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import springapp.jokefactory.entity.Joke;
 import springapp.jokefactory.entity.Structure;
-import springapp.jokefactory.entity.repository.JokeRepository;
-import springapp.jokefactory.entity.repository.StructureRepository;
+import springapp.jokefactory.repository.JokeRepository;
+import springapp.jokefactory.repository.StructureRepository;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -29,15 +29,15 @@ public class JokeController {
 
     @RequestMapping("/jokes")
     public String getJokes(Model model){
-        List<Joke> allJokes = (List<Joke>) jokeRepository.findAll();
+        List<Joke> allJokes = jokeRepository.findAll();
         model.addAttribute("jokes", allJokes);
-        List<Structure> allStructures = (List<Structure>) structureRepostory.findAll();
+        List<Structure> allStructures = structureRepostory.findAll();
         model.addAttribute("structures", allStructures);
         return "jokes";
     }
 
     @RequestMapping("/joke")
-    public String getJoke(@RequestParam("id") Integer id, Model model){
+    public String getJoke(@RequestParam("id") Long id, Model model){
         Joke joke = jokeRepository.findById(id).get();
         model.addAttribute("joke", joke);
         return "joke";
@@ -46,7 +46,7 @@ public class JokeController {
     @RequestMapping("/newjoke")
     public String createJoke(Model model){
         model.addAttribute("joke", new Joke());
-        List<Structure> allStructures = (List<Structure>) structureRepostory.findAll();
+        List<Structure> allStructures = structureRepostory.findAll();
         model.addAttribute("structures", allStructures);
         return "jokeform";
     }
@@ -66,17 +66,17 @@ public class JokeController {
     }
 
     @RequestMapping(value = "/joke/delete/{id}")
-    public String deleteJoke(@PathVariable("id") Integer id){
+    public String deleteJoke(@PathVariable("id") Long id){
         Joke jokeToDelete = jokeRepository.findById(id).get();
         jokeRepository.delete(jokeToDelete);
         return "redirect:/jokes";
     }
 
     @RequestMapping(value = "/joke/edit/{id}")
-    public String editStructures(@PathVariable("id") Integer id, Model model){
+    public String editStructures(@PathVariable("id") Long id, Model model){
         Joke jokeToEdit = jokeRepository.findById(id).get();
         model.addAttribute("joke", jokeToEdit);
-        List<Structure> allStructures = (List<Structure>) structureRepostory.findAll();
+        List<Structure> allStructures = structureRepostory.findAll();
         model.addAttribute("structures", allStructures);
         return "jokeedit";
     }

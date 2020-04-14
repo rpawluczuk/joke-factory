@@ -15,7 +15,10 @@ public class Structure {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
+
+    @OneToMany(mappedBy = "structure", cascade = CascadeType.MERGE)
+    private Set<Joke> jokes;
 
     private String name;
     private String description;
@@ -25,9 +28,6 @@ public class Structure {
 
     @UpdateTimestamp
     private Timestamp lastUpdated;
-
-    @OneToMany(mappedBy = "structure", cascade = CascadeType.MERGE)
-    private Set<Joke> jokes;
 
     public Structure() {
     }

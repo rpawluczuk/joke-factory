@@ -13,11 +13,18 @@ public class Joke {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
+
+    @ManyToOne
+    @JoinColumn(name = "structure_id")
+    private Structure structure;
+
+    @ManyToOne
+    @JoinColumn(name = "author_id")
+    private Author author;
 
     private String title;
     private String content;
-    private String author;
 
     @CreationTimestamp
     private Timestamp dateCreated;
@@ -25,17 +32,5 @@ public class Joke {
     @UpdateTimestamp
     private Timestamp lastUpdated;
 
-    @ManyToOne
-    @JoinColumn(name = "structure_id")
-    private Structure structure;
-
-    public Joke() {
-        this.author = "unknown";
-    }
-
-    public Joke(String title, String content) {
-        this.title = title;
-        this.content = content;
-        this.author = "unknown";
-    }
+    public Joke() {}
 }

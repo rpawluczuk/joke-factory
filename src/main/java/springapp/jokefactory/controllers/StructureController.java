@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import springapp.jokefactory.entity.Joke;
 import springapp.jokefactory.entity.Structure;
-import springapp.jokefactory.entity.repository.JokeRepository;
-import springapp.jokefactory.entity.repository.StructureRepository;
+import springapp.jokefactory.repository.JokeRepository;
+import springapp.jokefactory.repository.StructureRepository;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -26,8 +26,8 @@ public class StructureController {
     JokeRepository jokeRepository;
 
     @RequestMapping("/structures")
-    public String getJokes(Model model) {
-        List<Structure> allStructures = (List<Structure>) structureRepository.findAll();
+    public String getStructures(Model model) {
+        List<Structure> allStructures = structureRepository.findAll();
         model.addAttribute("structures", allStructures);
         return "structures";
     }
@@ -53,9 +53,9 @@ public class StructureController {
     }
 
     @RequestMapping(value = "/structure/delete/{id}")
-    public String deleteStructures(@PathVariable("id") Integer id) {
+    public String deleteStructure(@PathVariable("id") Long id) {
         Structure structureToDelete = structureRepository.findById(id).get();
-        List<Joke> connectedJokes = (List<Joke>) jokeRepository.findAll();
+        List<Joke> connectedJokes = jokeRepository.findAll();
         connectedJokes = connectedJokes.stream()
                 .filter(joke -> joke.getStructure().getId().equals(id))
                 .collect(Collectors.toList());
@@ -68,7 +68,7 @@ public class StructureController {
     }
 
     @RequestMapping(value = "/structure/edit/{id}")
-    public String editStructures(@PathVariable("id") Integer id, Model model) {
+    public String editStructures(@PathVariable("id") Long id, Model model) {
         Structure structureToEdit = structureRepository.findById(id).get();
         model.addAttribute("structure", structureToEdit);
         return "structureedit";
