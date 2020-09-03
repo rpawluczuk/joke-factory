@@ -32,6 +32,7 @@ public class JokeController {
 
     @PostMapping
     public void addJoke(@RequestBody Joke joke){
+        System.out.println(joke.toString());
         jokeRepository.save(joke);
     }
 
@@ -40,7 +41,8 @@ public class JokeController {
         Joke jokeToUpdate = jokeRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Joke not found for this id :: " + id));
         jokeToUpdate.setTitle(joke.getTitle());
         jokeToUpdate.setContent(joke.getContent());
-        jokeRepository.save(joke);
+        jokeToUpdate.setStructure(joke.getStructure());
+        jokeRepository.save(jokeToUpdate);
     }
 
     @DeleteMapping(value = "/{id}")

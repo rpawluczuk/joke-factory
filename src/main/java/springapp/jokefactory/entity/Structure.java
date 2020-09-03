@@ -1,5 +1,6 @@
 package springapp.jokefactory.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -18,6 +19,7 @@ public class Structure {
     private Long id;
 
     @OneToMany(mappedBy = "structure", cascade = CascadeType.MERGE)
+    @JsonIgnore
     private Set<Joke> jokes;
 
     private String name;
