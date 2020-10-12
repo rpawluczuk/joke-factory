@@ -42,6 +42,7 @@ public class JokeController {
         jokeToUpdate.setTitle(joke.getTitle());
         jokeToUpdate.setContent(joke.getContent());
         jokeToUpdate.setStructure(joke.getStructure());
+        jokeToUpdate.setAuthor(joke.getAuthor());
         jokeRepository.save(jokeToUpdate);
     }
 

@@ -29,7 +29,7 @@ public class StructureController {
         return structureRepository.findById(id);
     }
 
-    @PostMapping
+    @PostMapping(consumes={"application/json"})
     public void addStructure(@RequestBody Structure structure){
         structureRepository.save(structure);
     }
