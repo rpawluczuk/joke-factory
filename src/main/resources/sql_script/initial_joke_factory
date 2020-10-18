@@ -1,0 +1,46 @@
+use mydb;
+
+create table if not exists mydb.joke(
+id bigint auto_increment,
+structure_id bigint,
+author_id bigint,
+title varchar(255),
+content varchar(3000),
+grade int,
+author varchar(255),
+date_created datetime,
+last_updated datetime,
+primary key (id),
+constraint FK_JokeStructure foreign key (structure_id) references structure(id),
+constraint FK_JokAuthore foreign key (author_id) references author(id)
+);
+
+create table if not exists mydb.structure(
+id bigint auto_increment,
+name varchar(255),
+description varchar(2000),
+date_created datetime,
+last_updated datetime,
+primary key (id)
+);
+
+create table if not exists mydb.jokes_structures(
+joke_id bigint,
+structure_id bigint,
+foreign key (joke_id) references joke(id),
+foreign key (structure_id) references structure(id)
+);
+
+create table if not exists mydb.author(
+id bigint auto_increment,
+name varchar(255),
+surname varchar(255),
+description varchar(2000),
+date_created datetime,
+last_updated datetime,
+primary key (id)
+);
+
+select * from author;
+select * from joke;
+select * from structure;

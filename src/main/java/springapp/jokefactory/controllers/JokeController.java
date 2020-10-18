@@ -41,7 +41,7 @@ public class JokeController {
         Joke jokeToUpdate = jokeRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Joke not found for this id :: " + id));
         jokeToUpdate.setTitle(joke.getTitle());
         jokeToUpdate.setContent(joke.getContent());
-        jokeToUpdate.setStructure(joke.getStructure());
+        jokeToUpdate.setStructures(joke.getStructures());
         jokeToUpdate.setAuthor(joke.getAuthor());
         jokeRepository.save(jokeToUpdate);
     }

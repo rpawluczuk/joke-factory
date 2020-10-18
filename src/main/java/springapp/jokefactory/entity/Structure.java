@@ -3,6 +3,8 @@ package springapp.jokefactory.entity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import springapp.jokefactory.deserializer.StructureDeserializer;
@@ -20,7 +22,8 @@ public class Structure {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToMany(mappedBy = "structure", cascade = CascadeType.MERGE)
+    @EqualsAndHashCode.Exclude @ToString.Exclude
+    @ManyToMany(mappedBy = "structures")
     @JsonBackReference
     private Set<Joke> jokes;
 

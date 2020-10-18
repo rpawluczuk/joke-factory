@@ -3,31 +3,31 @@ package springapp.jokefactory.Serializer;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
-import springapp.jokefactory.entity.Joke;
+import springapp.jokefactory.entity.Structure;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-public class CustomJokeSetSerializer extends StdSerializer<Set<Joke>> {
+public class CustomStructureSetSerializer extends StdSerializer<Set<Structure>> {
 
-    public CustomJokeSetSerializer() {
+    public CustomStructureSetSerializer() {
         this(null);
     }
 
-    protected CustomJokeSetSerializer(Class<Set<Joke>> t) {
+    public CustomStructureSetSerializer(Class<Set<Structure>> t) {
         super(t);
     }
 
     @Override
-    public void serialize(Set<Joke> jokes,
+    public void serialize(Set<Structure> structures,
                           JsonGenerator jsonGenerator,
                           SerializerProvider serializerProvider)
             throws IOException {
         List<Long> ids = new ArrayList<>();
-        for (Joke joke : jokes) {
-            ids.add(joke.getId());
+        for (Structure structure : structures) {
+            ids.add(structure.getId());
         }
         jsonGenerator.writeObject(ids);
     }

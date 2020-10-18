@@ -9,6 +9,7 @@ import springapp.jokefactory.deserializer.JokeDeserializer;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.Set;
 
 @JsonDeserialize(using = JokeDeserializer.class)
 @Entity
@@ -19,9 +20,14 @@ public class Joke {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JsonManagedReference
-    private Structure structure;
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "jokes_structures",
+            joinColumns = { @JoinColumn(name = "joke_id") },
+            inverseJoinColumns = { @JoinColumn(name = "structure_id") }
+            )
+    private Set<Structure> structures;
+
+//    @JsonSerialize(using = CustomStructureSetSerializer.class)
 
     @ManyToOne
     @JsonManagedReference
@@ -47,12 +53,12 @@ public class Joke {
         this.id = id;
     }
 
-    public Structure getStructure() {
-        return structure;
+    public Set<Structure> getStructures() {
+        return structures;
     }
 
-    public void setStructure(Structure structure) {
-        this.structure = structure;
+    public void setStructures(Set<Structure> structures) {
+        this.structures = structures;
     }
 
     public Author getAuthor() {

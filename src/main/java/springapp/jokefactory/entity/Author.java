@@ -3,6 +3,8 @@ package springapp.jokefactory.entity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import springapp.jokefactory.deserializer.AuthorDeserializer;
@@ -20,6 +22,7 @@ public class Author {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @EqualsAndHashCode.Exclude @ToString.Exclude
     @OneToMany(mappedBy = "author", cascade = CascadeType.MERGE)
     @JsonBackReference
     private Set<Joke> jokes;
