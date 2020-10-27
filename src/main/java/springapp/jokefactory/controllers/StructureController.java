@@ -2,11 +2,13 @@ package springapp.jokefactory.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import springapp.jokefactory.entity.Joke;
 import springapp.jokefactory.entity.Structure;
 import springapp.jokefactory.repository.JokeRepository;
 import springapp.jokefactory.repository.StructureRepository;
 
 import java.util.Optional;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/api/structures")
@@ -42,6 +44,11 @@ public class StructureController {
     @DeleteMapping(value = "/{id}")
     public void deleteStructure(@PathVariable("id") Long id){
         Structure structureToDelete = structureRepository.findById(id).get();
+        Set<Joke> jokes = structureToDelete.getJokes();
+        for (Joke joke : jokes) {
+            joke.getStructures().remove(structureToDelete);
+            jokeRepository.save(joke);
+        }
         structureRepository.delete(structureToDelete);
     }
 }

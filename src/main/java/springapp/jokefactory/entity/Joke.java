@@ -20,7 +20,7 @@ public class Joke {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany()
     @JoinTable(name = "jokes_structures",
             joinColumns = { @JoinColumn(name = "joke_id") },
             inverseJoinColumns = { @JoinColumn(name = "structure_id") }
