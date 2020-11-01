@@ -39,24 +39,29 @@ public class JokeDeserializer extends StdDeserializer<Joke> {
             throws IOException, JsonProcessingException {
         JsonNode node = jp.getCodec().readTree(jp);
         Joke joke = new Joke();
-        try {
-            long id = node.get("id").asLong();
-            Optional<Joke> optionalEditedJoke = jokeRepository.findById(id);
-            if (optionalEditedJoke.isPresent()){
-                joke = optionalEditedJoke.get();
-                joke.setTitle(node.get("title").asText());
-                return joke;
-            }
-        } catch (NullPointerException npe){
+        if (node.get("id") == null){
             joke.setTitle(node.get("title").asText());
             joke.setContent(node.get("content").asText());
             Iterator<JsonNode> structuresInJsonNodeFormat = node.get("structures").elements();
             Set<Structure> selectedStructures = new HashSet<>();
             structuresInJsonNodeFormat.forEachRemaining(s -> selectedStructures.add(structureRepository.findById(s.get("id").asLong()).get()));
             joke.setStructures(selectedStructures);
-            long authorID = node.get("author").get("id").asLong();
-            joke.setAuthor(authorRepository.findById(authorID).get());
+            if (node.get("author").get("id") != null){
+                long authorID = node.get("author").get("id").asLong();
+                joke.setAuthor(authorRepository.findById(authorID).get());
+            } else {
+                joke.setAuthor(null);
+            }
         }
+
+//        long id = node.get("id").asLong();
+
+//        Optional<Joke> optionalEditedJoke = jokeRepository.findById(id);
+//        if (optionalEditedJoke.isPresent()) {
+//            joke = optionalEditedJoke.get();
+//            joke.setTitle(node.get("title").asText());
+//            return joke;
+//        }
         return joke;
     }
 }
