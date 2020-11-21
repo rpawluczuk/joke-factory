@@ -9,11 +9,16 @@ import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import springapp.jokefactory.entity.Author;
 import springapp.jokefactory.entity.Joke;
+import springapp.jokefactory.repository.AuthorRepository;
 import springapp.jokefactory.repository.JokeRepository;
 import springapp.jokefactory.repository.StructureRepository;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/jokes")
@@ -24,15 +29,25 @@ public class JokeController {
     JokeRepository jokeRepository;
 
     @Autowired
+    AuthorRepository authorRepository;
+
+    @Autowired
     StructureRepository structureRepository;
 
     @GetMapping
     public ResponseEntity<Map<String, Object>> getJokes(@RequestParam(defaultValue = "0") int page,
-                                                  @RequestParam(defaultValue = "5") int size){
+                                                  @RequestParam(defaultValue = "5") int size,
+                                                  @RequestParam(defaultValue = "-1") int authorFilter){
         try {
             List<Joke> jokes;
             Pageable paging = PageRequest.of(page, size, Sort.Direction.DESC, "dateCreated");
-            Page<Joke> pageJokes = jokeRepository.findAll(paging);
+            Page<Joke> pageJokes;
+            if (authorFilter != -1){
+                Optional<Author> author = authorRepository.findById((long) authorFilter);
+                pageJokes = jokeRepository.findJokesByAuthor(author.get(), paging);
+            } else {
+                pageJokes = jokeRepository.findAll(paging);
+            }
             jokes = pageJokes.getContent();
             Map<String, Object> response = new HashMap<>();
             response.put("jokes", jokes);
