@@ -10,10 +10,13 @@ import springapp.jokefactory.entity.Joke;
 import springapp.jokefactory.entity.Structure;
 import springapp.jokefactory.repository.AuthorRepository;
 import springapp.jokefactory.repository.JokeRepository;
+import springapp.jokefactory.repository.OriginRepository;
 import springapp.jokefactory.repository.StructureRepository;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 
 public class JokeDeserializer extends StdDeserializer<Joke> {
 
@@ -25,6 +28,9 @@ public class JokeDeserializer extends StdDeserializer<Joke> {
 
     @Autowired
     AuthorRepository authorRepository;
+
+    @Autowired
+    OriginRepository originRepository;
 
     public JokeDeserializer() {
         this(null);
@@ -51,6 +57,12 @@ public class JokeDeserializer extends StdDeserializer<Joke> {
                 joke.setAuthor(authorRepository.findById(authorID).get());
             } else {
                 joke.setAuthor(null);
+            }
+            if (node.get("origin").get("id") != null){
+                long originID = node.get("origin").get("id").asLong();
+                joke.setOrigin(originRepository.findById(originID).get());
+            } else {
+                joke.setOrigin(null);
             }
         }
 

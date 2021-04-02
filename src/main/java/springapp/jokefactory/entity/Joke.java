@@ -1,15 +1,25 @@
 package springapp.jokefactory.entity;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import lombok.Data;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
-import springapp.jokefactory.deserializer.JokeDeserializer;
-
-import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.Set;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+
+import lombok.Data;
+import springapp.jokefactory.deserializer.JokeDeserializer;
 
 @JsonDeserialize(using = JokeDeserializer.class)
 @Entity
@@ -32,6 +42,10 @@ public class Joke {
     @ManyToOne
     @JsonManagedReference
     private Author author;
+
+    @ManyToOne
+    @JsonManagedReference
+    private Origin origin;
 
     private String title;
     private String content;
@@ -67,6 +81,14 @@ public class Joke {
 
     public void setAuthor(Author author) {
         this.author = author;
+    }
+
+    public Origin getOrigin() {
+        return origin;
+    }
+
+    public void setOrigin(Origin origin) {
+        this.origin = origin;
     }
 
     public String getTitle() {
