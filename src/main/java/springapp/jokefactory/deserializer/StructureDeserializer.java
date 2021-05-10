@@ -1,21 +1,26 @@
 package springapp.jokefactory.deserializer;
 
+import java.io.IOException;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import springapp.jokefactory.entity.Structure;
 import springapp.jokefactory.repository.StructureRepository;
-
-import java.io.IOException;
-import java.util.Optional;
 
 public class StructureDeserializer extends StdDeserializer<Structure> {
 
     @Autowired
     StructureRepository structureRepository;
+
+    @Autowired
+    StructureRepository blockRepository;
 
     public StructureDeserializer() {
         this(null);

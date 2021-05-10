@@ -1,14 +1,25 @@
 package springapp.jokefactory.controllers;
 
+import java.util.Optional;
+import java.util.Set;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
+
 import springapp.jokefactory.entity.Author;
 import springapp.jokefactory.entity.Joke;
 import springapp.jokefactory.repository.AuthorRepository;
 import springapp.jokefactory.repository.JokeRepository;
-
-import java.util.Optional;
-import java.util.Set;
 
 @RestController
 @RequestMapping("/api/authors")
@@ -32,6 +43,7 @@ public class AuthorController {
     }
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public void addAuthor(@RequestBody Author author){
         authorRepository.save(author);
     }

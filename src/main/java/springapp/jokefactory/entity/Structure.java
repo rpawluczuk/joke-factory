@@ -1,17 +1,25 @@
 package springapp.jokefactory.entity;
 
+import java.sql.Timestamp;
+import java.util.Set;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
+
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 import springapp.jokefactory.deserializer.StructureDeserializer;
-
-import javax.persistence.*;
-import java.sql.Timestamp;
-import java.util.Set;
 
 @JsonDeserialize(using = StructureDeserializer.class)
 @Entity
@@ -29,6 +37,11 @@ public class Structure {
 
     private String name;
     private String description;
+
+    @EqualsAndHashCode.Exclude @ToString.Exclude
+    @OneToMany(mappedBy = "structure", cascade = CascadeType.MERGE)
+    @JsonBackReference
+    private Set<Block> blockScheme;
 
     @CreationTimestamp
     private Timestamp dateCreated;
@@ -82,6 +95,14 @@ public class Structure {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Set<Block> getBlockScheme() {
+        return blockScheme;
+    }
+
+    public void setBlockScheme(Set<Block> blockScheme) {
+        this.blockScheme = blockScheme;
     }
 
     public Timestamp getDateCreated() {
