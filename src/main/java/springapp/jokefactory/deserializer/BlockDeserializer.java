@@ -33,11 +33,11 @@ public class BlockDeserializer extends StdDeserializer<Block> {
         Block block = new Block();
         block.setPosition(node.get("position").asInt());
         block.setTitle(node.get("title").asText());
+        block.setDescription(node.get("description").asText());
         block.setBlockType(node.get("blockType").asText());
         if(!node.get("description").isEmpty()){
             block.setDescription(node.get("description").asText());
         }
-
         return block;
     }
 }

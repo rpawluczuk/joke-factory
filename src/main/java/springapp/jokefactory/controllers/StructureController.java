@@ -1,10 +1,11 @@
 package springapp.jokefactory.controllers;
 
-import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -57,23 +58,37 @@ public class StructureController {
     public void addStructure(@RequestBody StructureDTO structureDTO){
         ObjectMapper mapper = new ObjectMapper();
         Structure structure = mapper.convertValue(structureDTO, Structure.class);
-
+        structure = structureRepository.save(structure);
         JsonNode arrayNode = structureDTO.getBlockScheme();
-        Set<Block> blockScheme = new HashSet<>();
         if (arrayNode.isArray()){
             for (final JsonNode objNode : arrayNode) {
                 Block block = mapper.convertValue(objNode, Block.class);
-                block = blockRepository.save(block);
-                blockScheme.add(block);
+                block.setStructure(structure);
+                blockRepository.save(block);
             }
         }
-        structure.setBlockScheme(blockScheme);
-        structureRepository.save(structure);
     }
 
     @PutMapping
-    public void editStructure(@RequestBody Structure structure){
-        structureRepository.save(structure);
+    public void editStructure(@RequestBody StructureDTO structureDTO){
+        ObjectMapper mapper = new ObjectMapper();
+        Structure structureToUpdate = structureRepository.findById(structureDTO.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Joke not found for this id :: " + structureDTO.getId()));
+        List<Block> blocksToDelete = blockRepository.findBlocksByStructure(structureToUpdate);
+        for (Block blockTodelete : blocksToDelete) {
+            blockRepository.delete(blockTodelete);
+        }
+        structureToUpdate.setName(structureDTO.getName());
+        structureToUpdate.setDescription(structureDTO.getDescription());
+        Structure structureUpdated = structureRepository.save(structureToUpdate);
+        JsonNode arrayNode = structureDTO.getBlockScheme();
+        if (arrayNode.isArray()){
+            for (final JsonNode objNode : arrayNode) {
+                Block block = mapper.convertValue(objNode, Block.class);
+                block.setStructure(structureUpdated);
+                blockRepository.save(block);
+            }
+        }
     }
 
     @DeleteMapping(value = "/{id}")

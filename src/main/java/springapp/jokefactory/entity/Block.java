@@ -10,7 +10,7 @@ import javax.persistence.ManyToOne;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import lombok.Data;
@@ -26,7 +26,7 @@ public class Block {
     private Long id;
 
     @ManyToOne
-    @JsonManagedReference
+    @JsonBackReference
     private Structure structure;
 
     private String title;

@@ -8,9 +8,18 @@ import springapp.jokefactory.deserializer.StructureDTODeserializer;
 @JsonDeserialize(using = StructureDTODeserializer.class)
 public class StructureDTO {
 
+    private Long id;
     private String name;
     private String description;
     private JsonNode blockScheme;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;

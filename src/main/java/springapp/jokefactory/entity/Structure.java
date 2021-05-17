@@ -1,6 +1,7 @@
 package springapp.jokefactory.entity;
 
 import java.sql.Timestamp;
+import java.util.List;
 import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -14,6 +15,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import lombok.Data;
@@ -39,9 +41,9 @@ public class Structure {
     private String description;
 
     @EqualsAndHashCode.Exclude @ToString.Exclude
-    @OneToMany(mappedBy = "structure", cascade = CascadeType.MERGE)
-    @JsonBackReference
-    private Set<Block> blockScheme;
+    @JsonManagedReference
+    @OneToMany(mappedBy = "structure", cascade = CascadeType.ALL)
+    private List<Block> blockScheme;
 
     @CreationTimestamp
     private Timestamp dateCreated;
@@ -97,11 +99,11 @@ public class Structure {
         this.description = description;
     }
 
-    public Set<Block> getBlockScheme() {
+    public List<Block> getBlockScheme() {
         return blockScheme;
     }
 
-    public void setBlockScheme(Set<Block> blockScheme) {
+    public void setBlockScheme(List<Block> blockScheme) {
         this.blockScheme = blockScheme;
     }
 

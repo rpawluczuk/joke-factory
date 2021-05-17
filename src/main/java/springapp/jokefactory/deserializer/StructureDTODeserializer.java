@@ -20,10 +20,12 @@ public class StructureDTODeserializer extends StdDeserializer<StructureDTO> {
     }
 
     @Override
-    public StructureDTO deserialize(JsonParser jp, DeserializationContext ctxt)
-            throws IOException {
+    public StructureDTO deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException {
         JsonNode node = jp.getCodec().readTree(jp);
         StructureDTO structureDTO = new StructureDTO();
+        if (node.has("id")) {
+            structureDTO.setId(node.get("id").asLong());
+        }
         structureDTO.setName(node.get("name").asText());
         structureDTO.setDescription(node.get("description").asText());
         structureDTO.setBlockScheme(node.get("blockScheme"));
