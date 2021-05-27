@@ -1,5 +1,10 @@
 package springapp.jokefactory.utils;
 
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
+@Component
+@Scope("singleton")
 public class Pagination {
 
     private int currentPage;
@@ -7,11 +12,11 @@ public class Pagination {
     private int totalPages;
     private int pageSize;
 
-    public Pagination(int currentPage, long totalItems, int totalPages, int pageSize) {
-        this.currentPage = currentPage;
-        this.totalItems = totalItems;
-        this.totalPages = totalPages;
-        this.pageSize = pageSize;
+    public Pagination() {
+        this.currentPage = 0;
+        this.totalItems = 0;
+        this.totalPages = 0;
+        this.pageSize = 5;
     }
 
     public int getCurrentPage() {

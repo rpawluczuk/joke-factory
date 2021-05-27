@@ -1,0 +1,66 @@
+{
+	"info": {
+		"_postman_id": "cddced03-4c92-4dc1-9ae3-b21ab6733555",
+		"name": "Jokes",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get all jokes",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/jokes",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"jokes"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get jokes with params",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/jokes?authorFilter=8&page=0&size=2",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"jokes"
+					],
+					"query": [
+						{
+							"key": "authorFilter",
+							"value": "8",
+							"description": "Number which is an author ID"
+						},
+						{
+							"key": "page",
+							"value": "0",
+							"description": "Number of page"
+						},
+						{
+							"key": "size",
+							"value": "2",
+							"description": "How many jokes there are on the single page"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
