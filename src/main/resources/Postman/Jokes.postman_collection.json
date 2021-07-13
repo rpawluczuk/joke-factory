@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "cddced03-4c92-4dc1-9ae3-b21ab6733555",
+		"_postman_id": "225cbb76-d9ac-421a-a1e8-1798ab5ef29b",
 		"name": "Jokes",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -44,18 +44,49 @@
 					"query": [
 						{
 							"key": "authorFilter",
-							"value": "8",
-							"description": "Number which is an author ID"
+							"value": "8"
 						},
 						{
 							"key": "page",
-							"value": "0",
-							"description": "Number of page"
+							"value": "0"
 						},
 						{
 							"key": "size",
-							"value": "2",
-							"description": "How many jokes there are on the single page"
+							"value": "2"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get filtered jokes",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/jokes?query&author=11&structures=13",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"jokes"
+					],
+					"query": [
+						{
+							"key": "query",
+							"value": null
+						},
+						{
+							"key": "author",
+							"value": "11"
+						},
+						{
+							"key": "structures",
+							"value": "13"
 						}
 					]
 				}

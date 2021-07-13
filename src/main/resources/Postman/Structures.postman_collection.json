@@ -1,0 +1,58 @@
+{
+	"info": {
+		"_postman_id": "3a48b8d6-4ce4-4131-a3c9-ab6a8084a6e0",
+		"name": "Structures",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get all structures",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/structures",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"structures"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create new structure",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/structures",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"structures"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

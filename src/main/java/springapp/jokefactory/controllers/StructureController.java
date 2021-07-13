@@ -75,8 +75,8 @@ public class StructureController {
         Structure structureToUpdate = structureRepository.findById(structureDTO.getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Joke not found for this id :: " + structureDTO.getId()));
         List<Block> blocksToDelete = blockRepository.findBlocksByStructure(structureToUpdate);
-        for (Block blockTodelete : blocksToDelete) {
-            blockRepository.delete(blockTodelete);
+        for (Block blockToDelete : blocksToDelete) {
+            blockRepository.delete(blockToDelete);
         }
         structureToUpdate.setName(structureDTO.getName());
         structureToUpdate.setDescription(structureDTO.getDescription());
