@@ -53,42 +53,21 @@ public class StructureController {
         return structureRepository.findById(id);
     }
 
+    @GetMapping(value = "/last")
+    public Optional<Structure> getLastStructure(){
+        long id = structureRepository.findHighestID();
+        return structureRepository.findById(id);
+    }
+
     @PostMapping(consumes={"application/json"})
     @ResponseStatus(HttpStatus.CREATED)
-    public void addStructure(@RequestBody StructureDTO structureDTO){
-        ObjectMapper mapper = new ObjectMapper();
-        Structure structure = mapper.convertValue(structureDTO, Structure.class);
-        structure = structureRepository.save(structure);
-        JsonNode arrayNode = structureDTO.getBlockScheme();
-        if (arrayNode.isArray()){
-            for (final JsonNode objNode : arrayNode) {
-                Block block = mapper.convertValue(objNode, Block.class);
-                block.setStructure(structure);
-                blockRepository.save(block);
-            }
-        }
+    public void addStructure(@RequestBody Structure structure){
+        structureRepository.save(structure);
     }
 
     @PutMapping
-    public void editStructure(@RequestBody StructureDTO structureDTO){
-        ObjectMapper mapper = new ObjectMapper();
-        Structure structureToUpdate = structureRepository.findById(structureDTO.getId())
-                .orElseThrow(() -> new ResourceNotFoundException("Joke not found for this id :: " + structureDTO.getId()));
-        List<Block> blocksToDelete = blockRepository.findBlocksByStructure(structureToUpdate);
-        for (Block blockToDelete : blocksToDelete) {
-            blockRepository.delete(blockToDelete);
-        }
-        structureToUpdate.setName(structureDTO.getName());
-        structureToUpdate.setDescription(structureDTO.getDescription());
-        Structure structureUpdated = structureRepository.save(structureToUpdate);
-        JsonNode arrayNode = structureDTO.getBlockScheme();
-        if (arrayNode.isArray()){
-            for (final JsonNode objNode : arrayNode) {
-                Block block = mapper.convertValue(objNode, Block.class);
-                block.setStructure(structureUpdated);
-                blockRepository.save(block);
-            }
-        }
+    public void editStructure(@RequestBody Structure structure){
+        structureRepository.save(structure);
     }
 
     @DeleteMapping(value = "/{id}")

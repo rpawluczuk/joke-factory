@@ -16,7 +16,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import lombok.Data;
 import springapp.jokefactory.deserializer.BlockDeserializer;
 
-@JsonDeserialize(using = BlockDeserializer.class)
+//@JsonDeserialize(using = BlockDeserializer.class)
 @Entity
 @Data
 public class Block {
