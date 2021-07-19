@@ -1,0 +1,159 @@
+{
+	"info": {
+		"_postman_id": "11d7629b-231a-4079-8149-c6d1817a6365",
+		"name": "Blocks",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get all blocks",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/blocks",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"blocks"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get single block",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/blocks/99",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"blocks",
+						"99"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get blocks of the structure",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/blocks?query&structure=13",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"blocks"
+					],
+					"query": [
+						{
+							"key": "query",
+							"value": null
+						},
+						{
+							"key": "structure",
+							"value": "13"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create new block",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"title\": \"test\",\r\n    \"description\": \"only for test.\",\r\n    \"position\": 0,\r\n    \"blockType\": \"StandardBlock\",\r\n    \"structure\": {\r\n        \"id\": 50,\r\n        \"name\": \"test3\",\r\n        \"description\": \"dffdfd\",\r\n        \"blockScheme\": [],\r\n        \"dateCreated\": \"2021-07-13T21:47:21.000+0000\",\r\n        \"lastUpdated\": \"2021-07-13T21:47:21.000+0000\"\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/blocks",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"blocks"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Edit block",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\": 259,\r\n    \"title\": \"edited test\",\r\n    \"description\": \"only for test.\",\r\n    \"position\": 0,\r\n    \"blockType\": \"StandardBlock\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/blocks",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"blocks"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete block",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/blocks/260",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"blocks",
+						"260"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
