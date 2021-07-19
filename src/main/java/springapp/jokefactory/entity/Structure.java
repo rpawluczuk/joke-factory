@@ -11,11 +11,11 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import lombok.Data;
@@ -41,7 +41,7 @@ public class Structure {
     private String description;
 
     @EqualsAndHashCode.Exclude @ToString.Exclude
-    @JsonManagedReference
+    @JsonIgnore
     @OneToMany(mappedBy = "structure", cascade = CascadeType.ALL)
     private List<Block> blockScheme;
 

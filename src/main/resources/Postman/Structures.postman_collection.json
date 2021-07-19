@@ -26,13 +26,55 @@
 			"response": []
 		},
 		{
+			"name": "Get single structure",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/structures/50",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"structures",
+						"50"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get last structure",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/structures/last",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"structures",
+						"last"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "Create new structure",
 			"request": {
 				"method": "POST",
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "",
+					"raw": "{\r\n    \"name\": \"test3\",\r\n    \"description\": \"dffdfd\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -49,6 +91,56 @@
 					"path": [
 						"api",
 						"structures"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Edit structure",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\": 51,\r\n    \"name\": \"edited test\",\r\n    \"description\": \"dffdfd\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/structures",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"structures"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete structure",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/structures/51",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"structures",
+						"51"
 					]
 				}
 			},
