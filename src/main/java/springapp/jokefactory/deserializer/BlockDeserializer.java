@@ -10,10 +10,10 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 
-import springapp.jokefactory.entity.Block;
+import springapp.jokefactory.entity.StructureBlock;
 import springapp.jokefactory.repository.StructureRepository;
 
-public class BlockDeserializer extends StdDeserializer<Block> {
+public class BlockDeserializer extends StdDeserializer<StructureBlock> {
 
     @Autowired
     StructureRepository blockRepository;
@@ -27,17 +27,17 @@ public class BlockDeserializer extends StdDeserializer<Block> {
     }
 
     @Override
-    public Block deserialize(JsonParser jp, DeserializationContext ctxt)
+    public StructureBlock deserialize(JsonParser jp, DeserializationContext ctxt)
             throws IOException, JsonProcessingException {
         JsonNode node = jp.getCodec().readTree(jp);
-        Block block = new Block();
-        block.setPosition(node.get("position").asInt());
-        block.setTitle(node.get("title").asText());
-        block.setDescription(node.get("description").asText());
-        block.setBlockType(node.get("blockType").asText());
+        StructureBlock structureBlock = new StructureBlock();
+        structureBlock.setPosition(node.get("position").asInt());
+        structureBlock.setTitle(node.get("title").asText());
+        structureBlock.setDescription(node.get("description").asText());
+        structureBlock.setBlockType(node.get("blockType").asText());
         if(!node.get("description").isEmpty()){
-            block.setDescription(node.get("description").asText());
+            structureBlock.setDescription(node.get("description").asText());
         }
-        return block;
+        return structureBlock;
     }
 }

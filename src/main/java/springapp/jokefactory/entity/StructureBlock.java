@@ -14,9 +14,9 @@ import org.hibernate.annotations.UpdateTimestamp;
 import lombok.Data;
 
 //@JsonDeserialize(using = BlockDeserializer.class)
-@Entity
+@Entity(name = "structure_block")
 @Data
-public class Block {
+public class StructureBlock {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,7 +37,7 @@ public class Block {
     @UpdateTimestamp
     private Timestamp lastUpdated;
 
-    public Block() {
+    public StructureBlock() {
     }
 
     public Long getId() {

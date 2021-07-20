@@ -43,7 +43,7 @@ public class Structure {
     @EqualsAndHashCode.Exclude @ToString.Exclude
     @JsonIgnore
     @OneToMany(mappedBy = "structure", cascade = CascadeType.ALL)
-    private List<Block> blockScheme;
+    private List<StructureBlock> structureBlockScheme;
 
     @CreationTimestamp
     private Timestamp dateCreated;
@@ -99,12 +99,12 @@ public class Structure {
         this.description = description;
     }
 
-    public List<Block> getBlockScheme() {
-        return blockScheme;
+    public List<StructureBlock> getStructureBlockScheme() {
+        return structureBlockScheme;
     }
 
-    public void setBlockScheme(List<Block> blockScheme) {
-        this.blockScheme = blockScheme;
+    public void setStructureBlockScheme(List<StructureBlock> structureBlockScheme) {
+        this.structureBlockScheme = structureBlockScheme;
     }
 
     public Timestamp getDateCreated() {

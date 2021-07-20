@@ -45,7 +45,7 @@ create table if not exists mydb.author
     constraint PK_Author primary key (id)
 );
 
-create table if not exists mydb.block
+create table if not exists mydb.structureBlock
 (
     id           bigint auto_increment,
     blockType    varchar(255),
@@ -57,7 +57,7 @@ create table if not exists mydb.block
     constraint PK_Block primary key (id)
 );
 
-create table block
+create table structureBlock
 (
     id           bigint auto_increment primary key,
     block_type   varchar(255) null,

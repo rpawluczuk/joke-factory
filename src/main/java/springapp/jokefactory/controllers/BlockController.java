@@ -1,12 +1,9 @@
 package springapp.jokefactory.controllers;
 
-import com.querydsl.core.types.Predicate;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.querydsl.binding.QuerydslPredicate;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import springapp.jokefactory.entity.Block;
-import springapp.jokefactory.entity.Joke;
+import springapp.jokefactory.entity.StructureBlock;
 import springapp.jokefactory.repository.BlockRepository;
 import springapp.jokefactory.repository.StructureRepository;
 
@@ -24,34 +21,34 @@ public class BlockController {
     StructureRepository structureRepository;
 
     @GetMapping
-    public Iterable<Block> getBlocks(){
+    public Iterable<StructureBlock> getBlocks(){
         return blockRepository.findAll();
     }
 
     @GetMapping(value = "/{id}")
-    public Optional<Block> getBlockById(@PathVariable("id") Long id){
+    public Optional<StructureBlock> getBlockById(@PathVariable("id") Long id){
         return blockRepository.findById(id);
     }
 
     @GetMapping(value = "with-structure/{structure_id}")
-    public Iterable<Block> getBlocksOfTheStructure(@PathVariable("structure_id") Long structureID){
+    public Iterable<StructureBlock> getBlocksOfTheStructure(@PathVariable("structure_id") Long structureID){
         return blockRepository.findBlocksByStructure(structureID);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void addBlock(@RequestBody Block block){
-        blockRepository.save(block);
+    public void addBlock(@RequestBody StructureBlock structureBlock){
+        blockRepository.save(structureBlock);
     }
 
     @PutMapping
-    public void editBlock(@RequestBody Block block){
-        blockRepository.save(block);
+    public void editBlock(@RequestBody StructureBlock structureBlock){
+        blockRepository.save(structureBlock);
     }
 
     @DeleteMapping(value = "/{id}")
     public void deleteBlock(@PathVariable("id") Long id){
-        Block blockToDelete = blockRepository.findById(id).get();
-        blockRepository.delete(blockToDelete);
+        StructureBlock structureBlockToDelete = blockRepository.findById(id).get();
+        blockRepository.delete(structureBlockToDelete);
     }
 }

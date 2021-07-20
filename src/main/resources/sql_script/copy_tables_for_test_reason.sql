@@ -8,10 +8,10 @@ create table structure_copy_for_test
 as
 select * from mydb.structure;
 
-drop table if exists mydb.block_copy_for_test;
-create table block_copy_for_test
+drop table if exists mydb.structure_block_copy_for_test;
+create table structure_block_copy_for_test
 as
-select * from mydb.block;
+select * from mydb.structure_block;
 
 drop table if exists mydb.author_copy_for_test;
 create table author_copy_for_test
