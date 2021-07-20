@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.querydsl.core.types.Predicate;
 
 import springapp.jokefactory.entity.Joke;
+import springapp.jokefactory.entity.Structure;
 import springapp.jokefactory.repository.AuthorRepository;
 import springapp.jokefactory.repository.JokeRepository;
 import springapp.jokefactory.repository.StructureRepository;
@@ -67,6 +68,12 @@ public class JokeController {
 
     @GetMapping(value = "/{id}")
     public Optional<Joke> getJokeById(@PathVariable("id") Long id){
+        return jokeRepository.findById(id);
+    }
+
+    @GetMapping(value = "/last")
+    public Optional<Joke> getLastJoke(){
+        long id = jokeRepository.findHighestID();
         return jokeRepository.findById(id);
     }
 
