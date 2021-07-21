@@ -1,17 +1,15 @@
 package springapp.jokefactory.entity;
 
 import java.sql.Timestamp;
+import java.util.List;
 import java.util.Set;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -21,7 +19,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import lombok.Data;
 import springapp.jokefactory.deserializer.JokeDeserializer;
 
-@JsonDeserialize(using = JokeDeserializer.class)
+//@JsonDeserialize(using = JokeDeserializer.class)
 @Entity
 @Data
 public class Joke {
@@ -37,15 +35,18 @@ public class Joke {
             )
     private Set<Structure> structures;
 
-//    @JsonSerialize(using = CustomStructureSetSerializer.class)
-
     @ManyToOne
-    @JsonManagedReference
+//    @JsonManagedReference
     private Author author;
 
     @ManyToOne
-    @JsonManagedReference
+//    @JsonManagedReference
     private Origin origin;
+
+    @EqualsAndHashCode.Exclude @ToString.Exclude
+    @JsonIgnore
+    @OneToMany(mappedBy = "joke", cascade = CascadeType.ALL)
+    private List<JokeBlock> jokeBlocks;
 
     private String title;
     private String content;
@@ -89,6 +90,14 @@ public class Joke {
 
     public void setOrigin(Origin origin) {
         this.origin = origin;
+    }
+
+    public List<JokeBlock> getJokeBlocks() {
+        return jokeBlocks;
+    }
+
+    public void setJokeBlocks(List<JokeBlock> jokeBlocks) {
+        this.jokeBlocks = jokeBlocks;
     }
 
     public String getTitle() {

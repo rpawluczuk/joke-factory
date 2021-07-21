@@ -1,19 +1,17 @@
 package springapp.jokefactory.entity;
 
 import java.sql.Timestamp;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import java.util.List;
+import javax.persistence.*;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import lombok.Data;
 
-//@JsonDeserialize(using = BlockDeserializer.class)
 @Entity(name = "structure_block")
 @Data
 public class StructureBlock {
@@ -23,8 +21,12 @@ public class StructureBlock {
     private Long id;
 
     @ManyToOne
-    @JsonBackReference
     private Structure structure;
+
+    @EqualsAndHashCode.Exclude @ToString.Exclude
+    @JsonIgnore
+    @OneToMany(mappedBy = "structureBlock", cascade = CascadeType.ALL)
+    private List<JokeBlock> jokeBlocks;
 
     private String title;
     private String description;
@@ -86,6 +88,14 @@ public class StructureBlock {
 
     public void setStructure(Structure structure) {
         this.structure = structure;
+    }
+
+    public List<JokeBlock> getJokeBlocks() {
+        return jokeBlocks;
+    }
+
+    public void setJokeBlocks(List<JokeBlock> jokeBlocks) {
+        this.jokeBlocks = jokeBlocks;
     }
 
     public Timestamp getDateCreated() {

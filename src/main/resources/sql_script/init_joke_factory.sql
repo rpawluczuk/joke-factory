@@ -13,8 +13,23 @@ create table if not exists mydb.joke
     constraint FK_JokeStructure foreign key (structure_id) references structure (id),
     constraint FK_JokeAuthor foreign key (author_id) references author (id)
 );
-create index INDX_structure_id on mydb.joke(structure_id ASC);
-create index INDX_author_id on mydb.joke(author_id ASC);
+create index INDX_structure_id on mydb.joke (structure_id ASC);
+create index INDX_author_id on mydb.joke (author_id ASC);
+
+create table if not exists mydb.joke_block
+(
+    id                 bigint auto_increment,
+    structure_block_id bigint,
+    joke_id            bigint,
+    joke_snippet       varchar(3000),
+    date_created       datetime,
+    last_updated       datetime,
+    constraint PK_JokeBlock primary key (id),
+    constraint FK_JokeBlock_StructureBlock foreign key (structure_block_id) references structure_block (id),
+    constraint FK_JokeBlock_Joke foreign key (joke_id) references joke (id)
+);
+create index INDX_StructureBlock_id on mydb.joke_block (structure_block_id ASC);
+create index INDX_Joke_id on mydb.joke_block (joke_id ASC);
 
 create table if not exists mydb.structure
 (

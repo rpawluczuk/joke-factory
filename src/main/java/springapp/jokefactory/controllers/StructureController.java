@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import springapp.jokefactory.entity.Joke;
 import springapp.jokefactory.entity.Structure;
-import springapp.jokefactory.repository.BlockRepository;
+import springapp.jokefactory.repository.StructureBlockRepository;
 import springapp.jokefactory.repository.JokeRepository;
 import springapp.jokefactory.repository.StructureRepository;
 
@@ -34,7 +34,7 @@ public class StructureController {
     JokeRepository jokeRepository;
 
     @Autowired
-    BlockRepository blockRepository;
+    StructureBlockRepository structureBlockRepository;
 
     @GetMapping
     public Iterable<Structure> getStructures(){

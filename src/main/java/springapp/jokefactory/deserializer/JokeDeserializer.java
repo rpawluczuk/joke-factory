@@ -65,15 +65,6 @@ public class JokeDeserializer extends StdDeserializer<Joke> {
                 joke.setOrigin(null);
             }
         }
-
-//        long id = node.get("id").asLong();
-
-//        Optional<Joke> optionalEditedJoke = jokeRepository.findById(id);
-//        if (optionalEditedJoke.isPresent()) {
-//            joke = optionalEditedJoke.get();
-//            joke.setTitle(node.get("title").asText());
-//            return joke;
-//        }
         return joke;
     }
 }

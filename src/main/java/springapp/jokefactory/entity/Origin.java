@@ -1,19 +1,16 @@
 package springapp.jokefactory.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-import springapp.jokefactory.deserializer.OriginDeserializer;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.Set;
 
-@JsonDeserialize(using = OriginDeserializer.class)
 @Entity
 @Data
 public class Origin {

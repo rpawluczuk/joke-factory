@@ -1,7 +1,6 @@
 package springapp.jokefactory.entity;
 
 import java.sql.Timestamp;
-import java.util.List;
 import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -16,14 +15,11 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import springapp.jokefactory.deserializer.StructureDeserializer;
 
-@JsonDeserialize(using = StructureDeserializer.class)
 @Entity
 @Data
 public class Structure {
@@ -43,7 +39,7 @@ public class Structure {
     @EqualsAndHashCode.Exclude @ToString.Exclude
     @JsonIgnore
     @OneToMany(mappedBy = "structure", cascade = CascadeType.ALL)
-    private List<StructureBlock> structureBlockScheme;
+    private Set<StructureBlock> structureBlockScheme;
 
     @CreationTimestamp
     private Timestamp dateCreated;
@@ -99,11 +95,11 @@ public class Structure {
         this.description = description;
     }
 
-    public List<StructureBlock> getStructureBlockScheme() {
+    public Set<StructureBlock> getStructureBlockScheme() {
         return structureBlockScheme;
     }
 
-    public void setStructureBlockScheme(List<StructureBlock> structureBlockScheme) {
+    public void setStructureBlockScheme(Set<StructureBlock> structureBlockScheme) {
         this.structureBlockScheme = structureBlockScheme;
     }
 

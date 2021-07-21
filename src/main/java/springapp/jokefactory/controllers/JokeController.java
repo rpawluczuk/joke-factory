@@ -80,19 +80,12 @@ public class JokeController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public void addJoke(@RequestBody Joke joke){
-        System.out.println(joke.toString());
         jokeRepository.save(joke);
     }
 
-    @PutMapping(value = "/{id}")
-    public void editJoke(@PathVariable("id") Long id, @RequestBody Joke joke){
-        Joke jokeToUpdate = jokeRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Joke not found for this id :: " + id));
-        jokeToUpdate.setTitle(joke.getTitle());
-        jokeToUpdate.setContent(joke.getContent());
-        jokeToUpdate.setStructures(joke.getStructures());
-        jokeToUpdate.setAuthor(joke.getAuthor());
-        jokeToUpdate.setOrigin(joke.getOrigin());
-        jokeRepository.save(jokeToUpdate);
+    @PutMapping
+    public void editJoke(@RequestBody Joke joke){
+        jokeRepository.save(joke);
     }
 
     @DeleteMapping(value = "/{id}")

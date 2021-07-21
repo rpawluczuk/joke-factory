@@ -1,7 +1,8 @@
 package springapp.jokefactory.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -17,11 +18,11 @@ public class JokeBlock {
     private Long id;
 
     @ManyToOne
-    @JsonBackReference
+    @EqualsAndHashCode.Exclude @ToString.Exclude
     private StructureBlock structureBlock;
 
     @ManyToOne
-    @JsonBackReference
+    @EqualsAndHashCode.Exclude @ToString.Exclude
     private Joke joke;
 
     private String jokeSnippet;
