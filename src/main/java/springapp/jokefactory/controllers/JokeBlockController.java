@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import springapp.jokefactory.entity.JokeBlock;
+import springapp.jokefactory.entity.StructureBlock;
 import springapp.jokefactory.repository.JokeBlockRepository;
 
 import java.util.Optional;
@@ -24,6 +25,11 @@ public class JokeBlockController {
     @GetMapping(value = "/{id}")
     public Optional<JokeBlock> getJokeBlockById(@PathVariable("id") Long id){
         return jokeBlockRepository.findById(id);
+    }
+
+    @GetMapping(value = "with-joke/{joke_id}")
+    public Iterable<JokeBlock> getBlocksOfTheJoke(@PathVariable("joke_id") Long jokeID){
+        return jokeBlockRepository.findBlocksByJoke(jokeID);
     }
 
     @PostMapping
