@@ -3,6 +3,11 @@ create table joke_copy_for_test
 as
 select * from mydb.joke;
 
+drop table if exists mydb.joke_block_copy_for_test;
+create table joke_block_copy_for_test
+as
+select * from mydb.joke_block;
+
 drop table if exists mydb.structure_copy_for_test;
 create table structure_copy_for_test
 as

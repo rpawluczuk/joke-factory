@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import springapp.jokefactory.entity.Joke;
+import springapp.jokefactory.entity.JokeBlock;
 import springapp.jokefactory.entity.Structure;
 import springapp.jokefactory.repository.StructureBlockRepository;
 import springapp.jokefactory.repository.JokeRepository;
@@ -50,6 +51,11 @@ public class StructureController {
     public Optional<Structure> getLastStructure(){
         long id = structureRepository.findHighestID();
         return structureRepository.findById(id);
+    }
+
+    @GetMapping(value = "by-joke-id/{joke_id}")
+    public Iterable<Structure> getStructuresByJokeID(@PathVariable("joke_id") Long jokeID){
+        return structureRepository.findStructuresByJokeID(jokeID);
     }
 
     @PostMapping(consumes={"application/json"})

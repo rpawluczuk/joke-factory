@@ -31,7 +31,6 @@ public class StructureBlock {
     private String title;
     private String description;
     private int position;
-    private String blockType;
 
     @CreationTimestamp
     private Timestamp dateCreated;
@@ -72,14 +71,6 @@ public class StructureBlock {
 
     public void setPosition(int position) {
         this.position = position;
-    }
-
-    public String getBlockType() {
-        return blockType;
-    }
-
-    public void setBlockType(String blockType) {
-        this.blockType = blockType;
     }
 
     public Structure getStructure() {
