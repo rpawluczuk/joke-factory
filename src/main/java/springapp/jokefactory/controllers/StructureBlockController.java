@@ -1,10 +1,8 @@
 package springapp.jokefactory.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import springapp.jokefactory.entity.Joke;
 import springapp.jokefactory.entity.StructureBlock;
 import springapp.jokefactory.repository.StructureBlockRepository;
 import springapp.jokefactory.repository.StructureRepository;
@@ -34,7 +32,7 @@ public class StructureBlockController {
 
     @GetMapping(value = "with-structure/{structure_id}")
     public Iterable<StructureBlock> getBlocksOfTheStructure(@PathVariable("structure_id") Long structureID){
-        return structureBlockRepository.findBlocksByStructure(structureID);
+        return structureBlockRepository.findStructureBlocksByStructure(structureID);
     }
 
     @PostMapping

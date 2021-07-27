@@ -6,7 +6,9 @@ import org.springframework.web.bind.annotation.*;
 import springapp.jokefactory.entity.JokeBlock;
 import springapp.jokefactory.entity.StructureBlock;
 import springapp.jokefactory.repository.JokeBlockRepository;
+import springapp.jokefactory.repository.StructureBlockRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -16,6 +18,9 @@ public class JokeBlockController {
 
     @Autowired
     JokeBlockRepository jokeBlockRepository;
+
+    @Autowired
+    StructureBlockRepository structureBlockRepository;
 
     @GetMapping
     public Iterable<JokeBlock> getJokeBlocks(){
@@ -29,7 +34,18 @@ public class JokeBlockController {
 
     @GetMapping(value = "with-joke/{joke_id}")
     public Iterable<JokeBlock> getBlocksOfTheJoke(@PathVariable("joke_id") Long jokeID){
-        return jokeBlockRepository.findBlocksByJoke(jokeID);
+        List<JokeBlock> jokeBlocks = jokeBlockRepository.findBlocksByJoke(jokeID);
+        List<StructureBlock> structureBlocks = structureBlockRepository.findStructureBlocksByJoke(jokeID);
+        structureBlocks.forEach(structureBlock -> {
+            Optional<JokeBlock> result = jokeBlocks.stream().filter(jokeBlock ->
+                    jokeBlock.getStructureBlock().getId().equals(structureBlock.getId())).findAny();
+            if (!result.isPresent()){
+                JokeBlock newJokeBlock = new JokeBlock();
+                newJokeBlock.setStructureBlock(structureBlock);
+                jokeBlocks.add(newJokeBlock);
+            }
+        });
+        return jokeBlocks;
     }
 
     @PostMapping
