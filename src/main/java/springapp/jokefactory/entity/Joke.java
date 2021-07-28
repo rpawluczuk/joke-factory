@@ -36,11 +36,9 @@ public class Joke {
     private Set<Structure> structures;
 
     @ManyToOne
-//    @JsonManagedReference
     private Author author;
 
     @ManyToOne
-//    @JsonManagedReference
     private Origin origin;
 
     @EqualsAndHashCode.Exclude @ToString.Exclude

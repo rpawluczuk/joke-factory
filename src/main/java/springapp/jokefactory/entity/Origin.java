@@ -31,7 +31,7 @@ public class Origin {
     @JsonIdentityInfo(
             generator = ObjectIdGenerators.PropertyGenerator.class,
             property = "id")
-    @ManyToMany(cascade={CascadeType.ALL})
+    @ManyToMany(cascade={CascadeType.PERSIST})
     @JoinTable(name="ORIGIN_CONNECTION",
             joinColumns={@JoinColumn(name="PARENT_ORIGIN_ID")},
             inverseJoinColumns={@JoinColumn(name="CHILD_ORIGIN_ID")})
