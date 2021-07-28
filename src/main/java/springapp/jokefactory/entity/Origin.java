@@ -44,6 +44,7 @@ public class Origin {
     @ManyToMany(mappedBy="children")
     private Set<Origin> parents = new HashSet<Origin>();
 
+    @Column(unique=true)
     private String name;
 
     @CreationTimestamp
