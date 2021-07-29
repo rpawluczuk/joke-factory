@@ -1,19 +1,20 @@
 package springapp.jokefactory.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import springapp.jokefactory.serializer.OriginSerializer;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.HashSet;
 import java.util.Set;
 
+@JsonSerialize(using = OriginSerializer.class)
 @Entity
 @Data
 public class Origin {
@@ -27,20 +28,16 @@ public class Origin {
     @JsonBackReference
     private Set<Joke> jokes;
 
+
     @EqualsAndHashCode.Exclude @ToString.Exclude
-    @JsonIdentityInfo(
-            generator = ObjectIdGenerators.PropertyGenerator.class,
-            property = "id")
     @ManyToMany(cascade={CascadeType.PERSIST})
     @JoinTable(name="ORIGIN_CONNECTION",
             joinColumns={@JoinColumn(name="PARENT_ORIGIN_ID")},
             inverseJoinColumns={@JoinColumn(name="CHILD_ORIGIN_ID")})
     private Set<Origin> children = new HashSet<Origin>();
 
+    @JsonSerialize(using = OriginSerializer.class)
     @EqualsAndHashCode.Exclude @ToString.Exclude
-    @JsonIdentityInfo(
-            generator = ObjectIdGenerators.PropertyGenerator.class,
-            property = "id")
     @ManyToMany(mappedBy="children")
     private Set<Origin> parents = new HashSet<Origin>();
 
