@@ -10,9 +10,6 @@ import java.text.SimpleDateFormat;
 
 public class OriginSerializer extends StdSerializer<Origin> {
 
-    private final SimpleDateFormat formatter
-            = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
-
     public OriginSerializer() {
         this(null);
     }
@@ -30,9 +27,8 @@ public class OriginSerializer extends StdSerializer<Origin> {
 
         jsonGenerator.writeNumberField("id", origin.getId());
         jsonGenerator.writeStringField("name", origin.getName());
-        jsonGenerator.writeStringField("dateCreated", formatter.format(origin.getDateCreated()));
-        jsonGenerator.writeStringField("lastUpdated", formatter.format(origin.getLastUpdated()));
-
+        jsonGenerator.writeStringField("dateCreated", String.valueOf(origin.getDateCreated()));
+        jsonGenerator.writeStringField("lastUpdated", String.valueOf(origin.getLastUpdated()));
 
         //Iterate Set
         jsonGenerator.writeArrayFieldStart("children");
