@@ -6,33 +6,25 @@ import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import springapp.jokefactory.entity.Origin;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
+import java.util.Set;
 
-public class OriginSerializer extends StdSerializer<Origin> {
+public class ConnectedOriginsSerializer extends StdSerializer<Set<Origin>> {
 
-    public OriginSerializer() {
+    public ConnectedOriginsSerializer() {
         this(null);
     }
 
-    public OriginSerializer(Class<Origin> t) {
+    public ConnectedOriginsSerializer(Class<Set<Origin>> t) {
         super(t);
     }
 
     @Override
-    public void serialize(Origin origin,
+    public void serialize(Set<Origin> origin,
                           JsonGenerator jsonGenerator,
                           SerializerProvider serializerProvider) throws IOException {
 
-        jsonGenerator.writeStartObject();
-
-        jsonGenerator.writeNumberField("id", origin.getId());
-        jsonGenerator.writeStringField("name", origin.getName());
-        jsonGenerator.writeStringField("dateCreated", String.valueOf(origin.getDateCreated()));
-        jsonGenerator.writeStringField("lastUpdated", String.valueOf(origin.getLastUpdated()));
-
-        //Iterate Set
-        jsonGenerator.writeArrayFieldStart("children");
-        for(Origin childOrigin: origin.getChildren()) {
+        jsonGenerator.writeStartArray();
+        for(Origin childOrigin: origin) {
             jsonGenerator.writeStartObject();
             jsonGenerator.writeNumberField("id", childOrigin.getId());
             jsonGenerator.writeStringField("name", childOrigin.getName());
@@ -40,6 +32,5 @@ public class OriginSerializer extends StdSerializer<Origin> {
         }
         jsonGenerator.writeEndArray();
 
-        jsonGenerator.writeEndObject();
     }
 }
