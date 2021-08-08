@@ -3,7 +3,6 @@ package springapp.jokefactory.controllers;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -36,7 +35,8 @@ public class OriginController {
 
     @GetMapping
     public Iterable<Origin> getOrigins(){
-        return originRepository.findAll();
+        List<Origin> sth = originRepository.findAll();
+        return sth;
     }
 
     @GetMapping(value = "/{id}")
@@ -47,11 +47,11 @@ public class OriginController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public void addOrigin(@RequestBody Origin origin){
-        Set<Origin> preparedChildren = origin.getChildren().stream().map(connectedOrigin -> {
-            Optional<Origin> foundedOrigin = originRepository.findOriginByName(connectedOrigin.getName());
-            return foundedOrigin.orElse(connectedOrigin);
-        }).collect(Collectors.toSet());
-        origin.setChildren(preparedChildren);
+//        Set<Origin> preparedChildren = origin.getChildren().stream().map(connectedOrigin -> {
+//            Optional<Origin> foundedOrigin = originRepository.findOriginByName(connectedOrigin.getName());
+//            return foundedOrigin.orElse(connectedOrigin);
+//        }).collect(Collectors.toSet());
+//        origin.setChildren(preparedChildren);
         originRepository.save(origin);
     }
 
