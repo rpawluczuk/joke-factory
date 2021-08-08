@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import springapp.jokefactory.serializer.ConnectedOriginsSerializer;
 //import springapp.jokefactory.serializer.ConnectedOriginsSerializer;
 
 import javax.persistence.*;
@@ -42,15 +43,15 @@ public class Origin {
 //    @JsonBackReference
 //    private Set<OriginConnection> children;
 
+    @JsonSerialize(using = ConnectedOriginsSerializer.class)
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    @OneToMany(mappedBy = "originParent", cascade = CascadeType.MERGE)
-    @JsonBackReference
+    @OneToMany(mappedBy = "originChild", cascade = CascadeType.MERGE)
     private Set<OriginRelation> parents;
 
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    @OneToMany(mappedBy = "originChild", cascade = CascadeType.MERGE)
+    @OneToMany(mappedBy = "originParent", cascade = CascadeType.MERGE)
     @JsonBackReference
     private Set<OriginRelation> children;
 
