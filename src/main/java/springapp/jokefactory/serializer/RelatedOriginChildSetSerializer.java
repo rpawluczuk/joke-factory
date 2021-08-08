@@ -8,13 +8,13 @@ import springapp.jokefactory.entity.OriginRelation;
 import java.io.IOException;
 import java.util.Set;
 
-public class ConnectedOriginsSerializer extends StdSerializer<Set<OriginRelation>> {
+public class RelatedOriginChildSetSerializer extends StdSerializer<Set<OriginRelation>> {
 
-    public ConnectedOriginsSerializer() {
+    public RelatedOriginChildSetSerializer() {
         this(null);
     }
 
-    public ConnectedOriginsSerializer(Class<Set<OriginRelation>> t) {
+    public RelatedOriginChildSetSerializer(Class<Set<OriginRelation>> t) {
         super(t);
     }
 
@@ -26,8 +26,8 @@ public class ConnectedOriginsSerializer extends StdSerializer<Set<OriginRelation
         jsonGenerator.writeStartArray();
         for(OriginRelation originRelation: originRelationSet) {
             jsonGenerator.writeStartObject();
-            jsonGenerator.writeNumberField("id", originRelation.getOriginParent().getId());
-            jsonGenerator.writeStringField("name", originRelation.getOriginParent().getName());
+            jsonGenerator.writeNumberField("id", originRelation.getOriginChild().getId());
+            jsonGenerator.writeStringField("name", originRelation.getOriginChild().getName());
             jsonGenerator.writeEndObject();
         }
         jsonGenerator.writeEndArray();

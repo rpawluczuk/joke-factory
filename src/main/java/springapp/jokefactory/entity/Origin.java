@@ -1,17 +1,16 @@
 package springapp.jokefactory.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-import springapp.jokefactory.serializer.ConnectedOriginsSerializer;
+import springapp.jokefactory.serializer.RelatedOriginChildSetSerializer;
+import springapp.jokefactory.serializer.RelatedOriginParentSetSerializer;
 //import springapp.jokefactory.serializer.ConnectedOriginsSerializer;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
-import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -43,16 +42,16 @@ public class Origin {
 //    @JsonBackReference
 //    private Set<OriginConnection> children;
 
-    @JsonSerialize(using = ConnectedOriginsSerializer.class)
+    @JsonSerialize(using = RelatedOriginParentSetSerializer.class)
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     @OneToMany(mappedBy = "originChild", cascade = CascadeType.MERGE)
     private Set<OriginRelation> parents;
 
+    @JsonSerialize(using = RelatedOriginChildSetSerializer.class)
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     @OneToMany(mappedBy = "originParent", cascade = CascadeType.MERGE)
-    @JsonBackReference
     private Set<OriginRelation> children;
 
     @Column(unique = true)
