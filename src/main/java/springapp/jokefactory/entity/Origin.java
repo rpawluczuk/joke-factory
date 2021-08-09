@@ -66,4 +66,8 @@ public class Origin {
     public Origin(Set<Joke> jokes) {
         this.jokes = jokes;
     }
+
+    public Origin(OriginCreatorDTO originCreatorDTO) {
+        this.name = originCreatorDTO.getName();
+    }
 }

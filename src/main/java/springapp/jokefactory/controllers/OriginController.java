@@ -17,9 +17,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import springapp.jokefactory.entity.Joke;
-import springapp.jokefactory.entity.Origin;
+import springapp.jokefactory.entity.*;
 import springapp.jokefactory.repository.JokeRepository;
+import springapp.jokefactory.repository.OriginRelationRepository;
 import springapp.jokefactory.repository.OriginRepository;
 
 @RestController
@@ -31,12 +31,14 @@ public class OriginController {
     OriginRepository originRepository;
 
     @Autowired
+    OriginRelationRepository originRelationRepository;
+
+    @Autowired
     JokeRepository jokeRepository;
 
     @GetMapping
     public Iterable<Origin> getOrigins(){
-        List<Origin> sth = originRepository.findAll();
-        return sth;
+        return originRepository.findAll();
     }
 
     @GetMapping(value = "/{id}")
@@ -46,13 +48,13 @@ public class OriginController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void addOrigin(@RequestBody Origin origin){
-//        Set<Origin> preparedChildren = origin.getChildren().stream().map(connectedOrigin -> {
-//            Optional<Origin> foundedOrigin = originRepository.findOriginByName(connectedOrigin.getName());
-//            return foundedOrigin.orElse(connectedOrigin);
-//        }).collect(Collectors.toSet());
-//        origin.setChildren(preparedChildren);
-        originRepository.save(origin);
+    public void addOrigin(@RequestBody OriginCreatorDTO originCreatorDTO){
+        Origin originParent = originRepository.save(new Origin(originCreatorDTO));
+        originCreatorDTO.getChildren().forEach(originCreatorDTOChild -> {
+            Origin originChild = originRepository.findOriginByName(originCreatorDTOChild.getName())
+                    .orElseGet(() -> originRepository.save(new Origin(originCreatorDTOChild)));
+            originRelationRepository.save(new OriginRelation(originParent, originChild));
+        });
     }
 
     @PutMapping
