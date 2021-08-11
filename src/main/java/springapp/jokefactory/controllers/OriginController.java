@@ -6,16 +6,7 @@ import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import springapp.jokefactory.entity.*;
 import springapp.jokefactory.repository.JokeRepository;
@@ -58,8 +49,10 @@ public class OriginController {
     }
 
     @PutMapping
-    public void editOrigin(@RequestBody Origin origin){
-        originRepository.save(origin);
+    public void editOrigin(@RequestBody OriginCreatorDTO originCreatorDTO){
+        Origin originToEdit = originRepository.findById(originCreatorDTO.getId()).get();
+        originToEdit.setName(originCreatorDTO.getName());
+        originRepository.save(originToEdit);
     }
 
     @DeleteMapping(value = "/{id}")
@@ -71,5 +64,13 @@ public class OriginController {
             jokeRepository.save(joke);
         }
         originRepository.delete(originToDelete);
+    }
+
+    @DeleteMapping(value = "/remove-relation", params = {"origin-parent-id", "origin-child-id"})
+    public void deleteOriginRelation(@RequestParam("origin-parent-id") Long originParentId,
+                                     @RequestParam("origin-child-id")Long originChildId ){
+        OriginRelation originRelation = originRelationRepository
+                .findById(new OriginRelationKey(originParentId, originChildId)).get();
+        originRelationRepository.delete(originRelation);
     }
 }
