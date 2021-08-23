@@ -1,5 +1,6 @@
 package springapp.jokefactory.controllers;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -32,6 +33,19 @@ public class OriginController {
         return originRepository.findAll();
     }
 
+    @GetMapping(value = "/get-connected-origins", params = "origin-name")
+    public Iterable<Origin> getConnectedOrigins(@RequestParam("origin-name") String originName){
+        Origin origin = originRepository.findOriginByName(originName).get();
+        Set<Origin> connectedOrigins =  new HashSet<>();
+        origin.getChildren().forEach(originRelation -> {
+            connectedOrigins.add(originRelation.getOriginChild());
+        });
+        origin.getParents().forEach(originRelation -> {
+            connectedOrigins.add(originRelation.getOriginChild());
+        });
+        return connectedOrigins;
+    }
+
     @GetMapping(value = "/{id}")
     public Optional<Origin> getOriginById(@PathVariable("id") Long id){
         return originRepository.findById(id);
@@ -40,11 +54,17 @@ public class OriginController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public void addOrigin(@RequestBody OriginCreatorDTO originCreatorDTO){
-        Origin originParent = originRepository.save(new Origin(originCreatorDTO));
+        Origin origin = originRepository.findOriginByName(originCreatorDTO.getName())
+                .orElseGet(() -> originRepository.save(new Origin(originCreatorDTO)));
         originCreatorDTO.getChildren().forEach(originCreatorDTOChild -> {
             Origin originChild = originRepository.findOriginByName(originCreatorDTOChild.getName())
                     .orElseGet(() -> originRepository.save(new Origin(originCreatorDTOChild)));
-            originRelationRepository.save(new OriginRelation(originParent, originChild));
+            originRelationRepository.save(new OriginRelation(origin, originChild));
+        });
+        originCreatorDTO.getParents().forEach(originCreatorDTOParent -> {
+            Origin originParent = originRepository.findOriginByName(originCreatorDTOParent.getName())
+                    .orElseGet(() -> originRepository.save(new Origin(originCreatorDTOParent)));
+            originRelationRepository.save(new OriginRelation(originParent, origin));
         });
     }
 

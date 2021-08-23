@@ -23,9 +23,12 @@ import org.springframework.web.bind.annotation.RestController;
 import com.querydsl.core.types.Predicate;
 
 import springapp.jokefactory.entity.Joke;
+import springapp.jokefactory.entity.JokeCreatorDTO;
+import springapp.jokefactory.entity.Origin;
 import springapp.jokefactory.entity.Structure;
 import springapp.jokefactory.repository.AuthorRepository;
 import springapp.jokefactory.repository.JokeRepository;
+import springapp.jokefactory.repository.OriginRepository;
 import springapp.jokefactory.repository.StructureRepository;
 import springapp.jokefactory.utils.Pagination;
 
@@ -42,6 +45,9 @@ public class JokeController {
 
     @Autowired
     StructureRepository structureRepository;
+
+    @Autowired
+    OriginRepository originRepository;
 
     @Autowired
     Pagination pagination;
@@ -79,7 +85,14 @@ public class JokeController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void addJoke(@RequestBody Joke joke){
+    public void addJoke(@RequestBody JokeCreatorDTO jokeCreatorDTO){
+        Joke joke = new Joke(jokeCreatorDTO);
+        originRepository.findOriginByName(jokeCreatorDTO.getOrigin())
+                .ifPresent(joke::setOrigin);
+        originRepository.findOriginByName(jokeCreatorDTO.getComedyOrigin())
+                .ifPresent(joke::setComedyOrigin);
+        originRepository.findOriginByName(jokeCreatorDTO.getOstensibleOrigin())
+                .ifPresent(joke::setOstensibleOrigin);
         jokeRepository.save(joke);
     }
 

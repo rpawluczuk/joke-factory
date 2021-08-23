@@ -8,6 +8,7 @@ import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
@@ -41,6 +42,12 @@ public class Joke {
     @ManyToOne
     private Origin origin;
 
+    @ManyToOne
+    private Origin comedyOrigin;
+
+    @ManyToOne
+    private Origin ostensibleOrigin;
+
     @EqualsAndHashCode.Exclude @ToString.Exclude
     @JsonIgnore
     @OneToMany(mappedBy = "joke", cascade = CascadeType.ALL)
@@ -56,6 +63,14 @@ public class Joke {
     private Timestamp lastUpdated;
 
     public Joke() {
+    }
+
+    public Joke(JokeCreatorDTO jokeCreatorDTO) {
+        this.structures = jokeCreatorDTO.getStructures();
+        this.author = jokeCreatorDTO.getAuthor();
+        this.jokeBlocks = jokeCreatorDTO.getJokeBlocks();
+        this.title = jokeCreatorDTO.getTitle();
+        this.content = jokeCreatorDTO.getContent();
     }
 
     public Long getId() {
