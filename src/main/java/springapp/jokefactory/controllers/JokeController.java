@@ -97,7 +97,14 @@ public class JokeController {
     }
 
     @PutMapping
-    public void editJoke(@RequestBody Joke joke){
+    public void editJoke(@RequestBody JokeCreatorDTO jokeCreatorDTO){
+        Joke joke = new Joke(jokeCreatorDTO);
+        originRepository.findOriginByName(jokeCreatorDTO.getOrigin())
+                .ifPresent(joke::setOrigin);
+        originRepository.findOriginByName(jokeCreatorDTO.getComedyOrigin())
+                .ifPresent(joke::setComedyOrigin);
+        originRepository.findOriginByName(jokeCreatorDTO.getOstensibleOrigin())
+                .ifPresent(joke::setOstensibleOrigin);
         jokeRepository.save(joke);
     }
 

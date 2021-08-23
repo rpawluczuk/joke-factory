@@ -66,11 +66,13 @@ public class Joke {
     }
 
     public Joke(JokeCreatorDTO jokeCreatorDTO) {
+        this.id = jokeCreatorDTO.getId();
         this.structures = jokeCreatorDTO.getStructures();
         this.author = jokeCreatorDTO.getAuthor();
         this.jokeBlocks = jokeCreatorDTO.getJokeBlocks();
         this.title = jokeCreatorDTO.getTitle();
         this.content = jokeCreatorDTO.getContent();
+        this.dateCreated = jokeCreatorDTO.getDateCreated();
     }
 
     public Long getId() {
