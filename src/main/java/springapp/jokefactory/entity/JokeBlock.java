@@ -1,8 +1,6 @@
 package springapp.jokefactory.entity;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -11,7 +9,11 @@ import java.sql.Timestamp;
 
 @Entity(name = "joke_block")
 @Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class JokeBlock {
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

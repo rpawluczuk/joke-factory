@@ -3,13 +3,17 @@ package springapp.jokefactory.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import springapp.jokefactory.dto.JokeBlocksAndStructureDto;
 import springapp.jokefactory.entity.JokeBlock;
+import springapp.jokefactory.entity.Structure;
 import springapp.jokefactory.entity.StructureBlock;
 import springapp.jokefactory.repository.JokeBlockRepository;
 import springapp.jokefactory.repository.StructureBlockRepository;
+import springapp.jokefactory.repository.StructureRepository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/api/joke-blocks")
@@ -21,6 +25,9 @@ public class JokeBlockController {
 
     @Autowired
     StructureBlockRepository structureBlockRepository;
+
+    @Autowired
+    StructureRepository structureRepository;
 
     @GetMapping
     public Iterable<JokeBlock> getJokeBlocks(){
@@ -46,6 +53,13 @@ public class JokeBlockController {
             }
         });
         return jokeBlocks;
+    }
+
+    @GetMapping(params = "structureId")
+    public JokeBlocksAndStructureDto getJokeBlocksAndStructure(@RequestParam("structureId") Long structureId) {
+        Set<StructureBlock> structureBlocks = structureBlockRepository.findStructureBlocksByStructure_IdOrderByPosition(structureId);
+        Structure structure = structureRepository.findById(structureId).get();
+        return JokeBlocksAndStructureDto.create(structure, structureBlocks);
     }
 
     @PostMapping

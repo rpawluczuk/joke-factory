@@ -6,19 +6,14 @@ import java.util.Set;
 
 import javax.persistence.*;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-
 import lombok.Data;
-import springapp.jokefactory.deserializer.JokeDeserializer;
+import springapp.jokefactory.dto.JokeCreatorDTO;
 
 //@JsonDeserialize(using = JokeDeserializer.class)
 @Entity
@@ -69,7 +64,6 @@ public class Joke {
         this.id = jokeCreatorDTO.getId();
         this.structures = jokeCreatorDTO.getStructures();
         this.author = jokeCreatorDTO.getAuthor();
-        this.jokeBlocks = jokeCreatorDTO.getJokeBlocks();
         this.title = jokeCreatorDTO.getTitle();
         this.content = jokeCreatorDTO.getContent();
         this.dateCreated = jokeCreatorDTO.getDateCreated();

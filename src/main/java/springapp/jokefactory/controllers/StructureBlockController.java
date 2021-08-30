@@ -32,7 +32,7 @@ public class StructureBlockController {
 
     @GetMapping(value = "with-structure/{structure_id}")
     public Iterable<StructureBlock> getBlocksOfTheStructure(@PathVariable("structure_id") Long structureID){
-        return structureBlockRepository.findStructureBlocksByStructure(structureID);
+        return structureBlockRepository.findStructureBlocksByStructure_IdOrderByPosition(structureID);
     }
 
     @PostMapping

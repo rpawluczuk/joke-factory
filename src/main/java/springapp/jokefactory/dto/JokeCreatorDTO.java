@@ -1,7 +1,8 @@
-package springapp.jokefactory.entity;
+package springapp.jokefactory.dto;
 
 import lombok.Data;
-import org.hibernate.annotations.CreationTimestamp;
+import springapp.jokefactory.entity.Author;
+import springapp.jokefactory.entity.Structure;
 
 import java.sql.Timestamp;
 import java.util.List;
@@ -16,7 +17,7 @@ public class JokeCreatorDTO {
     private String origin;
     private String comedyOrigin;
     private String ostensibleOrigin;
-    private List<JokeBlock> jokeBlocks;
+    private List<JokeBlockDto> jokeBlocks;
     private String title;
     private String content;
     private Timestamp dateCreated;
