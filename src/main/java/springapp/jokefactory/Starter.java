@@ -4,10 +4,10 @@
 //import org.springframework.boot.CommandLineRunner;
 //import org.springframework.context.annotation.Scope;
 //import org.springframework.stereotype.Component;
-//import springapp.jokefactory.entity.Joke;
-//import springapp.jokefactory.entity.Structure;
-//import springapp.jokefactory.repository.JokeRepository;
-//import springapp.jokefactory.repository.StructureRepository;
+//import springapp.jokefactory.joke.Joke;
+//import springapp.jokefactory.structure.Structure;
+//import springapp.jokefactory.joke.JokeRepository;
+//import springapp.jokefactory.structure.StructureRepository;
 //
 //import javax.transaction.Transactional;
 //import java.util.HashSet;
