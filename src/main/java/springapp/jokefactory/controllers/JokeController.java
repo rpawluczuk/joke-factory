@@ -116,6 +116,21 @@ public class JokeController {
     @PutMapping
     public void editJoke(@RequestBody JokeCreatorDTO jokeCreatorDTO){
         Joke joke = new Joke(jokeCreatorDTO);
+        Set<Structure> structures= jokeCreatorDTO.getJokeBlocks().stream()
+                .map(JokeBlockDto::getStructureName)
+                .distinct()
+                .map(structureName ->  structureRepository.findFirstByName(structureName))
+                .collect(Collectors.toSet());
+        List<JokeBlock> jokeBlocks = jokeCreatorDTO.getJokeBlocks().stream().map(jokeBlockDto -> {
+            return JokeBlock.builder()
+                    .id(jokeBlockDto.getId())
+                    .structureBlock(structureBlockRepository.findById(jokeBlockDto.getStructureBlockId()).get())
+                    .joke(joke)
+                    .jokeSnippet(jokeBlockDto.getJokeSnippet())
+                    .build();
+        }).collect(Collectors.toList());
+        joke.setStructures(structures);
+        joke.setJokeBlocks(jokeBlocks);
         originRepository.findOriginByName(jokeCreatorDTO.getOrigin())
                 .ifPresent(joke::setOrigin);
         originRepository.findOriginByName(jokeCreatorDTO.getComedyOrigin())

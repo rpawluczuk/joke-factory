@@ -2,12 +2,17 @@ package springapp.jokefactory.dto;
 
 import lombok.Builder;
 import lombok.Data;
+import springapp.jokefactory.entity.JokeBlock;
 import springapp.jokefactory.entity.StructureBlock;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Data
 @Builder
 public class JokeBlockDto {
 
+    private long id;
     private String jokeSnippet;
     private String structureName;
     private String title;
@@ -24,5 +29,19 @@ public class JokeBlockDto {
                 .position(structureBlock.getPosition())
                 .structureBlockId(structureBlock.getId())
                 .build();
+    }
+
+    static List<JokeBlockDto> create(List<JokeBlock> jokeBlocks, String structureName) {
+        return jokeBlocks.stream().map(jokeBlock -> {
+            return JokeBlockDto.builder()
+                    .id(jokeBlock.getId())
+                    .jokeSnippet(jokeBlock.getJokeSnippet())
+                    .structureName(structureName)
+                    .title(jokeBlock.getStructureBlock().getTitle())
+                    .description(jokeBlock.getStructureBlock().getDescription())
+                    .position(jokeBlock.getStructureBlock().getPosition())
+                    .structureBlockId(jokeBlock.getStructureBlock().getId())
+                    .build();
+        }).collect(Collectors.toList());
     }
 }
