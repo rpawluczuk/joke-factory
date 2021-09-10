@@ -65,7 +65,6 @@ public class Joke {
 
     public Joke(JokeCreatorDTO jokeCreatorDTO) {
         this.id = jokeCreatorDTO.getId();
-        this.structures = jokeCreatorDTO.getStructures();
         this.author = jokeCreatorDTO.getAuthor();
         this.title = jokeCreatorDTO.getTitle();
         this.content = jokeCreatorDTO.getContent();

@@ -2,23 +2,20 @@ package springapp.jokefactory.joke;
 
 import lombok.Data;
 import springapp.jokefactory.author.Author;
-import springapp.jokefactory.joke.jokeblock.JokeBlockDto;
-import springapp.jokefactory.structure.Structure;
+import springapp.jokefactory.joke.jokeblock.JokeBlocksAndStructureDto;
 
 import java.sql.Timestamp;
 import java.util.List;
-import java.util.Set;
 
 @Data
 public class JokeCreatorDTO {
 
     private Long id;
-    private Set<Structure> structures;
     private Author author;
     private String origin;
     private String comedyOrigin;
     private String ostensibleOrigin;
-    private List<JokeBlockDto> jokeBlocks;
+    private List<JokeBlocksAndStructureDto> jokeBlocksWithStructureDtoList;
     private String title;
     private String content;
     private Timestamp dateCreated;

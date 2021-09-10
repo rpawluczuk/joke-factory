@@ -1,5 +1,6 @@
 package springapp.jokefactory.joke;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -27,6 +28,7 @@ import com.querydsl.core.types.Predicate;
 import springapp.jokefactory.author.AuthorRepository;
 import springapp.jokefactory.joke.jokeblock.JokeBlockDto;
 import springapp.jokefactory.joke.jokeblock.JokeBlock;
+import springapp.jokefactory.joke.jokeblock.JokeBlocksAndStructureDto;
 import springapp.jokefactory.origin.OriginRepository;
 import springapp.jokefactory.structure.Structure;
 import springapp.jokefactory.structure.StructureRepository;
@@ -91,12 +93,15 @@ public class JokeController {
     @ResponseStatus(HttpStatus.CREATED)
     public void addJoke(@RequestBody JokeCreatorDTO jokeCreatorDTO){
         Joke joke = new Joke(jokeCreatorDTO);
-        Set<Structure> structures= jokeCreatorDTO.getJokeBlocks().stream()
-                .map(JokeBlockDto::getStructureName)
+        Set<Structure> structures= jokeCreatorDTO.getJokeBlocksWithStructureDtoList().stream()
+                .map(JokeBlocksAndStructureDto::getStructureName)
                 .distinct()
                 .map(structureName ->  structureRepository.findFirstByName(structureName))
                 .collect(Collectors.toSet());
-        List<JokeBlock> jokeBlocks = jokeCreatorDTO.getJokeBlocks().stream().map(jokeBlockDto -> {
+        List<JokeBlock> jokeBlocks = jokeCreatorDTO.getJokeBlocksWithStructureDtoList().stream()
+                .map(JokeBlocksAndStructureDto::getJokeBlocksDto)
+                .flatMap(Collection::stream)
+                .map(jokeBlockDto -> {
             return JokeBlock.builder()
                     .structureBlock(structureBlockRepository.findById(jokeBlockDto.getStructureBlockId()).get())
                     .joke(joke)
@@ -117,12 +122,16 @@ public class JokeController {
     @PutMapping
     public void editJoke(@RequestBody JokeCreatorDTO jokeCreatorDTO){
         Joke joke = new Joke(jokeCreatorDTO);
-        Set<Structure> structures= jokeCreatorDTO.getJokeBlocks().stream()
-                .map(JokeBlockDto::getStructureName)
+        Set<Structure> structures = jokeCreatorDTO.getJokeBlocksWithStructureDtoList().stream()
+                .map(JokeBlocksAndStructureDto::getStructureName)
                 .distinct()
                 .map(structureName ->  structureRepository.findFirstByName(structureName))
                 .collect(Collectors.toSet());
-        List<JokeBlock> jokeBlocks = jokeCreatorDTO.getJokeBlocks().stream().map(jokeBlockDto -> {
+
+        List<JokeBlock> jokeBlocks = jokeCreatorDTO.getJokeBlocksWithStructureDtoList().stream()
+                .map(JokeBlocksAndStructureDto::getJokeBlocksDto)
+                .flatMap(Collection::stream)
+                .map(jokeBlockDto -> {
             return JokeBlock.builder()
                     .id(jokeBlockDto.getId())
                     .structureBlock(structureBlockRepository.findById(jokeBlockDto.getStructureBlockId()).get())
