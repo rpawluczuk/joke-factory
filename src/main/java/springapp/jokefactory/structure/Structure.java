@@ -11,18 +11,19 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
 import springapp.jokefactory.joke.Joke;
 import springapp.jokefactory.structure.structureblock.StructureBlock;
 
 @Entity
+@NoArgsConstructor
+@Builder
+@AllArgsConstructor
 @Data
 public class Structure {
 
@@ -48,9 +49,6 @@ public class Structure {
 
     @UpdateTimestamp
     private Timestamp lastUpdated;
-
-    public Structure() {
-    }
 
     public Structure(String name, String description) {
         this.name = name;

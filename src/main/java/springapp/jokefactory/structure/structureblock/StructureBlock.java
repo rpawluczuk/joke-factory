@@ -5,16 +5,17 @@ import java.util.List;
 import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import lombok.Data;
 import springapp.jokefactory.joke.jokeblock.JokeBlock;
 import springapp.jokefactory.structure.Structure;
 
 @Entity(name = "structure_block")
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Data
 public class StructureBlock {
 
@@ -39,9 +40,6 @@ public class StructureBlock {
 
     @UpdateTimestamp
     private Timestamp lastUpdated;
-
-    public StructureBlock() {
-    }
 
     public Long getId() {
         return id;

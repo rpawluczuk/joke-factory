@@ -2,6 +2,7 @@ package springapp.jokefactory.joke.jokeblock;
 
 import lombok.Builder;
 import lombok.Data;
+import org.mapstruct.factory.Mappers;
 import springapp.jokefactory.structure.Structure;
 import springapp.jokefactory.structure.structureblock.StructureBlock;
 
@@ -17,10 +18,11 @@ public class JokeBlocksAndStructureDto {
 
     String structureName;
     List<JokeBlockDto> jokeBlocksDto;
+    private static JokeBlockMapper jokeBlockMapper = Mappers.getMapper(JokeBlockMapper.class);
 
     public static JokeBlocksAndStructureDto create(Structure structure, Set<StructureBlock> structureBlocks) {
         List<JokeBlockDto> jokeBlockDtoList = structureBlocks.stream()
-                .map(structureBlock -> JokeBlockDto.create(structureBlock, structure.getName()))
+                .map(structureBlock -> jokeBlockMapper.structureBlockToJokeBlockDto(structureBlock))
                 .sorted(Comparator.comparingInt(JokeBlockDto::getPosition))
                 .collect(Collectors.toList());
 
@@ -35,10 +37,14 @@ public class JokeBlocksAndStructureDto {
                 .collect(Collectors.groupingBy(jokeBlock -> jokeBlock.getStructureBlock().getStructure()));
 
         return jokeBlockMap.entrySet().stream().map(entrySet -> {
-          return JokeBlocksAndStructureDto.builder()
-          .structureName(entrySet.getKey().getName())
-          .jokeBlocksDto(JokeBlockDto.create(entrySet.getValue(), entrySet.getKey().getName()))
-          .build();
+            List<JokeBlockDto> jokeBlocksDto = entrySet.getValue().stream()
+                    .map(jokeBlock -> jokeBlockMapper.jokeBlockToJokeBlockDto(jokeBlock))
+                    .collect(Collectors.toList());
+
+            return JokeBlocksAndStructureDto.builder()
+                    .structureName(entrySet.getKey().getName())
+                    .jokeBlocksDto(jokeBlocksDto)
+                    .build();
         }).collect(Collectors.toList());
     }
 }

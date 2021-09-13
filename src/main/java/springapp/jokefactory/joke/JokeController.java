@@ -6,6 +6,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -58,6 +59,8 @@ public class JokeController {
     @Autowired
     Pagination pagination;
 
+    private JokeMapper jokeMapper = Mappers.getMapper(JokeMapper.class);
+
     @GetMapping()
     public Iterable<Joke> getAllJokes(){
         PageRequest pageRequest = PageRequest.of(pagination.getCurrentPage(), pagination.getPageSize(),
@@ -92,7 +95,7 @@ public class JokeController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public void addJoke(@RequestBody JokeCreatorDTO jokeCreatorDTO){
-        Joke joke = new Joke(jokeCreatorDTO);
+        Joke joke = jokeMapper.mapJokeCreatorDtoToJoke(jokeCreatorDTO);
         Set<Structure> structures= jokeCreatorDTO.getJokeBlocksWithStructureDtoList().stream()
                 .map(JokeBlocksAndStructureDto::getStructureName)
                 .distinct()
@@ -121,7 +124,7 @@ public class JokeController {
 
     @PutMapping
     public void editJoke(@RequestBody JokeCreatorDTO jokeCreatorDTO){
-        Joke joke = new Joke(jokeCreatorDTO);
+        Joke joke = jokeMapper.mapJokeCreatorDtoToJoke(jokeCreatorDTO);
         Set<Structure> structures = jokeCreatorDTO.getJokeBlocksWithStructureDtoList().stream()
                 .map(JokeBlocksAndStructureDto::getStructureName)
                 .distinct()
