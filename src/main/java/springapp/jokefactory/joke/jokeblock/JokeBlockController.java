@@ -56,7 +56,7 @@ public class JokeBlockController {
 
     @GetMapping(params = "structureId")
     public JokeBlocksAndStructureDto getJokeBlocksAndStructure(@RequestParam("structureId") Long structureId) {
-        Set<StructureBlock> structureBlocks = structureBlockRepository.findStructureBlocksByStructure_IdOrderByPosition(structureId);
+        List<StructureBlock> structureBlocks = structureBlockRepository.findStructureBlocksByStructure_IdOrderByPosition(structureId);
         Structure structure = structureRepository.findById(structureId).get();
         List<JokeBlockDto> jokeBlockDtoList = structureBlocks.stream()
                 .map(jokeBlockMapper::structureBlockToJokeBlockDto)

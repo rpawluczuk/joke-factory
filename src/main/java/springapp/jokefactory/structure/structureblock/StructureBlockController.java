@@ -5,7 +5,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import springapp.jokefactory.structure.StructureRepository;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/blocks")
@@ -30,7 +34,16 @@ public class StructureBlockController {
 
     @GetMapping(value = "with-structure/{structure_id}")
     public Iterable<StructureBlock> getBlocksOfTheStructure(@PathVariable("structure_id") Long structureID){
-        return structureBlockRepository.findStructureBlocksByStructure_IdOrderByPosition(structureID);
+        List<StructureBlock> structureBlockList = structureBlockRepository.findStructureBlocksByStructure_IdOrderByPosition(structureID);
+        AtomicInteger position = new AtomicInteger();
+        structureBlockList = structureBlockList.stream().map(structureBlock -> {
+            if (structureBlock.getPosition() != position.get()) {
+                structureBlock.setPosition(position.get());
+            }
+            position.getAndIncrement();
+            return structureBlock;
+        }).collect(Collectors.toList());
+        return structureBlockList;
     }
 
     @PostMapping
@@ -40,8 +53,17 @@ public class StructureBlockController {
     }
 
     @PutMapping
-    public void editStructureBlock(@RequestBody StructureBlock structureBlock){
-        structureBlockRepository.save(structureBlock);
+    public void editStructureBlockList(@RequestBody List<StructureBlock> newStructureBlockList){
+        List<StructureBlock> oldStructureBlockList = newStructureBlockList.stream().findFirst()
+                .map(structureBlock -> structureBlockRepository.findStructureBlocksByStructure_IdOrderByPosition(structureBlock.getStructure().getId()))
+                .orElse(Collections.emptyList());
+        List<Long> newStructureBlockIdList = newStructureBlockList.stream().map(StructureBlock::getId).collect(Collectors.toList());
+        oldStructureBlockList.forEach(oldStructureBlock -> {
+            if (!newStructureBlockIdList.contains(oldStructureBlock.getId())) {
+                structureBlockRepository.delete(oldStructureBlock);
+            }
+        });
+        newStructureBlockList.forEach(structureBlock -> structureBlockRepository.save(structureBlock));
     }
 
     @DeleteMapping(value = "/{id}")
