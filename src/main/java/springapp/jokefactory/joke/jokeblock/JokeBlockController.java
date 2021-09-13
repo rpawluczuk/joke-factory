@@ -73,23 +73,21 @@ public class JokeBlockController {
     public List<JokeBlocksAndStructureDto> getExistingJokeBlocksAndStructure(@RequestParam("jokeId") Long jokeId) {
         List<Structure> structureList = structureRepository.findStructuresByJokeID(jokeId);
         List<JokeBlock> jokeBlocks = jokeBlockRepository.findBlocksByJoke(jokeId);
-        Map<Structure, List<JokeBlock>> jokeBlockMap = new HashMap<>();
+        HashMap<Structure, List<JokeBlockDto>> jokeBlockMap = new HashMap<>();
         structureList.forEach(structure -> {
-            List<JokeBlock> filteredJokeBlockList = jokeBlocks.stream()
+            List<JokeBlockDto> filteredJokeBlockDtoList = jokeBlocks.stream()
                     .filter(jokeBlock -> structure.equals(jokeBlock.getStructureBlock().getStructure()))
-                    .collect(Collectors.toList());
-            jokeBlockMap.put(structure, filteredJokeBlockList);
-        });
-        return jokeBlockMap.entrySet().stream().map(entrySet -> {
-            List<JokeBlockDto> jokeBlocksDto = entrySet.getValue().stream()
                     .map(jokeBlockMapper::jokeBlockToJokeBlockDto)
                     .collect(Collectors.toList());
-
-            return JokeBlocksAndStructureDto.builder()
-                    .structureName(entrySet.getKey().getName())
-                    .jokeBlocksDto(jokeBlocksDto)
-                    .build();
-        }).collect(Collectors.toList());
+            List<StructureBlock> structureBlockList = structureBlockRepository.findStructureBlocksByStructure_IdOrderByPosition(structure.getId());
+            if (filteredJokeBlockDtoList.isEmpty() && structureBlockList.size() > 0) {
+                filteredJokeBlockDtoList = structureBlockList.stream()
+                        .map(jokeBlockMapper::structureBlockToJokeBlockDto)
+                        .collect(Collectors.toList());
+            }
+            jokeBlockMap.put(structure, filteredJokeBlockDtoList);
+        });
+        return jokeBlockMapper.hashMapToJokeBlocksAndStructureDto(jokeBlockMap);
     }
 
     @PostMapping

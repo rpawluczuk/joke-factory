@@ -2,7 +2,12 @@ package springapp.jokefactory.joke.jokeblock;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import springapp.jokefactory.structure.Structure;
 import springapp.jokefactory.structure.structureblock.StructureBlock;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Mapper
 interface JokeBlockMapper {
@@ -18,4 +23,10 @@ interface JokeBlockMapper {
     @Mapping(target = "structureBlockId", source = "structureBlock.id")
     @Mapping(target = "id", ignore = true)
     JokeBlockDto structureBlockToJokeBlockDto(StructureBlock structureBlock);
+
+    default List<JokeBlocksAndStructureDto> hashMapToJokeBlocksAndStructureDto(HashMap<Structure, List<JokeBlockDto>> jokeBlockMap) {
+        return jokeBlockMap.entrySet().stream()
+                .map(entrySet -> new JokeBlocksAndStructureDto(entrySet.getKey().getName(), entrySet.getValue()))
+                .collect(Collectors.toList());
+    }
 }
