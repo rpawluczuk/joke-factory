@@ -1,19 +1,16 @@
 package springapp.jokefactory.joke.jokeblock;
 
+import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import springapp.jokefactory.joke.jokeblock.JokeBlocksAndStructureDto;
-import springapp.jokefactory.joke.jokeblock.JokeBlock;
 import springapp.jokefactory.structure.Structure;
-import springapp.jokefactory.structure.structureblock.StructureBlock;
-import springapp.jokefactory.joke.jokeblock.JokeBlockRepository;
-import springapp.jokefactory.structure.structureblock.StructureBlockRepository;
 import springapp.jokefactory.structure.StructureRepository;
+import springapp.jokefactory.structure.structureblock.StructureBlock;
+import springapp.jokefactory.structure.structureblock.StructureBlockRepository;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/joke-blocks")
@@ -28,6 +25,8 @@ public class JokeBlockController {
 
     @Autowired
     StructureRepository structureRepository;
+
+    private static final JokeBlockMapper jokeBlockMapper = Mappers.getMapper(JokeBlockMapper.class);
 
     @GetMapping
     public Iterable<JokeBlock> getJokeBlocks() {
@@ -59,14 +58,38 @@ public class JokeBlockController {
     public JokeBlocksAndStructureDto getJokeBlocksAndStructure(@RequestParam("structureId") Long structureId) {
         Set<StructureBlock> structureBlocks = structureBlockRepository.findStructureBlocksByStructure_IdOrderByPosition(structureId);
         Structure structure = structureRepository.findById(structureId).get();
-        return JokeBlocksAndStructureDto.create(structure, structureBlocks);
+        List<JokeBlockDto> jokeBlockDtoList = structureBlocks.stream()
+                .map(jokeBlockMapper::structureBlockToJokeBlockDto)
+                .sorted(Comparator.comparingInt(JokeBlockDto::getPosition))
+                .collect(Collectors.toList());
+
+        return JokeBlocksAndStructureDto.builder()
+                .structureName(structure.getName())
+                .jokeBlocksDto(jokeBlockDtoList)
+                .build();
     }
 
     @GetMapping(params = "jokeId")
     public List<JokeBlocksAndStructureDto> getExistingJokeBlocksAndStructure(@RequestParam("jokeId") Long jokeId) {
+        List<Structure> structureList = structureRepository.findStructuresByJokeID(jokeId);
         List<JokeBlock> jokeBlocks = jokeBlockRepository.findBlocksByJoke(jokeId);
+        Map<Structure, List<JokeBlock>> jokeBlockMap = new HashMap<>();
+        structureList.forEach(structure -> {
+            List<JokeBlock> filteredJokeBlockList = jokeBlocks.stream()
+                    .filter(jokeBlock -> structure.equals(jokeBlock.getStructureBlock().getStructure()))
+                    .collect(Collectors.toList());
+            jokeBlockMap.put(structure, filteredJokeBlockList);
+        });
+        return jokeBlockMap.entrySet().stream().map(entrySet -> {
+            List<JokeBlockDto> jokeBlocksDto = entrySet.getValue().stream()
+                    .map(jokeBlockMapper::jokeBlockToJokeBlockDto)
+                    .collect(Collectors.toList());
 
-        return JokeBlocksAndStructureDto.create(jokeBlocks);
+            return JokeBlocksAndStructureDto.builder()
+                    .structureName(entrySet.getKey().getName())
+                    .jokeBlocksDto(jokeBlocksDto)
+                    .build();
+        }).collect(Collectors.toList());
     }
 
     @PostMapping
