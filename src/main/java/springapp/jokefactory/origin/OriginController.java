@@ -49,25 +49,24 @@ public class OriginController {
     }
 
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
     public void addOrigin(@RequestBody OriginCreatorDTO originCreatorDTO){
         Origin origin = originRepository.findOriginByName(originCreatorDTO.getName())
-                .orElseGet(() -> originRepository.save(new Origin(originCreatorDTO)));
+                .orElseGet(() -> originRepository.save(new Origin(originCreatorDTO.getName())));
         originCreatorDTO.getChildren().forEach(originCreatorDTOChild -> {
-            Origin originChild = originRepository.findOriginByName(originCreatorDTOChild.getName())
+            Origin originChild = originRepository.findOriginByName(originCreatorDTOChild)
                     .orElseGet(() -> originRepository.save(new Origin(originCreatorDTOChild)));
             originRelationRepository.save(new OriginRelation(origin, originChild));
         });
-        originCreatorDTO.getParents().forEach(originCreatorDTOParent -> {
-            Origin originParent = originRepository.findOriginByName(originCreatorDTOParent.getName())
-                    .orElseGet(() -> originRepository.save(new Origin(originCreatorDTOParent)));
-            originRelationRepository.save(new OriginRelation(originParent, origin));
-        });
+//        originCreatorDTO.getParents().forEach(originCreatorDTOParent -> {
+//            Origin originParent = originRepository.findOriginByName(originCreatorDTOParent.getName())
+//                    .orElseGet(() -> originRepository.save(new Origin(originCreatorDTOParent)));
+//            originRelationRepository.save(new OriginRelation(originParent, origin));
+//        });
     }
 
     @PutMapping
     public void editOrigin(@RequestBody OriginCreatorDTO originCreatorDTO){
-        Origin originToEdit = originRepository.findById(originCreatorDTO.getId()).get();
+        Origin originToEdit = originRepository.findOriginByName(originCreatorDTO.getName()).get();
         originToEdit.setName(originCreatorDTO.getName());
         originRepository.save(originToEdit);
     }

@@ -66,7 +66,7 @@ public class Origin {
         this.jokes = jokes;
     }
 
-    public Origin(OriginCreatorDTO originCreatorDTO) {
-        this.name = originCreatorDTO.getName();
+    public Origin(String originCreatorDTO) {
+        this.name = originCreatorDTO;
     }
 }

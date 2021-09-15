@@ -2,13 +2,11 @@ package springapp.jokefactory.origin;
 
 import lombok.Data;
 
-import java.util.Set;
+import java.util.List;
 
 @Data
 public class OriginCreatorDTO {
 
-    private long id;
     private String name;
-    private Set<OriginCreatorDTO> children;
-    private Set<OriginCreatorDTO> parents;
+    private List<String> children;
 }
