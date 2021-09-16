@@ -25,4 +25,17 @@ public interface OriginMapper {
     }
 
     Origin mapOriginCreatorChildDtoToOrigin(OriginCreatorChildDto originCreatorChildDto);
+
+    @Mapping(target = "children", source = "connectedOriginList", qualifiedByName = "extractOriginNameList")
+    OriginPresenterDto mapOriginToOriginPresenterDto(Origin origin, List<Origin> connectedOriginList);
+
+    @Named("extractOriginNameList")
+    default List<String> extractOriginNameList(List<Origin> connectedOriginList) {
+        return connectedOriginList.stream()
+                .map(Origin::getName)
+                .collect(Collectors.toList());
+    }
+
+    OriginItemDto mapOriginToOriginListItemDto(Origin origin);
+
 }

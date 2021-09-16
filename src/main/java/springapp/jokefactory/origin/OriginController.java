@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import springapp.jokefactory.joke.Joke;
-import springapp.jokefactory.joke.JokeMapper;
 import springapp.jokefactory.joke.JokeRepository;
 
 @RestController
@@ -28,15 +27,31 @@ public class OriginController {
     private final OriginMapper originMapper = Mappers.getMapper(OriginMapper.class);
 
     @GetMapping
-    public Iterable<Origin> getOrigins(){
-        return originRepository.findAll();
+    public Iterable<OriginPresenterDto> getOrigins(){
+        List<Origin> originList = originRepository.findAll();
+        return originList.stream().map(origin -> {
+            List<Origin> connectedOriginList = getConnectedOrigins(origin);
+            return originMapper.mapOriginToOriginPresenterDto(origin, connectedOriginList);
+        }).collect(Collectors.toList());
     }
 
     @GetMapping(value = "/get-connected-origins", params = "origin-name")
     public Iterable<Origin> getConnectedOrigins(@RequestParam("origin-name") String originName){
         Origin origin = originRepository.findOriginByName(originName).get();
-        List<OriginRelation> originRelationListForChild = originRelationRepository.findOriginRelationsByOriginChild(origin).get();
-        Set<Origin> connectedOrigins = new HashSet<>();
+        return getConnectedOrigins(origin);
+    }
+
+    @GetMapping(value = "/list-items")
+    public Iterable<OriginItemDto> getOriginListItems(){
+        return originRepository.findAll().stream()
+                .map(originMapper::mapOriginToOriginListItemDto)
+                .collect(Collectors.toList());
+    }
+
+    private List<Origin> getConnectedOrigins(Origin origin) {
+        List<OriginRelation> originRelationListForChild = originRelationRepository.findOriginRelationsByOriginChild(origin)
+                .orElse(Collections.emptyList());
+        List<Origin> connectedOrigins = new ArrayList<>();
         origin.getChildren().forEach(originRelation -> {
             connectedOrigins.add(originRelation.getOriginChild());
         });
