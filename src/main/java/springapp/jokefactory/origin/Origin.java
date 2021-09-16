@@ -29,23 +29,11 @@ public class Origin {
     @JsonBackReference
     private Set<Joke> jokes;
 
-
-////    @JsonSerialize(using = ConnectedOriginsSerializer.class)
-//    @OneToMany(mappedBy = "parentOrigin", cascade={CascadeType.PERSIST})
-//    private Set<OriginConnection> parents;
-
-    //    @JsonSerialize(using = ConnectedOriginsSerializer.class)
+//    @JsonSerialize(using = RelatedOriginParentSetSerializer.class)
 //    @EqualsAndHashCode.Exclude
 //    @ToString.Exclude
-//    @OneToMany(mappedBy = "childOrigin", cascade = CascadeType.MERGE)
-//    @JsonBackReference
-//    private Set<OriginConnection> children;
-
-    @JsonSerialize(using = RelatedOriginParentSetSerializer.class)
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    @OneToMany(mappedBy = "originChild", cascade = CascadeType.MERGE)
-    private Set<OriginRelation> parents;
+//    @OneToMany(mappedBy = "originChild", cascade = CascadeType.MERGE)
+//    private Set<OriginRelation> parents;
 
     @JsonSerialize(using = RelatedOriginChildSetSerializer.class)
     @EqualsAndHashCode.Exclude

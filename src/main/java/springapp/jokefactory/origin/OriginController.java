@@ -1,14 +1,14 @@
 package springapp.jokefactory.origin;
 
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
+import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import springapp.jokefactory.joke.Joke;
+import springapp.jokefactory.joke.JokeMapper;
 import springapp.jokefactory.joke.JokeRepository;
 
 @RestController
@@ -25,6 +25,8 @@ public class OriginController {
     @Autowired
     JokeRepository jokeRepository;
 
+    private final OriginMapper originMapper = Mappers.getMapper(OriginMapper.class);
+
     @GetMapping
     public Iterable<Origin> getOrigins(){
         return originRepository.findAll();
@@ -33,12 +35,13 @@ public class OriginController {
     @GetMapping(value = "/get-connected-origins", params = "origin-name")
     public Iterable<Origin> getConnectedOrigins(@RequestParam("origin-name") String originName){
         Origin origin = originRepository.findOriginByName(originName).get();
-        Set<Origin> connectedOrigins =  new HashSet<>();
+        List<OriginRelation> originRelationListForChild = originRelationRepository.findOriginRelationsByOriginChild(origin).get();
+        Set<Origin> connectedOrigins = new HashSet<>();
         origin.getChildren().forEach(originRelation -> {
             connectedOrigins.add(originRelation.getOriginChild());
         });
-        origin.getParents().forEach(originRelation -> {
-            connectedOrigins.add(originRelation.getOriginChild());
+        originRelationListForChild.forEach(originRelation -> {
+            connectedOrigins.add(originRelation.getOriginParent());
         });
         return connectedOrigins;
     }
@@ -48,24 +51,42 @@ public class OriginController {
         return originRepository.findById(id);
     }
 
+    @GetMapping(params = "originCreatorName")
+    public Optional<OriginCreatorDto> getOriginCreatorDtoByName(@RequestParam("originCreatorName") String originCreatorName){
+        Origin origin = originRepository.findOriginByName(originCreatorName).get();
+        List<OriginRelation> originRelationListForChild = originRelationRepository.findOriginRelationsByOriginChild(origin).get();
+        List<Origin> connectedOrigins = new ArrayList<>();
+        origin.getChildren().forEach(originRelation -> {
+            connectedOrigins.add(originRelation.getOriginChild());
+        });
+        originRelationListForChild.forEach(originRelation -> {
+            connectedOrigins.add(originRelation.getOriginParent());
+        });
+        OriginCreatorDto originCreatorDTO = originMapper.mapOriginToOriginCreatorDto(origin, connectedOrigins);
+        return Optional.ofNullable(originCreatorDTO);
+    }
+
     @PostMapping
-    public void addOrigin(@RequestBody OriginCreatorDTO originCreatorDTO){
+    public void addOrigin(@RequestBody OriginCreatorDto originCreatorDTO){
         Origin origin = originRepository.findOriginByName(originCreatorDTO.getName())
                 .orElseGet(() -> originRepository.save(new Origin(originCreatorDTO.getName())));
         originCreatorDTO.getChildren().forEach(originCreatorDTOChild -> {
-            Origin originChild = originRepository.findOriginByName(originCreatorDTOChild)
-                    .orElseGet(() -> originRepository.save(new Origin(originCreatorDTOChild)));
+            Origin originChild = originRepository.findOriginByName(originCreatorDTOChild.getName())
+                    .orElseGet(() -> originRepository.save(new Origin(originCreatorDTOChild.getName())));
             originRelationRepository.save(new OriginRelation(origin, originChild));
         });
-//        originCreatorDTO.getParents().forEach(originCreatorDTOParent -> {
-//            Origin originParent = originRepository.findOriginByName(originCreatorDTOParent.getName())
-//                    .orElseGet(() -> originRepository.save(new Origin(originCreatorDTOParent)));
-//            originRelationRepository.save(new OriginRelation(originParent, origin));
-//        });
+    }
+
+    @PostMapping(value = "/add-origin-child")
+    public void addOriginChild(@RequestBody OriginCreatorChildDto originCreatorChildDto) {
+        Origin originParent = originRepository.findById(originCreatorChildDto.getParentId()).get();
+        Origin originChild = originRepository.findOriginByName(originCreatorChildDto.getName())
+                .orElseGet(() -> originRepository.save(originMapper.mapOriginCreatorChildDtoToOrigin(originCreatorChildDto)));
+        originRelationRepository.save(new OriginRelation(originParent, originChild));
     }
 
     @PutMapping
-    public void editOrigin(@RequestBody OriginCreatorDTO originCreatorDTO){
+    public void editOrigin(@RequestBody OriginCreatorDto originCreatorDTO){
         Origin originToEdit = originRepository.findOriginByName(originCreatorDTO.getName()).get();
         originToEdit.setName(originCreatorDTO.getName());
         originRepository.save(originToEdit);

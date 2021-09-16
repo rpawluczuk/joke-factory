@@ -5,8 +5,9 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class OriginCreatorDTO {
+public class OriginCreatorDto {
 
+    private Long id;
     private String name;
-    private List<String> children;
+    private List<OriginCreatorChildDto> children;
 }

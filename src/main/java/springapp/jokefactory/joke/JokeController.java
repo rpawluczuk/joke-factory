@@ -59,7 +59,7 @@ public class JokeController {
     @Autowired
     Pagination pagination;
 
-    private JokeMapper jokeMapper = Mappers.getMapper(JokeMapper.class);
+    private final JokeMapper jokeMapper = Mappers.getMapper(JokeMapper.class);
 
     @GetMapping()
     public Iterable<Joke> getAllJokes(){
