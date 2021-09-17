@@ -69,7 +69,8 @@ public class OriginController {
     @GetMapping(params = "originCreatorName")
     public Optional<OriginCreatorDto> getOriginCreatorDtoByName(@RequestParam("originCreatorName") String originCreatorName){
         Origin origin = originRepository.findOriginByName(originCreatorName).get();
-        List<OriginRelation> originRelationListForChild = originRelationRepository.findOriginRelationsByOriginChild(origin).get();
+        List<OriginRelation> originRelationListForChild = originRelationRepository.findOriginRelationsByOriginChild(origin)
+                .orElse(Collections.emptyList());
         List<Origin> connectedOrigins = new ArrayList<>();
         origin.getChildren().forEach(originRelation -> {
             connectedOrigins.add(originRelation.getOriginChild());
