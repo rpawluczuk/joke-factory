@@ -41,6 +41,14 @@ public class OriginController {
         return getConnectedOrigins(origin);
     }
 
+    @GetMapping(value = "/origin-creator-children", params = "origin-id")
+    public Iterable<OriginCreatorChildDto> getOriginCreatorChildList(@RequestParam("origin-id") Long id){
+        Origin origin = originRepository.findById(id).get();
+        return getConnectedOrigins(origin).stream()
+                .map(connectedOrigin -> originMapper.mapOriginToOriginCreatorChildDto(connectedOrigin, id))
+                .collect(Collectors.toList());
+    }
+
     @GetMapping(value = "/list-items")
     public Iterable<OriginItemDto> getOriginListItems(){
         return originRepository.findAll().stream()
