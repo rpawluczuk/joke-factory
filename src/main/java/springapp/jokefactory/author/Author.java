@@ -1,9 +1,7 @@
 package springapp.jokefactory.author;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import springapp.jokefactory.joke.Joke;
@@ -14,6 +12,9 @@ import java.util.Set;
 
 @Entity
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Author {
 
     @Id
@@ -34,9 +35,6 @@ public class Author {
 
     @UpdateTimestamp
     private Timestamp lastUpdated;
-
-    public Author() {
-    }
 
     public Author(String name, String surname, String description) {
         this.name = name;

@@ -15,8 +15,10 @@ import java.util.Set;
 @Entity
 @Getter
 @Setter
+@Builder
 @EqualsAndHashCode
 @RequiredArgsConstructor
+@AllArgsConstructor
 public class Origin {
 
     @Id
@@ -38,11 +40,15 @@ public class Origin {
     @OneToMany(mappedBy = "ostensibleOrigin", cascade = CascadeType.MERGE)
     private Set<Joke> jokesAsOstensibleContext;
 
-    @JsonSerialize(using = RelatedOriginChildSetSerializer.class)
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     @OneToMany(mappedBy = "originParent", cascade = CascadeType.MERGE)
     private Set<OriginRelation> children;
+
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    @OneToMany(mappedBy = "originChild", cascade = CascadeType.MERGE)
+    private Set<OriginRelation> parents;
 
     @Column(unique = true)
     private String name;

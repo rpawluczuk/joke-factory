@@ -7,12 +7,10 @@ import java.util.Set;
 import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import lombok.Data;
 import springapp.jokefactory.author.Author;
 import springapp.jokefactory.joke.jokeblock.JokeBlock;
 import springapp.jokefactory.origin.Origin;
@@ -21,6 +19,9 @@ import springapp.jokefactory.structure.Structure;
 //@JsonDeserialize(using = JokeDeserializer.class)
 @Entity
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Joke {
 
     @Id
@@ -59,9 +60,6 @@ public class Joke {
 
     @UpdateTimestamp
     private Timestamp lastUpdated;
-
-    public Joke() {
-    }
 
     public Long getId() {
         return id;

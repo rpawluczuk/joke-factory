@@ -30,18 +30,8 @@ public class OriginController {
     private final OriginMapper originMapper = Mappers.getMapper(OriginMapper.class);
 
     @GetMapping
-    public Iterable<OriginPresenterDto> getOrigins() {
-        List<Origin> originList = originRepository.findAll();
-        return originList.stream().map(origin -> {
-            List<Origin> connectedOriginList = getConnectedOrigins(origin);
-            return originMapper.mapOriginToOriginPresenterDto(origin, connectedOriginList);
-        }).collect(Collectors.toList());
-    }
-
-    @GetMapping(value = "/get-connected-origins", params = "origin-name")
-    public Iterable<Origin> getConnectedOrigins(@RequestParam("origin-name") String originName) {
-        Origin origin = originRepository.findOriginByName(originName).get();
-        return getConnectedOrigins(origin);
+    Iterable<OriginPresenterDto> getOriginPresenters() {
+        return originFacade.getOriginPresenters();
     }
 
     @GetMapping(value = "/origin-creator-children", params = "origin-id")

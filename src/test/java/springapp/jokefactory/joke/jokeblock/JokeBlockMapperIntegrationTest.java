@@ -2,8 +2,8 @@ package springapp.jokefactory.joke.jokeblock;
 
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
-import springapp.jokefactory.structure.Structure;
 import springapp.jokefactory.structure.structureblock.StructureBlock;
+import springapp.jokefactory.structure.structureblock.StructureBlockFactory;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -11,28 +11,19 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 public class JokeBlockMapperIntegrationTest {
 
     private final JokeBlockMapper jokeBlockMapper = Mappers.getMapper(JokeBlockMapper.class);
+    private final StructureBlockFactory structureBlockFactory = new StructureBlockFactory();
+    private final JokeBlockFactory jokeBlockFactory = new JokeBlockFactory();
 
     @Test
     public void givenJokeBlockToJokeBlockDTO_whenMaps_thenCorrect() {
-        Structure structure = Structure.builder()
-                .name("structure test name")
-                .build();
 
-        StructureBlock structureBlock = StructureBlock.builder()
-                .title("test title")
-                .description("test description")
-                .position(2)
-                .id(11L)
-                .structure(structure)
-                .build();
+        // given
+        JokeBlock jokeBlock = jokeBlockFactory.createJokeBlock(1);
 
-        JokeBlock jokeBlock = JokeBlock.builder()
-                .id(1L)
-                .jokeSnippet("test joke snippet")
-                .structureBlock(structureBlock)
-                .build();
+        // when
         JokeBlockDto jokeBlockDto = jokeBlockMapper.jokeBlockToJokeBlockDto(jokeBlock);
 
+        // then
         assertEquals(jokeBlock.getId(), jokeBlockDto.getId());
         assertEquals(jokeBlock.getJokeSnippet(), jokeBlockDto.getJokeSnippet());
         assertEquals(jokeBlock.getStructureBlock().getTitle(), jokeBlockDto.getTitle());
@@ -44,20 +35,14 @@ public class JokeBlockMapperIntegrationTest {
 
     @Test
     public void givenStructureBlockToJokeBlockDTO_whenMaps_thenCorrect() {
-        Structure structure = Structure.builder()
-                .name("structure test name")
-                .build();
 
-        StructureBlock structureBlock = StructureBlock.builder()
-                .title("test title")
-                .description("test description")
-                .position(2)
-                .id(11L)
-                .structure(structure)
-                .build();
+        // given
+        StructureBlock structureBlock = structureBlockFactory.createStructureBlock(1, 1);
 
+        // when
         JokeBlockDto jokeBlockDto = jokeBlockMapper.structureBlockToJokeBlockDto(structureBlock);
 
+        // then
         assertNull(jokeBlockDto.getJokeSnippet());
         assertEquals(structureBlock.getTitle(), jokeBlockDto.getTitle());
         assertEquals(structureBlock.getDescription(), jokeBlockDto.getDescription());

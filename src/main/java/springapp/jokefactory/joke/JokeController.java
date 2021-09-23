@@ -62,13 +62,15 @@ public class JokeController {
     private final JokeMapper jokeMapper = Mappers.getMapper(JokeMapper.class);
 
     @GetMapping()
-    public Iterable<Joke> getAllJokes(){
+    public Iterable<JokePresenterDto> getAllJokes(){
         PageRequest pageRequest = PageRequest.of(pagination.getCurrentPage(), pagination.getPageSize(),
                 Sort.Direction.DESC, "dateCreated");
         Page<Joke> pageJokes = jokeRepository.findAll(pageRequest);
         pagination.setTotalPages(pageJokes.getTotalPages());
         pagination.setTotalItems(pageJokes.getTotalElements());
-        return pageJokes.getContent();
+        return pageJokes.getContent().stream()
+                .map(jokeMapper::mapJokeToJokePresenterDto)
+                .collect(Collectors.toList());
     }
 
     @GetMapping(params = "query")

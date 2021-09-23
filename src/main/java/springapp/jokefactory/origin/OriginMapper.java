@@ -6,6 +6,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Mapper
@@ -26,11 +27,11 @@ public interface OriginMapper {
 
     Origin mapOriginCreatorChildDtoToOrigin(OriginCreatorChildDto originCreatorChildDto);
 
-    @Mapping(target = "children", source = "connectedOriginList", qualifiedByName = "extractOriginNameList")
-    OriginPresenterDto mapOriginToOriginPresenterDto(Origin origin, List<Origin> connectedOriginList);
+    @Mapping(target = "children", source = "connectedOriginSet", qualifiedByName = "extractOriginNameList")
+    OriginPresenterDto mapOriginToOriginPresenterDto(Origin origin, Set<Origin> connectedOriginSet);
 
     @Named("extractOriginNameList")
-    default List<String> extractOriginNameList(List<Origin> connectedOriginList) {
+    default List<String> extractOriginNameList(Set<Origin> connectedOriginList) {
         return connectedOriginList.stream()
                 .map(Origin::getName)
                 .collect(Collectors.toList());

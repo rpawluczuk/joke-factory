@@ -1,10 +1,14 @@
 package springapp.jokefactory.origin;
 
+import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import springapp.jokefactory.joke.JokeRepository;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class OriginFacade {
@@ -18,9 +22,20 @@ public class OriginFacade {
     @Autowired
     OriginRelationRepository originRelationRepository;
 
+    private final OriginMapper originMapper = Mappers.getMapper(OriginMapper.class);
+
     public Optional<Origin> getOriginById(Long id) {
         return originRepository.findById(id);
     }
+
+    public Iterable<OriginPresenterDto> getOriginPresenters() {
+        List<Origin> originList = originRepository.findAll();
+        return originList.stream().map(origin -> {
+            Set<Origin> connectedOriginList = originRepository.findAllConnectedOrigins(origin);
+            return originMapper.mapOriginToOriginPresenterDto(origin, connectedOriginList);
+        }).collect(Collectors.toList());
+    }
+
 
     public void deleteOrigin(Long id) {
         Origin originToDelete = originRepository.findById(id)
