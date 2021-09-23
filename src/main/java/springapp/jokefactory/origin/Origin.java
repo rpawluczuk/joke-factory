@@ -1,12 +1,9 @@
 package springapp.jokefactory.origin;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import springapp.jokefactory.joke.Joke;
-//import springapp.jokefactory.serializer.ConnectedOriginsSerializer;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -61,9 +58,5 @@ public class Origin {
 
     public Origin(Set<Joke> jokes) {
         this.jokes = jokes;
-    }
-
-    public Origin(String originCreatorDTO) {
-        this.name = originCreatorDTO;
     }
 }

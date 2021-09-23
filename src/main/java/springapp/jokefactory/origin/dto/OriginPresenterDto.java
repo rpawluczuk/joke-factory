@@ -1,4 +1,4 @@
-package springapp.jokefactory.origin;
+package springapp.jokefactory.origin.dto;
 
 import lombok.Data;
 
