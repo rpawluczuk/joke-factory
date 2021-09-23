@@ -6,4 +6,6 @@ import org.mapstruct.Mapper;
 public interface StructureMapper {
 
     StructurePresenterDto mapStructureToStructurePresenterDto(Structure structure);
+
+    StructureItemDto mapStructureToStructureItemDto(Structure structure);
 }

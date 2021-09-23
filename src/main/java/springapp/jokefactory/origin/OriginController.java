@@ -7,7 +7,6 @@ import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import springapp.jokefactory.joke.Joke;
 import springapp.jokefactory.joke.JokeRepository;
 
 @RestController
@@ -25,13 +24,13 @@ public class OriginController {
     JokeRepository jokeRepository;
 
     @Autowired
-    OriginFacade originFacade;
+    OriginService originService;
 
     private final OriginMapper originMapper = Mappers.getMapper(OriginMapper.class);
 
     @GetMapping
     Iterable<OriginPresenterDto> getOriginPresenters() {
-        return originFacade.getOriginPresenters();
+        return originService.getOriginPresenters();
     }
 
     @GetMapping(value = "/origin-creator-children", params = "origin-id")
@@ -45,7 +44,7 @@ public class OriginController {
     @GetMapping(value = "/list-items")
     public Iterable<OriginItemDto> getOriginListItems() {
         return originRepository.findAll().stream()
-                .map(originMapper::mapOriginToOriginListItemDto)
+                .map(originMapper::mapOriginToOriginItemDto)
                 .collect(Collectors.toList());
     }
 
@@ -64,7 +63,7 @@ public class OriginController {
 
     @GetMapping(value = "/{id}")
     Optional<Origin> getOriginById(@PathVariable("id") Long id) {
-        return originFacade.getOriginById(id);
+        return originService.getOriginById(id);
     }
 
     @GetMapping(params = "originCreatorName")
@@ -111,12 +110,12 @@ public class OriginController {
 
     @DeleteMapping(value = "/{id}")
     void deleteOrigin(@PathVariable("id") Long id) {
-        originFacade.deleteOrigin(id);
+        originService.deleteOrigin(id);
     }
 
     @DeleteMapping(value = "/remove-relation", params = {"origin-parent-id", "origin-child-id"})
     void deleteOriginRelation(@RequestParam("origin-parent-id") Long originParentId,
                               @RequestParam("origin-child-id") Long originChildId) {
-        originFacade.deleteOriginRelation(originParentId, originChildId);
+        originService.deleteOriginRelation(originParentId, originChildId);
     }
 }

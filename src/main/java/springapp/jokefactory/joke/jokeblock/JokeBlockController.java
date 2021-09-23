@@ -39,7 +39,7 @@ public class JokeBlockController {
     }
 
     @GetMapping(value = "with-joke/{joke_id}")
-    public Iterable<JokeBlock> getBlocksOfTheJoke(@PathVariable("joke_id") Long jokeID) {
+    public Iterable<JokeBlockDto> getBlocksOfTheJoke(@PathVariable("joke_id") Long jokeID) {
         List<JokeBlock> jokeBlocks = jokeBlockRepository.findBlocksByJoke(jokeID);
         List<StructureBlock> structureBlocks = structureBlockRepository.findStructureBlocksByJoke(jokeID);
         structureBlocks.forEach(structureBlock -> {
@@ -51,7 +51,9 @@ public class JokeBlockController {
                 jokeBlocks.add(newJokeBlock);
             }
         });
-        return jokeBlocks;
+        return jokeBlocks.stream()
+                .map(jokeBlockMapper::jokeBlockToJokeBlockDto)
+                .collect(Collectors.toList());
     }
 
     @GetMapping(params = "structureId")

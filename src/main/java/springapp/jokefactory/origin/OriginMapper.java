@@ -37,6 +37,6 @@ public interface OriginMapper {
                 .collect(Collectors.toList());
     }
 
-    OriginItemDto mapOriginToOriginListItemDto(Origin origin);
+    OriginItemDto mapOriginToOriginItemDto(Origin origin);
 
 }

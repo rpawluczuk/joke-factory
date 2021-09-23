@@ -2,7 +2,9 @@ package springapp.jokefactory.structure;
 
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
+import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -34,6 +36,8 @@ public class StructureController {
     @Autowired
     StructureBlockRepository structureBlockRepository;
 
+    private final StructureMapper structureMapper = Mappers.getMapper(StructureMapper.class);
+
     @GetMapping
     public Iterable<Structure> getStructures(){
         return structureRepository.findAll();
@@ -51,8 +55,10 @@ public class StructureController {
     }
 
     @GetMapping(value = "by-joke-id/{joke_id}")
-    public Iterable<Structure> getStructuresByJokeID(@PathVariable("joke_id") Long jokeID){
-        return structureRepository.findStructuresByJokeID(jokeID);
+    public Iterable<StructureItemDto> getStructuresByJokeID(@PathVariable("joke_id") Long jokeID){
+        return structureRepository.findStructuresByJokeID(jokeID).stream()
+                .map(structureMapper::mapStructureToStructureItemDto)
+                .collect(Collectors.toList());
     }
 
     @PostMapping(consumes={"application/json"})
