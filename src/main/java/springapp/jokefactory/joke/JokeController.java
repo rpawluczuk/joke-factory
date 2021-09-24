@@ -2,15 +2,11 @@ package springapp.jokefactory.joke;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.querydsl.binding.QuerydslPredicate;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -27,14 +23,12 @@ import org.springframework.web.bind.annotation.RestController;
 import com.querydsl.core.types.Predicate;
 
 import springapp.jokefactory.author.AuthorRepository;
-import springapp.jokefactory.joke.jokeblock.JokeBlockDto;
 import springapp.jokefactory.joke.jokeblock.JokeBlock;
 import springapp.jokefactory.joke.jokeblock.JokeBlocksAndStructureDto;
 import springapp.jokefactory.origin.OriginRepository;
 import springapp.jokefactory.structure.Structure;
 import springapp.jokefactory.structure.StructureRepository;
 import springapp.jokefactory.structure.structureblock.StructureBlockRepository;
-import springapp.jokefactory.utils.Pagination;
 
 @RestController
 @RequestMapping("/api/jokes")
@@ -57,51 +51,39 @@ public class JokeController {
     OriginRepository originRepository;
 
     @Autowired
-    Pagination pagination;
+    JokeService jokeService;
 
     private final JokeMapper jokeMapper = Mappers.getMapper(JokeMapper.class);
 
     @GetMapping()
-    public Iterable<JokePresenterDto> getAllJokes(){
-        PageRequest pageRequest = PageRequest.of(pagination.getCurrentPage(), pagination.getPageSize(),
-                Sort.Direction.DESC, "dateCreated");
-        Page<Joke> pageJokes = jokeRepository.findAll(pageRequest);
-        pagination.setTotalPages(pageJokes.getTotalPages());
-        pagination.setTotalItems(pageJokes.getTotalElements());
-        return pageJokes.getContent().stream()
-                .map(jokeMapper::mapJokeToJokePresenterDto)
-                .collect(Collectors.toList());
+    Iterable<JokePresenterDto> getJokePresenterList(){
+        return jokeService.getJokePresenterList();
     }
 
     @GetMapping(params = "query")
-    public Iterable<Joke> getFilteredJokes(@QuerydslPredicate(root = Joke.class) Predicate predicate){
-        PageRequest pageRequest = PageRequest.of(pagination.getCurrentPage(), pagination.getPageSize(),
-                Sort.Direction.DESC, "dateCreated");
-        Page<Joke>  pageJokes = jokeRepository.findAll(predicate, pageRequest);
-        pagination.setTotalPages(pageJokes.getTotalPages());
-        pagination.setTotalItems(pageJokes.getTotalElements());
-        return pageJokes.getContent();
+    Iterable<JokePresenterDto> getFilteredJokes(@QuerydslPredicate(root = Joke.class) Predicate predicate){
+        return jokeService.getFilteredJokePresenterList(predicate);
     }
 
     @GetMapping(value = "/{id}")
-    public Optional<Joke> getJokeById(@PathVariable("id") Long id){
-        return jokeRepository.findById(id);
+    JokeCreatorDto getJokeById(@PathVariable("id") Long id){
+        return jokeService.getJokeCreatorById(id);
     }
 
-    @GetMapping(value = "/last")
-    public Optional<Joke> getLastJoke(){
-        long id = jokeRepository.findHighestID();
-        return jokeRepository.findById(id);
-    }
+//    @GetMapping(value = "/last")
+//    public Optional<Joke> getLastJoke(){
+//        long id = jokeRepository.findHighestID();
+//        return jokeRepository.findById(id);
+//    }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void addJoke(@RequestBody JokeCreatorDTO jokeCreatorDTO){
+    public void addJoke(@RequestBody JokeCreatorDto jokeCreatorDTO){
         Joke joke = jokeMapper.mapJokeCreatorDtoToJoke(jokeCreatorDTO);
         Set<Structure> structures= jokeCreatorDTO.getJokeBlocksWithStructureDtoList().stream()
-                .map(JokeBlocksAndStructureDto::getStructureName)
+                .map(JokeBlocksAndStructureDto::getStructureItemDto)
                 .distinct()
-                .map(structureName ->  structureRepository.findFirstByName(structureName))
+                .map(structureItemDto ->  structureRepository.findFirstByName(structureItemDto.getText()))
                 .collect(Collectors.toSet());
         List<JokeBlock> jokeBlocks = jokeCreatorDTO.getJokeBlocksWithStructureDtoList().stream()
                 .map(JokeBlocksAndStructureDto::getJokeBlocksDto)
@@ -115,22 +97,28 @@ public class JokeController {
         }).collect(Collectors.toList());
         joke.setStructures(structures);
         joke.setJokeBlocks(jokeBlocks);
-        originRepository.findOriginByName(jokeCreatorDTO.getOrigin())
-                .ifPresent(joke::setOrigin);
-        originRepository.findOriginByName(jokeCreatorDTO.getComedyOrigin())
-                .ifPresent(joke::setComedyOrigin);
-        originRepository.findOriginByName(jokeCreatorDTO.getOstensibleOrigin())
-                .ifPresent(joke::setOstensibleOrigin);
+        if (jokeCreatorDTO.getOrigin() != null) {
+            originRepository.findOriginByName(jokeCreatorDTO.getOrigin().getName())
+                    .ifPresent(joke::setOrigin);
+        }
+        if (jokeCreatorDTO.getComedyOrigin() != null) {
+            originRepository.findOriginByName(jokeCreatorDTO.getComedyOrigin().getName())
+                    .ifPresent(joke::setComedyOrigin);
+        }
+        if (jokeCreatorDTO.getOstensibleOrigin() != null) {
+            originRepository.findOriginByName(jokeCreatorDTO.getOstensibleOrigin().getName())
+                    .ifPresent(joke::setOstensibleOrigin);
+        }
         jokeRepository.save(joke);
     }
 
     @PutMapping
-    public void editJoke(@RequestBody JokeCreatorDTO jokeCreatorDTO){
+    public void editJoke(@RequestBody JokeCreatorDto jokeCreatorDTO){
         Joke joke = jokeMapper.mapJokeCreatorDtoToJoke(jokeCreatorDTO);
         Set<Structure> structures = jokeCreatorDTO.getJokeBlocksWithStructureDtoList().stream()
-                .map(JokeBlocksAndStructureDto::getStructureName)
+                .map(JokeBlocksAndStructureDto::getStructureItemDto)
                 .distinct()
-                .map(structureName ->  structureRepository.findFirstByName(structureName))
+                .map(structureItemDto ->  structureRepository.findFirstByName(structureItemDto.getText()))
                 .collect(Collectors.toSet());
 
         List<JokeBlock> jokeBlocks = jokeCreatorDTO.getJokeBlocksWithStructureDtoList().stream()
@@ -146,11 +134,11 @@ public class JokeController {
         }).collect(Collectors.toList());
         joke.setStructures(structures);
         joke.setJokeBlocks(jokeBlocks);
-        originRepository.findOriginByName(jokeCreatorDTO.getOrigin())
+        originRepository.findOriginByName(jokeCreatorDTO.getOrigin().getName())
                 .ifPresent(joke::setOrigin);
-        originRepository.findOriginByName(jokeCreatorDTO.getComedyOrigin())
+        originRepository.findOriginByName(jokeCreatorDTO.getComedyOrigin().getName())
                 .ifPresent(joke::setComedyOrigin);
-        originRepository.findOriginByName(jokeCreatorDTO.getOstensibleOrigin())
+        originRepository.findOriginByName(jokeCreatorDTO.getOstensibleOrigin().getName())
                 .ifPresent(joke::setOstensibleOrigin);
         jokeRepository.save(joke);
     }

@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import springapp.jokefactory.structure.Structure;
+import springapp.jokefactory.structure.StructureMapper;
 import springapp.jokefactory.structure.StructureRepository;
 import springapp.jokefactory.structure.structureblock.StructureBlock;
 import springapp.jokefactory.structure.structureblock.StructureBlockRepository;
@@ -27,6 +28,7 @@ public class JokeBlockController {
     StructureRepository structureRepository;
 
     private static final JokeBlockMapper jokeBlockMapper = Mappers.getMapper(JokeBlockMapper.class);
+    private static final StructureMapper structureMapper = Mappers.getMapper(StructureMapper.class);
 
     @GetMapping
     public Iterable<JokeBlock> getJokeBlocks() {
@@ -66,7 +68,7 @@ public class JokeBlockController {
                 .collect(Collectors.toList());
 
         return JokeBlocksAndStructureDto.builder()
-                .structureName(structure.getName())
+                .structureItemDto(structureMapper.mapStructureToStructureItemDto(structure))
                 .jokeBlocksDto(jokeBlockDtoList)
                 .build();
     }

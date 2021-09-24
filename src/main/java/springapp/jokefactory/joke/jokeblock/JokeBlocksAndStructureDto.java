@@ -3,6 +3,7 @@ package springapp.jokefactory.joke.jokeblock;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import springapp.jokefactory.structure.StructureItemDto;
 
 import java.util.List;
 
@@ -11,6 +12,6 @@ import java.util.List;
 @Builder
 public class JokeBlocksAndStructureDto {
 
-    String structureName;
+    StructureItemDto structureItemDto;
     List<JokeBlockDto> jokeBlocksDto;
 }

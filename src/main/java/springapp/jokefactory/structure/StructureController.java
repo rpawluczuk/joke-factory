@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import springapp.jokefactory.joke.Joke;
+import springapp.jokefactory.origin.dto.OriginItemDto;
 import springapp.jokefactory.structure.structureblock.StructureBlockRepository;
 import springapp.jokefactory.joke.JokeRepository;
 
@@ -41,6 +42,13 @@ public class StructureController {
     @GetMapping
     public Iterable<Structure> getStructures(){
         return structureRepository.findAll();
+    }
+
+    @GetMapping(value = "/list-items")
+    Iterable<StructureItemDto> getStructureItemList() {
+        return structureRepository.findAll().stream()
+                .map(structureMapper::mapStructureToStructureItemDto)
+                .collect(Collectors.toList());
     }
 
     @GetMapping(value = "/{id}")

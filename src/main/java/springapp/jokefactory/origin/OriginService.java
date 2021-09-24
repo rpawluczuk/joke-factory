@@ -3,7 +3,6 @@ package springapp.jokefactory.origin;
 import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 import springapp.jokefactory.joke.JokeRepository;
 import springapp.jokefactory.origin.dto.OriginCreatorChildDto;
 import springapp.jokefactory.origin.dto.OriginCreatorDto;
