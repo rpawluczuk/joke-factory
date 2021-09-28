@@ -57,10 +57,10 @@ class OriginService {
     }
 
     void addOrigin(OriginCreatorDto originCreatorDTO) {
-        Origin origin = originRepository.findById(originCreatorDTO.getId())
+        Origin origin = originRepository.findOriginByName(originCreatorDTO.getName())
                 .orElseGet(() -> originRepository.save(originMapper.mapOriginCreatorDtoToOrigin(originCreatorDTO)));
         originCreatorDTO.getChildren().forEach(originCreatorDTOChild -> {
-            Origin originChild = originRepository.findById(originCreatorDTOChild.getId())
+            Origin originChild = originRepository.findOriginByName(originCreatorDTOChild.getName())
                     .orElseGet(() -> originRepository.save(originMapper.mapOriginCreatorChildDtoToOrigin(originCreatorDTOChild)));
             originRelationRepository.save(new OriginRelation(origin, originChild));
         });
@@ -69,7 +69,7 @@ class OriginService {
     void addOriginChild(OriginCreatorChildDto originCreatorChildDto) {
         Origin originParent = originRepository.findById(originCreatorChildDto.getParentId())
                 .orElseThrow(() -> new IllegalArgumentException("No origin found with id: " + originCreatorChildDto.getParentId()));
-        Origin originChild = originRepository.findById(originCreatorChildDto.getId())
+        Origin originChild = originRepository.findOriginByName(originCreatorChildDto.getName())
                 .orElseGet(() -> originRepository.save(originMapper.mapOriginCreatorChildDtoToOrigin(originCreatorChildDto)));
         originRelationRepository.save(new OriginRelation(originParent, originChild));
     }

@@ -134,12 +134,18 @@ public class JokeController {
         }).collect(Collectors.toList());
         joke.setStructures(structures);
         joke.setJokeBlocks(jokeBlocks);
-        originRepository.findOriginByName(jokeCreatorDTO.getOrigin().getName())
-                .ifPresent(joke::setOrigin);
-        originRepository.findOriginByName(jokeCreatorDTO.getComedyOrigin().getName())
-                .ifPresent(joke::setComedyOrigin);
-        originRepository.findOriginByName(jokeCreatorDTO.getOstensibleOrigin().getName())
-                .ifPresent(joke::setOstensibleOrigin);
+        if (jokeCreatorDTO.getOrigin() != null) {
+            originRepository.findOriginByName(jokeCreatorDTO.getOrigin().getName())
+                    .ifPresent(joke::setOrigin);
+        }
+        if (jokeCreatorDTO.getComedyOrigin() != null) {
+            originRepository.findOriginByName(jokeCreatorDTO.getComedyOrigin().getName())
+                    .ifPresent(joke::setComedyOrigin);
+        }
+        if (jokeCreatorDTO.getOstensibleOrigin() != null) {
+            originRepository.findOriginByName(jokeCreatorDTO.getOstensibleOrigin().getName())
+                    .ifPresent(joke::setOstensibleOrigin);
+        }
         jokeRepository.save(joke);
     }
 
