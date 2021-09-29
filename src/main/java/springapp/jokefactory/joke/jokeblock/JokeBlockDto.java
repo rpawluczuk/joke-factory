@@ -9,9 +9,9 @@ public class JokeBlockDto {
 
     private long id;
     private String jokeSnippet;
-    private String structureName;
     private String title;
     private String description;
     private int position;
+    private long structureId;
     private long structureBlockId;
 }

@@ -59,39 +59,12 @@ public class JokeBlockController {
     }
 
     @GetMapping(params = "structureId")
-    public JokeBlocksAndStructureDto getJokeBlocksAndStructure(@RequestParam("structureId") Long structureId) {
+    public List<JokeBlockDto> getJokeBlocksOfStructure(@RequestParam("structureId") Long structureId) {
         List<StructureBlock> structureBlocks = structureBlockRepository.findStructureBlocksByStructure_IdOrderByPosition(structureId);
-        Structure structure = structureRepository.findById(structureId).get();
-        List<JokeBlockDto> jokeBlockDtoList = structureBlocks.stream()
+        return structureBlocks.stream()
                 .map(jokeBlockMapper::structureBlockToJokeBlockDto)
                 .sorted(Comparator.comparingInt(JokeBlockDto::getPosition))
                 .collect(Collectors.toList());
-
-        return JokeBlocksAndStructureDto.builder()
-                .structureItemDto(structureMapper.mapStructureToStructureItemDto(structure))
-                .jokeBlocksDto(jokeBlockDtoList)
-                .build();
-    }
-
-    @GetMapping(params = "jokeId")
-    public List<JokeBlocksAndStructureDto> getExistingJokeBlocksAndStructure(@RequestParam("jokeId") Long jokeId) {
-        List<Structure> structureList = structureRepository.findStructuresByJokeID(jokeId);
-        List<JokeBlock> jokeBlocks = jokeBlockRepository.findBlocksByJoke(jokeId);
-        HashMap<Structure, List<JokeBlockDto>> jokeBlockMap = new HashMap<>();
-        structureList.forEach(structure -> {
-            List<JokeBlockDto> filteredJokeBlockDtoList = jokeBlocks.stream()
-                    .filter(jokeBlock -> structure.equals(jokeBlock.getStructureBlock().getStructure()))
-                    .map(jokeBlockMapper::jokeBlockToJokeBlockDto)
-                    .collect(Collectors.toList());
-            List<StructureBlock> structureBlockList = structureBlockRepository.findStructureBlocksByStructure_IdOrderByPosition(structure.getId());
-            if (filteredJokeBlockDtoList.isEmpty() && structureBlockList.size() > 0) {
-                filteredJokeBlockDtoList = structureBlockList.stream()
-                        .map(jokeBlockMapper::structureBlockToJokeBlockDto)
-                        .collect(Collectors.toList());
-            }
-            jokeBlockMap.put(structure, filteredJokeBlockDtoList);
-        });
-        return jokeBlockMapper.hashMapToJokeBlocksAndStructureDto(jokeBlockMap);
     }
 
     @PostMapping

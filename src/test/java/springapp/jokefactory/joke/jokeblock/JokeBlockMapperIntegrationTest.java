@@ -30,7 +30,7 @@ public class JokeBlockMapperIntegrationTest {
         assertEquals(jokeBlock.getStructureBlock().getDescription(), jokeBlockDto.getDescription());
         assertEquals(jokeBlock.getStructureBlock().getPosition(), jokeBlockDto.getPosition());
         assertEquals(jokeBlock.getStructureBlock().getId(), jokeBlockDto.getStructureBlockId());
-        assertEquals(jokeBlock.getStructureBlock().getStructure().getName(), jokeBlockDto.getStructureName());
+        assertEquals(jokeBlock.getStructureBlock().getStructure().getId(), jokeBlockDto.getStructureId());
     }
 
     @Test
@@ -48,6 +48,6 @@ public class JokeBlockMapperIntegrationTest {
         assertEquals(structureBlock.getDescription(), jokeBlockDto.getDescription());
         assertEquals(structureBlock.getPosition(), jokeBlockDto.getPosition());
         assertEquals(structureBlock.getId(), jokeBlockDto.getStructureBlockId());
-        assertEquals(structureBlock.getStructure().getName(), jokeBlockDto.getStructureName());
+        assertEquals(structureBlock.getStructure().getId(), jokeBlockDto.getStructureId());
     }
 }
