@@ -26,68 +26,44 @@ import springapp.jokefactory.joke.JokeRepository;
 @RestController
 @RequestMapping("/api/structures")
 @CrossOrigin("http://localhost:4200")
-public class StructureController {
+class StructureController {
 
     @Autowired
-    StructureRepository structureRepository;
-
-    @Autowired
-    JokeRepository jokeRepository;
-
-    @Autowired
-    StructureBlockRepository structureBlockRepository;
-
-    private final StructureMapper structureMapper = Mappers.getMapper(StructureMapper.class);
+    StructureService structureService;
 
     @GetMapping
-    public Iterable<Structure> getStructures(){
-        return structureRepository.findAll();
+    Iterable<StructurePresenterDto> getStructurePresenterList(){
+        return structureService.getStructurePresenterList();
     }
 
     @GetMapping(value = "/list-items")
     Iterable<StructureItemDto> getStructureItemList() {
-        return structureRepository.findAll().stream()
-                .map(structureMapper::mapStructureToStructureItemDto)
-                .collect(Collectors.toList());
+        return structureService.getStructureItemList();
     }
 
     @GetMapping(value = "/{id}")
-    public Optional<Structure> getStructureById(@PathVariable("id") Long id){
-        return structureRepository.findById(id);
-    }
-
-    @GetMapping(value = "/last")
-    public Optional<Structure> getLastStructure(){
-        long id = structureRepository.findHighestID();
-        return structureRepository.findById(id);
+    StructureCreatorDto getStructureCreatorDto(@PathVariable("id") Long id){
+        return structureService.getStructureCreatorDto(id);
     }
 
     @GetMapping(value = "by-joke-id/{joke_id}")
-    public Iterable<StructureItemDto> getStructuresByJokeID(@PathVariable("joke_id") Long jokeID){
-        return structureRepository.findStructuresByJokeID(jokeID).stream()
-                .map(structureMapper::mapStructureToStructureItemDto)
-                .collect(Collectors.toList());
+    Iterable<StructureItemDto> getStructuresByJokeID(@PathVariable("joke_id") Long jokeID){
+        return structureService.getStructureItemListByJokeID(jokeID);
     }
 
     @PostMapping(consumes={"application/json"})
     @ResponseStatus(HttpStatus.CREATED)
-    public void addStructure(@RequestBody Structure structure){
-        structureRepository.save(structure);
+    void addStructure(@RequestBody StructureCreatorDto structureCreatorDto){
+        structureService.addStructure(structureCreatorDto);
     }
 
     @PutMapping
-    public void editStructure(@RequestBody Structure structure){
-        structureRepository.save(structure);
+    void editStructure(@RequestBody StructureCreatorDto structureCreatorDto){
+        structureService.editStructure(structureCreatorDto);
     }
 
     @DeleteMapping(value = "/{id}")
-    public void deleteStructure(@PathVariable("id") Long id){
-        Structure structureToDelete = structureRepository.findById(id).get();
-        Set<Joke> jokes = structureToDelete.getJokes();
-        for (Joke joke : jokes) {
-            joke.getStructures().remove(structureToDelete);
-            jokeRepository.save(joke);
-        }
-        structureRepository.delete(structureToDelete);
+    void deleteStructure(@PathVariable("id") Long id){
+        structureService.deleteStructure(id);
     }
 }

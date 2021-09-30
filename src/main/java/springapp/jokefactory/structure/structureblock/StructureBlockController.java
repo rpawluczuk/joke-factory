@@ -1,5 +1,6 @@
 package springapp.jokefactory.structure.structureblock;
 
+import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -21,6 +22,8 @@ public class StructureBlockController {
 
     @Autowired
     StructureRepository structureRepository;
+
+    private final StructureBlockMapper structureBlockMapper = Mappers.getMapper(StructureBlockMapper.class);
 
     @GetMapping
     public Iterable<StructureBlock> getStructureBlocks(){
@@ -44,6 +47,14 @@ public class StructureBlockController {
             return structureBlock;
         }).collect(Collectors.toList());
         return structureBlockList;
+    }
+
+    @GetMapping(value = "/presenter-list/{structure_id}")
+    public Iterable<StructureBlockPresenterDto> getStructureBlockPresenterList(@PathVariable("structure_id") Long structureId){
+        List<StructureBlock> structureBlockList = structureBlockRepository.findStructureBlocksByStructure_IdOrderByPosition(structureId);
+        return structureBlockList.stream()
+                .map(structureBlockMapper::mapStructureBlockToStructureBlockPresenterDto)
+                .collect(Collectors.toList());
     }
 
     @PostMapping
