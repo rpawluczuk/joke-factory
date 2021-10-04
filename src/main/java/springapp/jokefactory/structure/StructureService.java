@@ -3,12 +3,11 @@ package springapp.jokefactory.structure;
 import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
 import springapp.jokefactory.joke.Joke;
 import springapp.jokefactory.joke.JokeRepository;
-import springapp.jokefactory.structure.structureblock.StructureBlock;
-import springapp.jokefactory.structure.structureblock.StructureBlockMapper;
-import springapp.jokefactory.structure.structureblock.StructureBlockRepository;
+import springapp.jokefactory.structureblock.StructureBlock;
+import springapp.jokefactory.structureblock.StructureBlockMapper;
+import springapp.jokefactory.structureblock.StructureBlockRepository;
 
 import java.util.List;
 import java.util.Set;

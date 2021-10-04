@@ -1,7 +1,6 @@
 package springapp.jokefactory.jokeblock;
 
-import springapp.jokefactory.jokeblock.JokeBlock;
-import springapp.jokefactory.structure.structureblock.StructureBlockFactory;
+import springapp.jokefactory.structureblock.StructureBlockFactory;
 
 import java.util.List;
 import java.util.stream.Collectors;

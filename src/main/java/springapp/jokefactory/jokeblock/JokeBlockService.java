@@ -4,8 +4,8 @@ import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import springapp.jokefactory.structure.StructureRepository;
-import springapp.jokefactory.structure.structureblock.StructureBlock;
-import springapp.jokefactory.structure.structureblock.StructureBlockRepository;
+import springapp.jokefactory.structureblock.StructureBlock;
+import springapp.jokefactory.structureblock.StructureBlockRepository;
 
 import java.util.Comparator;
 import java.util.List;

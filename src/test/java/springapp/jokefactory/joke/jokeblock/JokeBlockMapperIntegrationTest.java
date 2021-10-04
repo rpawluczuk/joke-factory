@@ -6,8 +6,8 @@ import springapp.jokefactory.jokeblock.JokeBlock;
 import springapp.jokefactory.jokeblock.JokeBlockCreatorDto;
 import springapp.jokefactory.jokeblock.JokeBlockFactory;
 import springapp.jokefactory.jokeblock.JokeBlockMapper;
-import springapp.jokefactory.structure.structureblock.StructureBlock;
-import springapp.jokefactory.structure.structureblock.StructureBlockFactory;
+import springapp.jokefactory.structureblock.StructureBlock;
+import springapp.jokefactory.structureblock.StructureBlockFactory;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;

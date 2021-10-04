@@ -1,4 +1,4 @@
-package springapp.jokefactory.structure.structureblock;
+package springapp.jokefactory.structureblock.dto;
 
 import lombok.Data;
 

@@ -1,7 +1,7 @@
 package springapp.jokefactory.structure;
 
 import lombok.Data;
-import springapp.jokefactory.structure.structureblock.StructureBlockCreatorDto;
+import springapp.jokefactory.structureblock.dto.StructureBlockCreatorDto;
 
 import java.util.List;
 

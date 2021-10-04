@@ -2,7 +2,7 @@ package springapp.jokefactory.jokeblock;
 
 import lombok.Builder;
 import lombok.Data;
-import springapp.jokefactory.structure.structureblock.StructureBlockPresenterDto;
+import springapp.jokefactory.structureblock.dto.StructureBlockPresenterDto;
 
 @Data
 @Builder

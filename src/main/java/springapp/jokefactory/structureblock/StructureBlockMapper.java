@@ -1,8 +1,10 @@
-package springapp.jokefactory.structure.structureblock;
+package springapp.jokefactory.structureblock;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import springapp.jokefactory.structure.Structure;
+import springapp.jokefactory.structureblock.dto.StructureBlockCreatorDto;
+import springapp.jokefactory.structureblock.dto.StructureBlockPresenterDto;
 
 @Mapper
 public interface StructureBlockMapper {
@@ -11,6 +13,8 @@ public interface StructureBlockMapper {
     @Mapping(target = "description", source = "structureBlockCreatorDto.description")
     @Mapping(target = "structure", source = "structure")
     StructureBlock mapStructureBlockCreatorDtoToStructureBlock(StructureBlockCreatorDto structureBlockCreatorDto, Structure structure);
+
+    StructureBlockCreatorDto mapStructureBlockToStructureBlockCreatorDto(StructureBlock structureBlock);
 
     StructureBlockPresenterDto mapStructureBlockToStructureBlockPresenterDto(StructureBlock structureBlock);
 

@@ -18,7 +18,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import springapp.jokefactory.joke.Joke;
-import springapp.jokefactory.structure.structureblock.StructureBlock;
+import springapp.jokefactory.structureblock.StructureBlock;
 
 @Entity
 @NoArgsConstructor

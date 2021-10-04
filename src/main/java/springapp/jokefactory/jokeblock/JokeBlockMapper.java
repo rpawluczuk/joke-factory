@@ -5,9 +5,9 @@ import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 import org.mapstruct.factory.Mappers;
 import springapp.jokefactory.joke.Joke;
-import springapp.jokefactory.structure.structureblock.StructureBlock;
-import springapp.jokefactory.structure.structureblock.StructureBlockMapper;
-import springapp.jokefactory.structure.structureblock.StructureBlockPresenterDto;
+import springapp.jokefactory.structureblock.StructureBlock;
+import springapp.jokefactory.structureblock.StructureBlockMapper;
+import springapp.jokefactory.structureblock.dto.StructureBlockPresenterDto;
 
 @Mapper
 public

@@ -1,12 +1,9 @@
-package springapp.jokefactory.structure.structureblock;
+package springapp.jokefactory.structureblock;
 
 import java.util.List;
-import java.util.Set;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-
-import springapp.jokefactory.structure.structureblock.StructureBlock;
 
 public interface StructureBlockRepository extends JpaRepository<StructureBlock, Long> {
 

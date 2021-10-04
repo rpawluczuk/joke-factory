@@ -13,8 +13,8 @@ import springapp.jokefactory.jokeblock.JokeBlockRepository;
 import springapp.jokefactory.origin.OriginRepository;
 import springapp.jokefactory.structure.Structure;
 import springapp.jokefactory.structure.StructureRepository;
-import springapp.jokefactory.structure.structureblock.StructureBlock;
-import springapp.jokefactory.structure.structureblock.StructureBlockRepository;
+import springapp.jokefactory.structureblock.StructureBlock;
+import springapp.jokefactory.structureblock.StructureBlockRepository;
 import springapp.jokefactory.utils.Pagination;
 
 import java.util.List;
