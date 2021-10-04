@@ -2,7 +2,7 @@ package springapp.jokefactory.joke;
 
 import com.google.common.collect.Sets;
 import springapp.jokefactory.author.AuthorFactory;
-import springapp.jokefactory.joke.jokeblock.JokeBlockFactory;
+import springapp.jokefactory.jokeblock.JokeBlockFactory;
 import springapp.jokefactory.origin.OriginFactory;
 import springapp.jokefactory.structure.StructureFactory;
 

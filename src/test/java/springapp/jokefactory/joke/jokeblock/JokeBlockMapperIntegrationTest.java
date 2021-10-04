@@ -2,6 +2,10 @@ package springapp.jokefactory.joke.jokeblock;
 
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
+import springapp.jokefactory.jokeblock.JokeBlock;
+import springapp.jokefactory.jokeblock.JokeBlockCreatorDto;
+import springapp.jokefactory.jokeblock.JokeBlockFactory;
+import springapp.jokefactory.jokeblock.JokeBlockMapper;
 import springapp.jokefactory.structure.structureblock.StructureBlock;
 import springapp.jokefactory.structure.structureblock.StructureBlockFactory;
 
@@ -21,16 +25,16 @@ public class JokeBlockMapperIntegrationTest {
         JokeBlock jokeBlock = jokeBlockFactory.createJokeBlock(1);
 
         // when
-        JokeBlockDto jokeBlockDto = jokeBlockMapper.jokeBlockToJokeBlockDto(jokeBlock);
+        JokeBlockCreatorDto jokeBlockCreatorDto = jokeBlockMapper.jokeBlockToJokeBlockCreatorDto(jokeBlock);
 
         // then
-        assertEquals(jokeBlock.getId(), jokeBlockDto.getId());
-        assertEquals(jokeBlock.getJokeSnippet(), jokeBlockDto.getJokeSnippet());
-        assertEquals(jokeBlock.getStructureBlock().getTitle(), jokeBlockDto.getTitle());
-        assertEquals(jokeBlock.getStructureBlock().getDescription(), jokeBlockDto.getDescription());
-        assertEquals(jokeBlock.getStructureBlock().getPosition(), jokeBlockDto.getPosition());
-        assertEquals(jokeBlock.getStructureBlock().getId(), jokeBlockDto.getStructureBlockId());
-        assertEquals(jokeBlock.getStructureBlock().getStructure().getId(), jokeBlockDto.getStructureId());
+        assertEquals(jokeBlock.getId(), jokeBlockCreatorDto.getId());
+        assertEquals(jokeBlock.getJokeSnippet(), jokeBlockCreatorDto.getJokeSnippet());
+        assertEquals(jokeBlock.getStructureBlock().getTitle(), jokeBlockCreatorDto.getStructureBlockPresenterDto().getTitle());
+        assertEquals(jokeBlock.getStructureBlock().getDescription(), jokeBlockCreatorDto.getStructureBlockPresenterDto().getDescription());
+        assertEquals(jokeBlock.getStructureBlock().getPosition(), jokeBlockCreatorDto.getPosition());
+        assertEquals(jokeBlock.getStructureBlock().getId(), jokeBlockCreatorDto.getStructureBlockPresenterDto().getId());
+        assertEquals(jokeBlock.getStructureBlock().getStructure().getId(), jokeBlockCreatorDto.getStructureId());
     }
 
     @Test
@@ -40,14 +44,14 @@ public class JokeBlockMapperIntegrationTest {
         StructureBlock structureBlock = structureBlockFactory.createStructureBlock(1, 1);
 
         // when
-        JokeBlockDto jokeBlockDto = jokeBlockMapper.structureBlockToJokeBlockDto(structureBlock);
+        JokeBlockCreatorDto jokeBlockCreatorDto = jokeBlockMapper.structureBlockToJokeBlockDto(structureBlock);
 
         // then
-        assertNull(jokeBlockDto.getJokeSnippet());
-        assertEquals(structureBlock.getTitle(), jokeBlockDto.getTitle());
-        assertEquals(structureBlock.getDescription(), jokeBlockDto.getDescription());
-        assertEquals(structureBlock.getPosition(), jokeBlockDto.getPosition());
-        assertEquals(structureBlock.getId(), jokeBlockDto.getStructureBlockId());
-        assertEquals(structureBlock.getStructure().getId(), jokeBlockDto.getStructureId());
+        assertNull(jokeBlockCreatorDto.getJokeSnippet());
+        assertEquals(structureBlock.getTitle(), jokeBlockCreatorDto.getStructureBlockPresenterDto().getTitle());
+        assertEquals(structureBlock.getDescription(), jokeBlockCreatorDto.getStructureBlockPresenterDto().getDescription());
+        assertEquals(structureBlock.getPosition(), jokeBlockCreatorDto.getPosition());
+        assertEquals(structureBlock.getId(), jokeBlockCreatorDto.getStructureBlockPresenterDto().getId());
+        assertEquals(structureBlock.getStructure().getId(), jokeBlockCreatorDto.getStructureId());
     }
 }

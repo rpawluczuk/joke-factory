@@ -7,8 +7,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import springapp.jokefactory.joke.jokeblock.JokeBlock;
-import springapp.jokefactory.joke.jokeblock.JokeBlockMapper;
+import springapp.jokefactory.jokeblock.JokeBlock;
+import springapp.jokefactory.jokeblock.JokeBlockMapper;
+import springapp.jokefactory.jokeblock.JokeBlockRepository;
 import springapp.jokefactory.origin.OriginRepository;
 import springapp.jokefactory.structure.Structure;
 import springapp.jokefactory.structure.StructureRepository;
@@ -25,6 +26,9 @@ class JokeService {
 
     @Autowired
     JokeRepository jokeRepository;
+
+    @Autowired
+    JokeBlockRepository jokeBlockRepository;
 
     @Autowired
     StructureRepository structureRepository;
@@ -76,13 +80,6 @@ class JokeService {
                             .orElseThrow(() -> new IllegalArgumentException("No structure found with id: " + structureItemDto.getId())))
                 .collect(Collectors.toSet());
         joke.setStructures(structures);
-        List<JokeBlock> jokeBlocks = jokeCreatorDTO.getJokeBlockDtoList().stream()
-                .map(jokeBlockDto -> {
-                    StructureBlock structureBlock = structureBlockRepository.findById(jokeBlockDto.getStructureBlockId())
-                            .orElseThrow(() -> new IllegalArgumentException("No structure found with id: " + jokeBlockDto.getStructureBlockId()));
-                    return jokeBlockMapper.jokeBlockDtoToJokeBlock(jokeBlockDto, joke, structureBlock);
-                }).collect(Collectors.toList());
-        joke.setJokeBlocks(jokeBlocks);
         if (jokeCreatorDTO.getOrigin() != null) {
             originRepository.findOriginByName(jokeCreatorDTO.getOrigin().getName())
                     .ifPresent(joke::setOrigin);
@@ -96,6 +93,13 @@ class JokeService {
                     .ifPresent(joke::setOstensibleOrigin);
         }
         jokeRepository.save(joke);
+        jokeCreatorDTO.getJokeBlockCreatorDtoList()
+                .forEach(jokeBlockCreatorDto -> {
+                    StructureBlock structureBlock = structureBlockRepository.findById(jokeBlockCreatorDto.getStructureBlockPresenterDto().getId())
+                            .orElseThrow(() -> new IllegalArgumentException("No structure found with id: " + jokeBlockCreatorDto.getStructureBlockPresenterDto().getId()));
+                    JokeBlock jokeBlock = jokeBlockMapper.jokeBlockCreatorDtoToJokeBlock(jokeBlockCreatorDto, joke, structureBlock);
+                    jokeBlockRepository.save(jokeBlock);
+                });
     }
 
     void editJoke(JokeCreatorDto jokeCreatorDTO) {
@@ -105,11 +109,11 @@ class JokeService {
                         .orElseThrow(() -> new IllegalArgumentException("No structure found with id: " + structureItemDto.getId())))
                 .collect(Collectors.toSet());
         joke.setStructures(structures);
-        List<JokeBlock> jokeBlocks = jokeCreatorDTO.getJokeBlockDtoList().stream()
+        List<JokeBlock> jokeBlocks = jokeCreatorDTO.getJokeBlockCreatorDtoList().stream()
                 .map(jokeBlockDto -> {
-                    StructureBlock structureBlock = structureBlockRepository.findById(jokeBlockDto.getStructureBlockId())
-                            .orElseThrow(() -> new IllegalArgumentException("No structure found with id: " + jokeBlockDto.getStructureBlockId()));
-                    return jokeBlockMapper.jokeBlockDtoToJokeBlock(jokeBlockDto, joke, structureBlock);
+                    StructureBlock structureBlock = structureBlockRepository.findById(jokeBlockDto.getStructureBlockPresenterDto().getId())
+                            .orElseThrow(() -> new IllegalArgumentException("No structure found with id: " + jokeBlockDto.getStructureBlockPresenterDto().getId()));
+                    return jokeBlockMapper.jokeBlockCreatorDtoToJokeBlock(jokeBlockDto, joke, structureBlock);
                 }).collect(Collectors.toList());
         joke.setJokeBlocks(jokeBlocks);
         if (jokeCreatorDTO.getOrigin() != null) {

@@ -1,8 +1,8 @@
-package springapp.jokefactory.joke.jokeblock;
+package springapp.jokefactory.jokeblock;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import springapp.jokefactory.joke.jokeblock.JokeBlock;
+import springapp.jokefactory.jokeblock.JokeBlock;
 import springapp.jokefactory.structure.Structure;
 
 import java.util.List;

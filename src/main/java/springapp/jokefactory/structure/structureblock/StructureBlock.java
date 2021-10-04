@@ -9,7 +9,7 @@ import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import springapp.jokefactory.joke.jokeblock.JokeBlock;
+import springapp.jokefactory.jokeblock.JokeBlock;
 import springapp.jokefactory.structure.Structure;
 
 @Entity(name = "structure_block")

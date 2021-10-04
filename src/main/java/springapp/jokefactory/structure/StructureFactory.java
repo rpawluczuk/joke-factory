@@ -1,8 +1,5 @@
 package springapp.jokefactory.structure;
 
-import springapp.jokefactory.joke.jokeblock.JokeBlock;
-import springapp.jokefactory.structure.Structure;
-
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;

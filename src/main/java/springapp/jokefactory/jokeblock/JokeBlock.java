@@ -1,4 +1,4 @@
-package springapp.jokefactory.joke.jokeblock;
+package springapp.jokefactory.jokeblock;
 
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -25,7 +25,7 @@ public class JokeBlock {
     @EqualsAndHashCode.Exclude @ToString.Exclude
     private StructureBlock structureBlock;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.MERGE)
     @EqualsAndHashCode.Exclude @ToString.Exclude
     private Joke joke;
 

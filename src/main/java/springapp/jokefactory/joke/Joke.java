@@ -8,11 +8,12 @@ import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
+import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import springapp.jokefactory.author.Author;
-import springapp.jokefactory.joke.jokeblock.JokeBlock;
+import springapp.jokefactory.jokeblock.JokeBlock;
 import springapp.jokefactory.origin.Origin;
 import springapp.jokefactory.structure.Structure;
 
@@ -48,7 +49,6 @@ public class Joke {
     private Origin ostensibleOrigin;
 
     @EqualsAndHashCode.Exclude @ToString.Exclude
-    @JsonIgnore
     @OneToMany(mappedBy = "joke", cascade = CascadeType.ALL)
     private List<JokeBlock> jokeBlocks;
 
