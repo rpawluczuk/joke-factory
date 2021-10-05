@@ -12,6 +12,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import springapp.jokefactory.structure.dto.StructureCreatorDto;
+import springapp.jokefactory.structure.dto.StructureItemDto;
+import springapp.jokefactory.structure.dto.StructurePresenterDto;
 
 @RestController
 @RequestMapping("/api/structures")

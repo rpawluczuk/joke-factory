@@ -3,7 +3,7 @@ package springapp.jokefactory.joke.jokeblock;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
 import springapp.jokefactory.jokeblock.JokeBlock;
-import springapp.jokefactory.jokeblock.JokeBlockCreatorDto;
+import springapp.jokefactory.jokeblock.dto.JokeBlockCreatorDto;
 import springapp.jokefactory.jokeblock.JokeBlockFactory;
 import springapp.jokefactory.jokeblock.JokeBlockMapper;
 import springapp.jokefactory.structureblock.StructureBlock;

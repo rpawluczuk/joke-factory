@@ -1,10 +1,10 @@
-package springapp.jokefactory.joke;
+package springapp.jokefactory.joke.dto;
 
 import lombok.Data;
 import springapp.jokefactory.author.Author;
-import springapp.jokefactory.jokeblock.JokeBlockCreatorDto;
+import springapp.jokefactory.jokeblock.dto.JokeBlockCreatorDto;
 import springapp.jokefactory.origin.dto.OriginItemDto;
-import springapp.jokefactory.structure.StructureItemDto;
+import springapp.jokefactory.structure.dto.StructureItemDto;
 
 import java.sql.Timestamp;
 import java.util.List;

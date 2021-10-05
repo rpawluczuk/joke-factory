@@ -3,6 +3,8 @@ package springapp.jokefactory.jokeblock;
 import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import springapp.jokefactory.jokeblock.dto.JokeBlockCreatorDto;
+import springapp.jokefactory.jokeblock.dto.JokeBlockPresenterDto;
 import springapp.jokefactory.structure.StructureRepository;
 import springapp.jokefactory.structureblock.StructureBlock;
 import springapp.jokefactory.structureblock.StructureBlockRepository;

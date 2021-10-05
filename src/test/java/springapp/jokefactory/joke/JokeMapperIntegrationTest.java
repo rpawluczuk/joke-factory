@@ -2,6 +2,7 @@ package springapp.jokefactory.joke;
 
 import org.junit.Test;
 import org.mapstruct.factory.Mappers;
+import springapp.jokefactory.joke.dto.JokePresenterDto;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

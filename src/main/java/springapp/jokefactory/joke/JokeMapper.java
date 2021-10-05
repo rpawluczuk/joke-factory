@@ -2,8 +2,10 @@ package springapp.jokefactory.joke;
 
 import org.mapstruct.*;
 import springapp.jokefactory.author.Author;
+import springapp.jokefactory.joke.dto.JokeCreatorDto;
+import springapp.jokefactory.joke.dto.JokePresenterDto;
 import springapp.jokefactory.structure.Structure;
-import springapp.jokefactory.structure.StructureItemDto;
+import springapp.jokefactory.structure.dto.StructureItemDto;
 
 import java.util.List;
 import java.util.Set;

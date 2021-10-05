@@ -2,6 +2,8 @@ package springapp.jokefactory.jokeblock;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import springapp.jokefactory.jokeblock.dto.JokeBlockCreatorDto;
+import springapp.jokefactory.jokeblock.dto.JokeBlockPresenterDto;
 
 import java.util.List;
 

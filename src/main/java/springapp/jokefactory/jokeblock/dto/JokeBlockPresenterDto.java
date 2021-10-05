@@ -1,16 +1,13 @@
-package springapp.jokefactory.jokeblock;
+package springapp.jokefactory.jokeblock.dto;
 
-import lombok.Builder;
 import lombok.Data;
 import springapp.jokefactory.structureblock.dto.StructureBlockPresenterDto;
 
 @Data
-@Builder
-public class JokeBlockCreatorDto {
+public class JokeBlockPresenterDto {
 
     private long id;
     private String jokeSnippet;
     private StructureBlockPresenterDto structureBlockPresenterDto;
-    private int position;
     private long structureId;
 }

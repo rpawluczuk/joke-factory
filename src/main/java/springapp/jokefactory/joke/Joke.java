@@ -17,7 +17,6 @@ import springapp.jokefactory.jokeblock.JokeBlock;
 import springapp.jokefactory.origin.Origin;
 import springapp.jokefactory.structure.Structure;
 
-//@JsonDeserialize(using = JokeDeserializer.class)
 @Entity
 @Data
 @NoArgsConstructor

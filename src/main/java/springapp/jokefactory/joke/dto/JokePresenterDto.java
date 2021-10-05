@@ -1,7 +1,7 @@
-package springapp.jokefactory.joke;
+package springapp.jokefactory.joke.dto;
 
 import lombok.Data;
-import springapp.jokefactory.structure.StructurePresenterDto;
+import springapp.jokefactory.structure.dto.StructurePresenterDto;
 
 import java.sql.Timestamp;
 import java.util.Set;

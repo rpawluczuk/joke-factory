@@ -1,64 +1,48 @@
 package springapp.jokefactory.author;
 
-import java.util.Optional;
-import java.util.Set;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
-
-import springapp.jokefactory.joke.Joke;
-import springapp.jokefactory.joke.JokeRepository;
+import org.springframework.web.bind.annotation.*;
+import springapp.jokefactory.author.dto.AuthorCreatorDto;
+import springapp.jokefactory.author.dto.AuthorItemDto;
+import springapp.jokefactory.author.dto.AuthorPresenterDto;
 
 @RestController
 @RequestMapping("/api/authors")
 @CrossOrigin("http://localhost:4200")
-public class AuthorController {
+class AuthorController {
 
     @Autowired
-    AuthorRepository authorRepository;
-
-    @Autowired
-    JokeRepository jokeRepository;
+    private AuthorService authorService;
 
     @GetMapping
-    public Iterable<Author> getAuthors(){
-        return authorRepository.findAll();
+    Iterable<AuthorPresenterDto> getAuthorPresenterList(){
+        return authorService.getAuthorPresenterList();
+    }
+
+    @GetMapping(value = "/list-items")
+    Iterable<AuthorItemDto> getAuthorItemList(){
+        return authorService.getAuthorItemList();
     }
 
     @GetMapping(value = "/{id}")
-    public Optional<Author> getAuthorById(@PathVariable("id") Long id){
-        return authorRepository.findById(id);
+    AuthorCreatorDto getAuthorCreator(@PathVariable("id") Long id){
+        return authorService.getAuthorCreator(id);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void addAuthor(@RequestBody Author author){
-        authorRepository.save(author);
+    void addAuthor(@RequestBody AuthorCreatorDto authorCreatorDto){
+        authorService.addAuthor(authorCreatorDto);
     }
 
     @PutMapping
-    public void editAuthor(@RequestBody Author author){
-        authorRepository.save(author);
+    void editAuthor(@RequestBody AuthorCreatorDto authorCreatorDto){
+        authorService.editAuthor(authorCreatorDto);
     }
 
     @DeleteMapping(value = "/{id}")
-    public void deleteAuthor(@PathVariable("id") Long id){
-        Author authorToDelete = authorRepository.findById(id).get();
-        Set<Joke> jokes = authorToDelete.getJokes();
-        for (Joke joke: jokes) {
-            joke.setAuthor(null);
-            jokeRepository.save(joke);
-        }
-        authorRepository.delete(authorToDelete);
+    void deleteAuthor(@PathVariable("id") Long id){
+        authorService.deleteAuthor(id);
     }
 }

@@ -7,6 +7,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import springapp.jokefactory.joke.dto.JokeCreatorDto;
+import springapp.jokefactory.joke.dto.JokePresenterDto;
 import springapp.jokefactory.jokeblock.JokeBlock;
 import springapp.jokefactory.jokeblock.JokeBlockMapper;
 import springapp.jokefactory.jokeblock.JokeBlockRepository;
