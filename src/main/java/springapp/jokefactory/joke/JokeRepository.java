@@ -7,7 +7,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
-public interface JokeRepository extends
+interface JokeRepository extends
                                 JpaRepository<Joke, Long>,
                                 QuerydslPredicateExecutor<Joke> {
 

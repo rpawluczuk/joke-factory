@@ -6,21 +6,21 @@ import springapp.jokefactory.structure.dto.StructureCreatorDto;
 import springapp.jokefactory.structure.dto.StructureItemDto;
 import springapp.jokefactory.structure.dto.StructurePresenterDto;
 
-@Mapper
-public interface StructureMapper {
+@Mapper(componentModel = "spring")
+abstract class StructureMapper {
 
-    StructurePresenterDto mapStructureToStructurePresenterDto(Structure structure);
+    abstract StructurePresenterDto mapStructureToStructurePresenterDto(Structure structure);
 
     @Mapping(target = "text", source = "structure.name")
-    StructureItemDto mapStructureToStructureItemDto(Structure structure);
+    abstract StructureItemDto mapStructureToStructureItemDto(Structure structure);
 
-    Structure mapStructureCreatorDtoToStructure(StructureCreatorDto structureCreatorDto);
+    abstract Structure mapStructureCreatorDtoToStructure(StructureCreatorDto structureCreatorDto);
 
-    StructureCreatorDto mapStructureToStructureCreatorDto(Structure structure);
+    abstract StructureCreatorDto mapStructureToStructureCreatorDto(Structure structure);
 
     @Mapping(target = "id", source = "structure.id")
     @Mapping(target = "name", source = "structureCreatorDto.name")
     @Mapping(target = "description", source = "structureCreatorDto.description")
     @Mapping(target = "structureBlockScheme", ignore = true)
-    Structure updateStructure(Structure structure, StructureCreatorDto structureCreatorDto);
+    abstract Structure updateStructure(Structure structure, StructureCreatorDto structureCreatorDto);
 }

@@ -3,42 +3,40 @@ package springapp.jokefactory.structure;
 import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import springapp.jokefactory.joke.Joke;
-import springapp.jokefactory.joke.JokeRepository;
+import springapp.jokefactory.joke.JokeFacade;
 import springapp.jokefactory.structure.dto.StructureCreatorDto;
 import springapp.jokefactory.structure.dto.StructureItemDto;
 import springapp.jokefactory.structure.dto.StructurePresenterDto;
 import springapp.jokefactory.structureblock.StructureBlock;
-import springapp.jokefactory.structureblock.StructureBlockMapper;
-import springapp.jokefactory.structureblock.StructureBlockRepository;
+import springapp.jokefactory.structureblock.StructureBlockFacade;
 
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 @Service
 class StructureService {
 
     @Autowired
-    StructureRepository structureRepository;
+    private StructureRepository structureRepository;
 
     @Autowired
-    StructureBlockRepository structureBlockRepository;
+    private StructureFacade structureFacade;
 
     @Autowired
-    JokeRepository jokeRepository;
+    private StructureBlockFacade structureBlockFacade;
 
-    private final StructureMapper structureMapper = Mappers.getMapper(StructureMapper.class);
-    private final StructureBlockMapper structureBlockMapper = Mappers.getMapper(StructureBlockMapper.class);
+    @Autowired
+    private JokeFacade jokeFacade;
 
-    StructureCreatorDto getStructureCreatorDto(Long id){
-        Structure structure = structureRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("No structure found with id: " + id));
+    @Autowired
+    private StructureMapper structureMapper;
+
+    StructureCreatorDto getStructureCreatorDto(Long id) {
+        Structure structure = structureFacade.tryToGetStructureById(id);
         return structureMapper.mapStructureToStructureCreatorDto(structure);
     }
 
-    Iterable<StructurePresenterDto> getStructurePresenterList(){
+    Iterable<StructurePresenterDto> getStructurePresenterList() {
         return structureRepository.findAll().stream()
                 .map(structureMapper::mapStructureToStructurePresenterDto)
                 .collect(Collectors.toList());
@@ -50,46 +48,33 @@ class StructureService {
                 .collect(Collectors.toList());
     }
 
-    Iterable<StructureItemDto> getStructureItemListByJokeID(Long jokeID){
+    Iterable<StructureItemDto> getStructureItemListByJokeID(Long jokeID) {
         return structureRepository.findStructuresByJokeID(jokeID).stream()
                 .map(structureMapper::mapStructureToStructureItemDto)
                 .collect(Collectors.toList());
     }
 
-    void addStructure(StructureCreatorDto structureCreatorDto){
+    void addStructure(StructureCreatorDto structureCreatorDto) {
         Structure structure = structureMapper.mapStructureCreatorDtoToStructure(structureCreatorDto);
-        Set<StructureBlock> structureBlockList = structureCreatorDto.getStructureBlockCreatorDtoList().stream()
-                .map(structureBlockCreatorDto ->
-                        structureBlockMapper.mapStructureBlockCreatorDtoToStructureBlock(structureBlockCreatorDto, structure))
-                .collect(Collectors.toSet());
+        List<StructureBlock> structureBlockList =
+                structureBlockFacade.extractStructureBlockList(structureCreatorDto.getStructureBlockCreatorDtoList(), structure);
         structure.setStructureBlockScheme(structureBlockList);
         structureRepository.save(structure);
     }
 
-    void editStructure(StructureCreatorDto structureCreatorDto){
-        Structure structure = structureRepository.findById(structureCreatorDto.getId())
-                .orElseThrow(() -> new IllegalArgumentException("No structure found with id: " + structureCreatorDto.getId()));
+    void editStructure(StructureCreatorDto structureCreatorDto) {
+        Structure structure = structureFacade.tryToGetStructureById(structureCreatorDto.getId());
         Structure updatedStructure = structureMapper.updateStructure(structure, structureCreatorDto);
-        List<StructureBlock> structureBlockList = structureBlockRepository.findStructureBlocksByStructure_IdOrderByPosition(structure.getId());
-        Set<StructureBlock> updatedStructureBlockList = IntStream.range(0, structureCreatorDto.getStructureBlockCreatorDtoList().size())
-                .mapToObj(index -> {
-                    if (index < structureBlockList.size()){
-                        return structureBlockMapper.updateStructureBlock(structureBlockList.get(index), structureCreatorDto.getStructureBlockCreatorDtoList().get(index));
-                    }
-                    return structureBlockMapper.mapStructureBlockCreatorDtoToStructureBlock(structureCreatorDto.getStructureBlockCreatorDtoList().get(index), structure);
-                })
-                .collect(Collectors.toSet());
+        List<StructureBlock> structureBlockList = structureBlockFacade.getStructureBlocksByStructure(structure.getId());
+        List<StructureBlock> updatedStructureBlockList = structureBlockFacade.extractUpdatedStructureBlockList(
+                structureCreatorDto.getStructureBlockCreatorDtoList(), structureBlockList, structure);
         updatedStructure.setStructureBlockScheme(updatedStructureBlockList);
         structureRepository.save(updatedStructure);
     }
 
-    void deleteStructure(Long id){
-        Structure structureToDelete = structureRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("No structure found with id: " + id));
-        for (Joke joke : structureToDelete.getJokes()) {
-            joke.getStructures().remove(structureToDelete);
-            jokeRepository.save(joke);
-        }
+    void deleteStructure(Long id) {
+        Structure structureToDelete = structureFacade.tryToGetStructureById(id);
+        jokeFacade.removeStructureFromJokes(structureToDelete);
         structureRepository.delete(structureToDelete);
     }
 }

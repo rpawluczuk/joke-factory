@@ -8,7 +8,7 @@ import springapp.jokefactory.structure.Structure;
 import java.util.List;
 import java.util.Optional;
 
-public interface JokeBlockRepository extends JpaRepository<JokeBlock, Long> {
+interface JokeBlockRepository extends JpaRepository<JokeBlock, Long> {
 
     @Query(value = "SELECT jb FROM joke_block jb where jb.joke.id = ?1 order by jb.structureBlock.position")
     List<JokeBlock> findBlocksByJoke(long jokeId);

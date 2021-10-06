@@ -7,7 +7,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.Optional;
 import java.util.Set;
 
-public interface OriginRepository extends JpaRepository<Origin, Long> {
+interface OriginRepository extends JpaRepository<Origin, Long> {
 
     @Query(value = "SELECT o FROM Origin o where o.name = :name")
     Optional<Origin> findOriginByName(@Param("name") String name);

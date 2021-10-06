@@ -8,20 +8,20 @@ import springapp.jokefactory.author.dto.AuthorCreatorDto;
 import springapp.jokefactory.author.dto.AuthorItemDto;
 import springapp.jokefactory.author.dto.AuthorPresenterDto;
 
-@Mapper
-public interface AuthorMapper {
+@Mapper(componentModel = "spring")
+abstract class AuthorMapper {
 
-    AuthorPresenterDto mapAuthorToAuthorPresenterDto(Author author);
+    abstract AuthorPresenterDto mapAuthorToAuthorPresenterDto(Author author);
 
-    AuthorCreatorDto mapAuthorToAuthorCreatorDto(Author author);
+    abstract AuthorCreatorDto mapAuthorToAuthorCreatorDto(Author author);
 
     @Mapping(target = "text", source = "author", qualifiedByName = "extractAuthorItemText")
-    AuthorItemDto mapAuthorToAuthorItemDto(Author author);
+    abstract AuthorItemDto mapAuthorToAuthorItemDto(Author author);
 
     @Named("extractAuthorItemText")
-    default String extractAuthorItemText(Author author) {
+    String extractAuthorItemText(Author author) {
         return author.getName() + " " + author.getSurname();
     }
 
-    void updateAuthorFromAuthorCreatorDto(AuthorCreatorDto authorCreatorDto, @MappingTarget Author author);
+    abstract void updateAuthorFromAuthorCreatorDto(AuthorCreatorDto authorCreatorDto, @MappingTarget Author author);
 }

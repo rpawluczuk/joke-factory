@@ -1,6 +1,7 @@
 package springapp.jokefactory.structure;
 
 import java.sql.Timestamp;
+import java.util.List;
 import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -42,7 +43,7 @@ public class Structure {
     @EqualsAndHashCode.Exclude @ToString.Exclude
     @JsonIgnore
     @OneToMany(mappedBy = "structure", cascade = CascadeType.ALL)
-    private Set<StructureBlock> structureBlockScheme;
+    private List<StructureBlock> structureBlockScheme;
 
     @CreationTimestamp
     private Timestamp dateCreated;
@@ -95,11 +96,11 @@ public class Structure {
         this.description = description;
     }
 
-    public Set<StructureBlock> getStructureBlockScheme() {
+    public List<StructureBlock> getStructureBlockScheme() {
         return structureBlockScheme;
     }
 
-    public void setStructureBlockScheme(Set<StructureBlock> structureBlockScheme) {
+    public void setStructureBlockScheme(List<StructureBlock> structureBlockScheme) {
         this.structureBlockScheme = structureBlockScheme;
     }
 

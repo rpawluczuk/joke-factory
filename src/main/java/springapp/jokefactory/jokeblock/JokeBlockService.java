@@ -5,9 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import springapp.jokefactory.jokeblock.dto.JokeBlockCreatorDto;
 import springapp.jokefactory.jokeblock.dto.JokeBlockPresenterDto;
-import springapp.jokefactory.structure.StructureRepository;
 import springapp.jokefactory.structureblock.StructureBlock;
-import springapp.jokefactory.structureblock.StructureBlockRepository;
+import springapp.jokefactory.structureblock.StructureBlockFacade;
 
 import java.util.Comparator;
 import java.util.List;
@@ -18,19 +17,17 @@ import java.util.stream.Collectors;
 class JokeBlockService {
 
     @Autowired
-    JokeBlockRepository jokeBlockRepository;
+    private JokeBlockRepository jokeBlockRepository;
 
     @Autowired
-    StructureBlockRepository structureBlockRepository;
+    private StructureBlockFacade structureBlockFacade;
 
     @Autowired
-    StructureRepository structureRepository;
-
-    private static final JokeBlockMapper jokeBlockMapper = Mappers.getMapper(JokeBlockMapper.class);
+    private JokeBlockMapper jokeBlockMapper;
 
     Iterable<JokeBlockCreatorDto> getJokeBlockCreatorList(Long jokeId) {
         List<JokeBlock> jokeBlocks = jokeBlockRepository.findBlocksByJoke(jokeId);
-        List<StructureBlock> structureBlocks = structureBlockRepository.findStructureBlocksByJoke(jokeId);
+        List<StructureBlock> structureBlocks = structureBlockFacade.getStructureBlocksByJoke(jokeId);
         structureBlocks.forEach(structureBlock -> {
             Optional<JokeBlock> result = jokeBlocks.stream().filter(jokeBlock ->
                     jokeBlock.getStructureBlock().getId().equals(structureBlock.getId())).findAny();
@@ -53,7 +50,7 @@ class JokeBlockService {
     }
 
     List<JokeBlockCreatorDto> getJokeBlockCreatorListOfStructure(Long structureId) {
-        List<StructureBlock> structureBlocks = structureBlockRepository.findStructureBlocksByStructure_IdOrderByPosition(structureId);
+        List<StructureBlock> structureBlocks = structureBlockFacade.getStructureBlocksByStructure(structureId);
         return structureBlocks.stream()
                 .map(jokeBlockMapper::structureBlockToJokeBlockDto)
                 .sorted(Comparator.comparingInt(JokeBlockCreatorDto::getPosition))

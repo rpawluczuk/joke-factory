@@ -11,13 +11,13 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@Mapper
-public interface JokeMapper {
+@Mapper(componentModel = "spring")
+abstract class JokeMapper {
 
     @Mapping(target = "origin", ignore = true)
     @Mapping(target = "comedyOrigin", ignore = true)
     @Mapping(target = "ostensibleOrigin", ignore = true)
-    Joke mapJokeCreatorDtoToJoke(JokeCreatorDto jokeCreatorDTO);
+    abstract Joke mapJokeCreatorDtoToJoke(JokeCreatorDto jokeCreatorDTO);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE,
             nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
@@ -25,21 +25,21 @@ public interface JokeMapper {
     @Mapping(target = "comedyOrigin", source = "joke.comedyOrigin.name")
     @Mapping(target = "ostensibleOrigin", source = "joke.ostensibleOrigin.name")
     @Mapping(target = "author", source = "joke.author", qualifiedByName = "extractAuthor")
-    JokePresenterDto mapJokeToJokePresenterDto(Joke joke);
+    abstract JokePresenterDto mapJokeToJokePresenterDto(Joke joke);
 
     @Mapping(target = "origin", source = "joke.origin")
     @Mapping(target = "comedyOrigin", source = "joke.comedyOrigin")
     @Mapping(target = "ostensibleOrigin", source = "joke.ostensibleOrigin")
     @Mapping(target = "structureItemList", source = "joke.structures", qualifiedByName = "extractStructureItem")
-    JokeCreatorDto mapJokeToJokeCreatorDto(Joke joke);
+    abstract JokeCreatorDto mapJokeToJokeCreatorDto(Joke joke);
 
     @Named("extractAuthor")
-    default String extractAuthor(Author author) {
+    String extractAuthor(Author author) {
         return author.getName() + " " + author.getSurname();
     }
 
     @Named("extractStructureItem")
-    default List<StructureItemDto> extractStructureItem(Set<Structure> structures) {
+    List<StructureItemDto> extractStructureItem(Set<Structure> structures) {
         return structures.stream()
                 .map(structure -> new StructureItemDto(structure.getId(), structure.getName()))
                 .collect(Collectors.toList());

@@ -1,9 +1,8 @@
 package springapp.jokefactory.origin;
 
-import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import springapp.jokefactory.joke.JokeRepository;
+import springapp.jokefactory.joke.JokeFacade;
 import springapp.jokefactory.origin.dto.OriginCreatorChildDto;
 import springapp.jokefactory.origin.dto.OriginCreatorDto;
 import springapp.jokefactory.origin.dto.OriginItemDto;
@@ -20,12 +19,13 @@ class OriginService {
     private OriginRepository originRepository;
 
     @Autowired
-    private JokeRepository jokeRepository;
+    private JokeFacade jokeFacade;
 
     @Autowired
     private OriginRelationRepository originRelationRepository;
 
-    private final OriginMapper originMapper = Mappers.getMapper(OriginMapper.class);
+    @Autowired
+    private OriginMapper originMapper;
 
     OriginCreatorDto getOriginCreator(Long id) {
         Origin origin = originRepository.findById(id)
@@ -84,18 +84,7 @@ class OriginService {
     void deleteOrigin(Long id) {
         Origin originToDelete = originRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("No origin found with id: " + id));
-        originToDelete.getJokes().forEach(joke -> {
-            joke.setOrigin(null);
-            jokeRepository.save(joke);
-        });
-        originToDelete.getJokesAsOstensibleContext().forEach(joke -> {
-            joke.setOstensibleOrigin(null);
-            jokeRepository.save(joke);
-        });
-        originToDelete.getJokesAsComedyContext().forEach(joke -> {
-            joke.setComedyOrigin(null);
-            jokeRepository.save(joke);
-        });
+        jokeFacade.removeOriginFromJokes(originToDelete);
         originRelationRepository.findAllOriginRelationsConnectedWithOrigin(originToDelete.getId())
                 .forEach(originRelationRepository::delete);
         originRepository.delete(originToDelete);

@@ -1,7 +1,6 @@
 package springapp.jokefactory.joke;
 
 import com.querydsl.core.types.Predicate;
-import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -10,13 +9,11 @@ import org.springframework.stereotype.Service;
 import springapp.jokefactory.joke.dto.JokeCreatorDto;
 import springapp.jokefactory.joke.dto.JokePresenterDto;
 import springapp.jokefactory.jokeblock.JokeBlock;
-import springapp.jokefactory.jokeblock.JokeBlockMapper;
-import springapp.jokefactory.jokeblock.JokeBlockRepository;
-import springapp.jokefactory.origin.OriginRepository;
+import springapp.jokefactory.jokeblock.JokeBlockFacade;
+import springapp.jokefactory.origin.OriginFacade;
 import springapp.jokefactory.structure.Structure;
-import springapp.jokefactory.structure.StructureRepository;
-import springapp.jokefactory.structureblock.StructureBlock;
-import springapp.jokefactory.structureblock.StructureBlockRepository;
+import springapp.jokefactory.structure.StructureFacade;
+import springapp.jokefactory.structureblock.StructureBlockFacade;
 import springapp.jokefactory.utils.Pagination;
 
 import java.util.List;
@@ -27,25 +24,25 @@ import java.util.stream.Collectors;
 class JokeService {
 
     @Autowired
-    JokeRepository jokeRepository;
+    private JokeRepository jokeRepository;
 
     @Autowired
-    JokeBlockRepository jokeBlockRepository;
+    private StructureFacade structureFacade;
 
     @Autowired
-    StructureRepository structureRepository;
+    private JokeBlockFacade jokeBlockFacade;
 
     @Autowired
-    StructureBlockRepository structureBlockRepository;
+    private StructureBlockFacade structureBlockFacade;
 
     @Autowired
-    OriginRepository originRepository;
+    private OriginFacade originFacade;
 
     @Autowired
-    Pagination pagination;
+    private Pagination pagination;
 
-    private final JokeMapper jokeMapper = Mappers.getMapper(JokeMapper.class);
-    private final JokeBlockMapper jokeBlockMapper = Mappers.getMapper(JokeBlockMapper.class);
+    @Autowired
+    private JokeMapper jokeMapper;
 
     Iterable<JokePresenterDto> getJokePresenterList(){
         PageRequest pageRequest = PageRequest.of(pagination.getCurrentPage(), pagination.getPageSize(),
@@ -75,61 +72,31 @@ class JokeService {
         return jokeMapper.mapJokeToJokeCreatorDto(joke);
     }
 
-    void addJoke(JokeCreatorDto jokeCreatorDTO) {
-        Joke joke = jokeMapper.mapJokeCreatorDtoToJoke(jokeCreatorDTO);
-        Set<Structure> structures = jokeCreatorDTO.getStructureItemList().stream()
-                .map(structureItemDto -> structureRepository.findById(structureItemDto.getId())
-                            .orElseThrow(() -> new IllegalArgumentException("No structure found with id: " + structureItemDto.getId())))
+    void addJoke(JokeCreatorDto jokeCreatorDto) {
+        Joke joke = jokeMapper.mapJokeCreatorDtoToJoke(jokeCreatorDto);
+        Set<Structure> structures = jokeCreatorDto.getStructureItemList().stream()
+                .map(structureItemDto -> structureFacade.tryToGetStructureById(structureItemDto.getId()))
                 .collect(Collectors.toSet());
         joke.setStructures(structures);
-        if (jokeCreatorDTO.getOrigin() != null) {
-            originRepository.findOriginByName(jokeCreatorDTO.getOrigin().getName())
-                    .ifPresent(joke::setOrigin);
-        }
-        if (jokeCreatorDTO.getComedyOrigin() != null) {
-            originRepository.findOriginByName(jokeCreatorDTO.getComedyOrigin().getName())
-                    .ifPresent(joke::setComedyOrigin);
-        }
-        if (jokeCreatorDTO.getOstensibleOrigin() != null) {
-            originRepository.findOriginByName(jokeCreatorDTO.getOstensibleOrigin().getName())
-                    .ifPresent(joke::setOstensibleOrigin);
-        }
+        originFacade.tryToGetOriginByOriginItem(jokeCreatorDto.getOrigin()).ifPresent(joke::setOrigin);
+        originFacade.tryToGetOriginByOriginItem(jokeCreatorDto.getComedyOrigin()).ifPresent(joke::setComedyOrigin);
+        originFacade.tryToGetOriginByOriginItem(jokeCreatorDto.getOstensibleOrigin()).ifPresent(joke::setOstensibleOrigin);
         jokeRepository.save(joke);
-        jokeCreatorDTO.getJokeBlockCreatorDtoList()
-                .forEach(jokeBlockCreatorDto -> {
-                    StructureBlock structureBlock = structureBlockRepository.findById(jokeBlockCreatorDto.getStructureBlockPresenterDto().getId())
-                            .orElseThrow(() -> new IllegalArgumentException("No structure found with id: " + jokeBlockCreatorDto.getStructureBlockPresenterDto().getId()));
-                    JokeBlock jokeBlock = jokeBlockMapper.jokeBlockCreatorDtoToJokeBlock(jokeBlockCreatorDto, joke, structureBlock);
-                    jokeBlockRepository.save(jokeBlock);
-                });
+        List<JokeBlock> jokeBlockList = jokeBlockFacade.extractJokeBlockList(jokeCreatorDto.getJokeBlockCreatorDtoList(), joke);
+        jokeBlockFacade.saveJokeBlockList(jokeBlockList);
     }
 
-    void editJoke(JokeCreatorDto jokeCreatorDTO) {
-        Joke joke = jokeMapper.mapJokeCreatorDtoToJoke(jokeCreatorDTO);
-        Set<Structure> structures = jokeCreatorDTO.getStructureItemList().stream()
-                .map(structureItemDto -> structureRepository.findById(structureItemDto.getId())
-                        .orElseThrow(() -> new IllegalArgumentException("No structure found with id: " + structureItemDto.getId())))
+    void editJoke(JokeCreatorDto jokeCreatorDto) {
+        Joke joke = jokeMapper.mapJokeCreatorDtoToJoke(jokeCreatorDto);
+        Set<Structure> structures = jokeCreatorDto.getStructureItemList().stream()
+                .map(structureItemDto -> structureFacade.tryToGetStructureById(structureItemDto.getId()))
                 .collect(Collectors.toSet());
         joke.setStructures(structures);
-        List<JokeBlock> jokeBlocks = jokeCreatorDTO.getJokeBlockCreatorDtoList().stream()
-                .map(jokeBlockDto -> {
-                    StructureBlock structureBlock = structureBlockRepository.findById(jokeBlockDto.getStructureBlockPresenterDto().getId())
-                            .orElseThrow(() -> new IllegalArgumentException("No structure found with id: " + jokeBlockDto.getStructureBlockPresenterDto().getId()));
-                    return jokeBlockMapper.jokeBlockCreatorDtoToJokeBlock(jokeBlockDto, joke, structureBlock);
-                }).collect(Collectors.toList());
+        List<JokeBlock> jokeBlocks = jokeBlockFacade.extractJokeBlockList(jokeCreatorDto.getJokeBlockCreatorDtoList(), joke);
         joke.setJokeBlocks(jokeBlocks);
-        if (jokeCreatorDTO.getOrigin() != null) {
-            originRepository.findOriginByName(jokeCreatorDTO.getOrigin().getName())
-                    .ifPresent(joke::setOrigin);
-        }
-        if (jokeCreatorDTO.getComedyOrigin() != null) {
-            originRepository.findOriginByName(jokeCreatorDTO.getComedyOrigin().getName())
-                    .ifPresent(joke::setComedyOrigin);
-        }
-        if (jokeCreatorDTO.getOstensibleOrigin() != null) {
-            originRepository.findOriginByName(jokeCreatorDTO.getOstensibleOrigin().getName())
-                    .ifPresent(joke::setOstensibleOrigin);
-        }
+        originFacade.tryToGetOriginByOriginItem(jokeCreatorDto.getOrigin()).ifPresent(joke::setOrigin);
+        originFacade.tryToGetOriginByOriginItem(jokeCreatorDto.getComedyOrigin()).ifPresent(joke::setComedyOrigin);
+        originFacade.tryToGetOriginByOriginItem(jokeCreatorDto.getOstensibleOrigin()).ifPresent(joke::setOstensibleOrigin);
         jokeRepository.save(joke);
     }
 

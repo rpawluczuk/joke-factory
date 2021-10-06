@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
-public interface StructureRepository extends JpaRepository<Structure, Long> {
+interface StructureRepository extends JpaRepository<Structure, Long> {
 
     @Query(value = "SELECT max(id) FROM Structure")
     long findHighestID();

@@ -6,10 +6,8 @@ import org.springframework.stereotype.Service;
 import springapp.jokefactory.author.dto.AuthorCreatorDto;
 import springapp.jokefactory.author.dto.AuthorItemDto;
 import springapp.jokefactory.author.dto.AuthorPresenterDto;
-import springapp.jokefactory.joke.Joke;
-import springapp.jokefactory.joke.JokeRepository;
+import springapp.jokefactory.joke.JokeFacade;
 
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -19,9 +17,10 @@ class AuthorService {
     private AuthorRepository authorRepository;
 
     @Autowired
-    private JokeRepository jokeRepository;
+    private JokeFacade jokeFacade;
 
-    private final AuthorMapper authorMapper = Mappers.getMapper(AuthorMapper.class);
+    @Autowired
+    private AuthorMapper authorMapper;
 
     Iterable<AuthorPresenterDto> getAuthorPresenterList(){
         return authorRepository.findAll().stream()
@@ -57,11 +56,7 @@ class AuthorService {
     void deleteAuthor(Long id){
         Author authorToDelete = authorRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("No author found with id: " + id));
-        Set<Joke> jokes = authorToDelete.getJokes();
-        for (Joke joke: jokes) {
-            joke.setAuthor(null);
-            jokeRepository.save(joke);
-        }
+        jokeFacade.removeAuthorFromJokes(authorToDelete);
         authorRepository.delete(authorToDelete);
     }
 }
