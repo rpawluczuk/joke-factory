@@ -1,4 +1,4 @@
-package springapp.jokefactory.origin;
+package springapp.jokefactory.topic;
 
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -16,7 +16,7 @@ import java.util.Set;
 @EqualsAndHashCode
 @RequiredArgsConstructor
 @AllArgsConstructor
-public class Origin {
+public class Topic {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,28 +24,28 @@ public class Origin {
 
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    @OneToMany(mappedBy = "origin", cascade = CascadeType.MERGE)
+    @OneToMany(mappedBy = "connectingTopic", cascade = CascadeType.MERGE)
     private Set<Joke> jokes;
 
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    @OneToMany(mappedBy = "comedyOrigin", cascade = CascadeType.MERGE)
+    @OneToMany(mappedBy = "comedyTopic", cascade = CascadeType.MERGE)
     private Set<Joke> jokesAsComedyContext;
 
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    @OneToMany(mappedBy = "ostensibleOrigin", cascade = CascadeType.MERGE)
+    @OneToMany(mappedBy = "ostensibleTopic", cascade = CascadeType.MERGE)
     private Set<Joke> jokesAsOstensibleContext;
 
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    @OneToMany(mappedBy = "originParent", cascade = CascadeType.MERGE)
-    private Set<OriginRelation> children;
+    @OneToMany(mappedBy = "topicParent", cascade = CascadeType.MERGE)
+    private Set<TopicRelation> children;
 
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    @OneToMany(mappedBy = "originChild", cascade = CascadeType.MERGE)
-    private Set<OriginRelation> parents;
+    @OneToMany(mappedBy = "topicChild", cascade = CascadeType.MERGE)
+    private Set<TopicRelation> parents;
 
     @Column(unique = true)
     private String name;
@@ -56,7 +56,7 @@ public class Origin {
     @UpdateTimestamp
     private Timestamp lastUpdated;
 
-    public Origin(Set<Joke> jokes) {
+    public Topic(Set<Joke> jokes) {
         this.jokes = jokes;
     }
 }

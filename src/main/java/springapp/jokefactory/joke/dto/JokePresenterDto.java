@@ -15,9 +15,9 @@ public class JokePresenterDto {
     private Byte rate;
     private Set<StructurePresenterDto> structures;
     private String author;
-    private String connectingOrigin;
-    private String comedyOrigin;
-    private String ostensibleOrigin;
+    private String connectingTopic;
+    private String comedyTopic;
+    private String ostensibleTopic;
     private Timestamp dateCreated;
     private Timestamp lastUpdated;
 }

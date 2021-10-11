@@ -3,7 +3,7 @@ package springapp.jokefactory.joke;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import springapp.jokefactory.author.Author;
-import springapp.jokefactory.origin.Origin;
+import springapp.jokefactory.topic.Topic;
 import springapp.jokefactory.structure.Structure;
 
 @Service
@@ -26,17 +26,17 @@ public class JokeFacade {
         });
     }
 
-    public void removeOriginFromJokes(Origin origin) {
-        origin.getJokes().forEach(joke -> {
-            joke.setOrigin(null);
+    public void removeTopicFromJokes(Topic topic) {
+        topic.getJokes().forEach(joke -> {
+            joke.setConnectingTopic(null);
             jokeRepository.save(joke);
         });
-        origin.getJokesAsOstensibleContext().forEach(joke -> {
-            joke.setOstensibleOrigin(null);
+        topic.getJokesAsOstensibleContext().forEach(joke -> {
+            joke.setOstensibleTopic(null);
             jokeRepository.save(joke);
         });
-        origin.getJokesAsComedyContext().forEach(joke -> {
-            joke.setComedyOrigin(null);
+        topic.getJokesAsComedyContext().forEach(joke -> {
+            joke.setComedyTopic(null);
             jokeRepository.save(joke);
         });
     }

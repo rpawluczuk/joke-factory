@@ -15,6 +15,6 @@ interface JokeRepository extends
     long findHighestID();
 
     @Query(value = "SELECT j FROM Joke j " +
-            "WHERE j.origin.id = :originId OR j.comedyOrigin.id = :originId OR j.ostensibleOrigin.id = :originId")
-    List<Joke> findAllJokesConnectedWithOrigin(@Param("originId") Long originId);
+            "WHERE j.connectingTopic.id = :topicId OR j.comedyTopic.id = :topicId OR j.ostensibleTopic.id = :topicId")
+    List<Joke> findAllJokesConnectedWithTopic(@Param("topicId") Long topicId);
 }

@@ -14,16 +14,16 @@ import java.util.stream.Collectors;
 @Mapper(componentModel = "spring")
 abstract class JokeMapper {
 
-    @Mapping(target = "origin", ignore = true)
-    @Mapping(target = "comedyOrigin", ignore = true)
-    @Mapping(target = "ostensibleOrigin", ignore = true)
+    @Mapping(target = "connectingTopic", ignore = true)
+    @Mapping(target = "comedyTopic", ignore = true)
+    @Mapping(target = "ostensibleTopic", ignore = true)
     abstract Joke mapJokeCreatorDtoToJoke(JokeCreatorDto jokeCreatorDTO);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE,
             nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
-    @Mapping(target = "connectingOrigin", source = "joke.origin.name")
-    @Mapping(target = "comedyOrigin", source = "joke.comedyOrigin.name")
-    @Mapping(target = "ostensibleOrigin", source = "joke.ostensibleOrigin.name")
+    @Mapping(target = "connectingTopic", source = "joke.connectingTopic.name")
+    @Mapping(target = "comedyTopic", source = "joke.comedyTopic.name")
+    @Mapping(target = "ostensibleTopic", source = "joke.ostensibleTopic.name")
     @Mapping(target = "author", source = "joke.author", qualifiedByName = "extractAuthor")
     @Mapping(target = "rate", source = "joke.rate", qualifiedByName = "handleRate")
     abstract JokePresenterDto mapJokeToJokePresenterDto(Joke joke);
@@ -41,9 +41,9 @@ abstract class JokeMapper {
         return rate.getValue();
     }
 
-    @Mapping(target = "origin", source = "joke.origin")
-    @Mapping(target = "comedyOrigin", source = "joke.comedyOrigin")
-    @Mapping(target = "ostensibleOrigin", source = "joke.ostensibleOrigin")
+    @Mapping(target = "connectingTopic", source = "joke.connectingTopic")
+    @Mapping(target = "comedyTopic", source = "joke.comedyTopic")
+    @Mapping(target = "ostensibleTopic", source = "joke.ostensibleTopic")
     @Mapping(target = "structureItemList", source = "joke.structures", qualifiedByName = "extractStructureItem")
     abstract JokeCreatorDto mapJokeToJokeCreatorDto(Joke joke);
 

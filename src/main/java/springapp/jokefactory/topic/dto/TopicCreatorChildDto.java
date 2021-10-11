@@ -1,9 +1,9 @@
-package springapp.jokefactory.origin.dto;
+package springapp.jokefactory.topic.dto;
 
 import lombok.Data;
 
 @Data
-public class OriginCreatorChildDto {
+public class TopicCreatorChildDto {
 
     private Long id;
     private String name;

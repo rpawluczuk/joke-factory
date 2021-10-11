@@ -11,7 +11,7 @@ import springapp.jokefactory.joke.dto.JokePresenterDto;
 import springapp.jokefactory.joke.dto.JokeRateDto;
 import springapp.jokefactory.jokeblock.JokeBlock;
 import springapp.jokefactory.jokeblock.JokeBlockFacade;
-import springapp.jokefactory.origin.OriginFacade;
+import springapp.jokefactory.topic.TopicFacade;
 import springapp.jokefactory.structure.Structure;
 import springapp.jokefactory.structure.StructureFacade;
 import springapp.jokefactory.utils.Pagination;
@@ -34,7 +34,7 @@ class JokeService {
     private JokeBlockFacade jokeBlockFacade;
 
     @Autowired
-    private OriginFacade originFacade;
+    private TopicFacade topicFacade;
 
     @Autowired
     private Pagination pagination;
@@ -78,9 +78,9 @@ class JokeService {
                     .collect(Collectors.toSet());
             joke.setStructures(structures);
         }
-        originFacade.tryToGetOriginByOriginItem(jokeCreatorDto.getOrigin()).ifPresent(joke::setOrigin);
-        originFacade.tryToGetOriginByOriginItem(jokeCreatorDto.getComedyOrigin()).ifPresent(joke::setComedyOrigin);
-        originFacade.tryToGetOriginByOriginItem(jokeCreatorDto.getOstensibleOrigin()).ifPresent(joke::setOstensibleOrigin);
+        topicFacade.tryToGetTopicByTopicItem(jokeCreatorDto.getConnectingTopic()).ifPresent(joke::setConnectingTopic);
+        topicFacade.tryToGetTopicByTopicItem(jokeCreatorDto.getComedyTopic()).ifPresent(joke::setComedyTopic);
+        topicFacade.tryToGetTopicByTopicItem(jokeCreatorDto.getOstensibleTopic()).ifPresent(joke::setOstensibleTopic);
         jokeRepository.save(joke);
         List<JokeBlock> jokeBlockList = jokeBlockFacade.extractJokeBlockList(jokeCreatorDto.getJokeBlockCreatorDtoList(), joke);
         jokeBlockFacade.saveJokeBlockList(jokeBlockList);
@@ -94,9 +94,9 @@ class JokeService {
         joke.setStructures(structures);
         List<JokeBlock> jokeBlocks = jokeBlockFacade.extractJokeBlockList(jokeCreatorDto.getJokeBlockCreatorDtoList(), joke);
         joke.setJokeBlocks(jokeBlocks);
-        originFacade.tryToGetOriginByOriginItem(jokeCreatorDto.getOrigin()).ifPresent(joke::setOrigin);
-        originFacade.tryToGetOriginByOriginItem(jokeCreatorDto.getComedyOrigin()).ifPresent(joke::setComedyOrigin);
-        originFacade.tryToGetOriginByOriginItem(jokeCreatorDto.getOstensibleOrigin()).ifPresent(joke::setOstensibleOrigin);
+        topicFacade.tryToGetTopicByTopicItem(jokeCreatorDto.getConnectingTopic()).ifPresent(joke::setConnectingTopic);
+        topicFacade.tryToGetTopicByTopicItem(jokeCreatorDto.getComedyTopic()).ifPresent(joke::setComedyTopic);
+        topicFacade.tryToGetTopicByTopicItem(jokeCreatorDto.getOstensibleTopic()).ifPresent(joke::setOstensibleTopic);
         jokeRepository.save(joke);
     }
 

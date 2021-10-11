@@ -23,10 +23,10 @@ create table author_copy_for_test
 as
 select * from mydb.author;
 
-drop table if exists mydb.origin_copy_for_test;
+drop table if exists mydb.topic_copy_for_test;
 create table origin_copy_for_test
 as
-select * from mydb.origin;
+select * from mydb.topic;
 
 drop table if exists mydb.jokes_structures_copy_for_test;
 create table jokes_structures_copy_for_test

@@ -1,4 +1,4 @@
-package springapp.jokefactory.origin.dto;
+package springapp.jokefactory.topic.dto;
 
 import lombok.Data;
 
@@ -6,7 +6,7 @@ import java.sql.Timestamp;
 import java.util.List;
 
 @Data
-public class OriginPresenterDto {
+public class TopicPresenterDto {
 
     private Long id;
     private String name;
