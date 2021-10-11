@@ -8,15 +8,16 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import springapp.jokefactory.joke.dto.JokeCreatorDto;
 import springapp.jokefactory.joke.dto.JokePresenterDto;
+import springapp.jokefactory.joke.dto.JokeRateDto;
 import springapp.jokefactory.jokeblock.JokeBlock;
 import springapp.jokefactory.jokeblock.JokeBlockFacade;
 import springapp.jokefactory.origin.OriginFacade;
 import springapp.jokefactory.structure.Structure;
 import springapp.jokefactory.structure.StructureFacade;
-import springapp.jokefactory.structureblock.StructureBlockFacade;
 import springapp.jokefactory.utils.Pagination;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -33,9 +34,6 @@ class JokeService {
     private JokeBlockFacade jokeBlockFacade;
 
     @Autowired
-    private StructureBlockFacade structureBlockFacade;
-
-    @Autowired
     private OriginFacade originFacade;
 
     @Autowired
@@ -44,7 +42,7 @@ class JokeService {
     @Autowired
     private JokeMapper jokeMapper;
 
-    Iterable<JokePresenterDto> getJokePresenterList(){
+    Iterable<JokePresenterDto> getJokePresenterList() {
         PageRequest pageRequest = PageRequest.of(pagination.getCurrentPage(), pagination.getPageSize(),
                 Sort.Direction.DESC, "dateCreated");
         Page<Joke> pageJokes = jokeRepository.findAll(pageRequest);
@@ -55,10 +53,10 @@ class JokeService {
                 .collect(Collectors.toList());
     }
 
-    Iterable<JokePresenterDto> getFilteredJokePresenterList(Predicate predicate){
+    Iterable<JokePresenterDto> getFilteredJokePresenterList(Predicate predicate) {
         PageRequest pageRequest = PageRequest.of(pagination.getCurrentPage(), pagination.getPageSize(),
                 Sort.Direction.DESC, "dateCreated");
-        Page<Joke>  pageJokes = jokeRepository.findAll(predicate, pageRequest);
+        Page<Joke> pageJokes = jokeRepository.findAll(predicate, pageRequest);
         pagination.setTotalPages(pageJokes.getTotalPages());
         pagination.setTotalItems(pageJokes.getTotalElements());
         return pageJokes.getContent().stream()
@@ -66,7 +64,7 @@ class JokeService {
                 .collect(Collectors.toList());
     }
 
-    JokeCreatorDto getJokeCreatorById(Long id){
+    JokeCreatorDto getJokeCreatorById(Long id) {
         Joke joke = jokeRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("No joke found with id: " + id));
         return jokeMapper.mapJokeToJokeCreatorDto(joke);
@@ -74,10 +72,12 @@ class JokeService {
 
     void addJoke(JokeCreatorDto jokeCreatorDto) {
         Joke joke = jokeMapper.mapJokeCreatorDtoToJoke(jokeCreatorDto);
-        Set<Structure> structures = jokeCreatorDto.getStructureItemList().stream()
-                .map(structureItemDto -> structureFacade.tryToGetStructureById(structureItemDto.getId()))
-                .collect(Collectors.toSet());
-        joke.setStructures(structures);
+        if (jokeCreatorDto.getStructureItemList() != null) {
+            Set<Structure> structures = jokeCreatorDto.getStructureItemList().stream()
+                    .map(structureItemDto -> structureFacade.tryToGetStructureById(structureItemDto.getId()))
+                    .collect(Collectors.toSet());
+            joke.setStructures(structures);
+        }
         originFacade.tryToGetOriginByOriginItem(jokeCreatorDto.getOrigin()).ifPresent(joke::setOrigin);
         originFacade.tryToGetOriginByOriginItem(jokeCreatorDto.getComedyOrigin()).ifPresent(joke::setComedyOrigin);
         originFacade.tryToGetOriginByOriginItem(jokeCreatorDto.getOstensibleOrigin()).ifPresent(joke::setOstensibleOrigin);
@@ -104,5 +104,34 @@ class JokeService {
         Joke jokeToDelete = jokeRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("No joke found with id: " + id));
         jokeRepository.delete(jokeToDelete);
+    }
+
+    void rateJoke(JokeRateDto jokeRateDto) {
+        Joke joke = jokeRepository.findById(jokeRateDto.getJokeId())
+                .orElseThrow(() -> new IllegalArgumentException("No joke found with id: " + jokeRateDto.getJokeId()));
+//        if (joke.getRate() == null) {
+//            joke.setRate(new Rate());
+//        }
+        Float oldRate = joke.getRate().getValue();
+        Short count = Optional.ofNullable(joke.getRate().getCount()).orElse((short) 0);
+        Rate newRate = Rate.builder()
+                .count((short) (count + 1))
+                .value((oldRate * count + jokeRateDto.getRate()) / (count + 1))
+                .build();
+        joke.setRate(newRate);
+        jokeRepository.save(joke);
+    }
+
+    public void resetJokeRate(Long id) {
+        Joke joke = jokeRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("No joke found with id: " + id));
+        joke.setRate(new Rate());
+        jokeRepository.save(joke);
+    }
+
+    public JokePresenterDto getJokePresenterById(Long id) {
+        Joke joke = jokeRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("No joke found with id: " + id));
+        return jokeMapper.mapJokeToJokePresenterDto(joke);
     }
 }

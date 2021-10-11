@@ -12,6 +12,7 @@ public class JokePresenterDto {
     private Long id;
     private String title;
     private String content;
+    private Byte rate;
     private Set<StructurePresenterDto> structures;
     private String author;
     private String connectingOrigin;

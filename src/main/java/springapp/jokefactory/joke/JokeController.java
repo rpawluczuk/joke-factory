@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import springapp.jokefactory.joke.dto.JokeCreatorDto;
 import springapp.jokefactory.joke.dto.JokePresenterDto;
+import springapp.jokefactory.joke.dto.JokeRateDto;
 
 @RestController
 @RequestMapping("/api/jokes")
@@ -26,9 +27,14 @@ class JokeController {
         return jokeService.getFilteredJokePresenterList(predicate);
     }
 
-    @GetMapping(value = "/{id}")
-    JokeCreatorDto getJokeById(@PathVariable("id") Long id) {
+    @GetMapping(value = "/creator/{id}")
+    JokeCreatorDto getJokeCreatorById(@PathVariable("id") Long id) {
         return jokeService.getJokeCreatorById(id);
+    }
+
+    @GetMapping(value = "/presenter/{id}")
+    JokePresenterDto getJokePresenterById(@PathVariable("id") Long id) {
+        return jokeService.getJokePresenterById(id);
     }
 
     @PostMapping
@@ -45,5 +51,15 @@ class JokeController {
     @DeleteMapping(value = "/{id}")
     void deleteJoke(@PathVariable("id") Long id) {
         jokeService.deleteJoke(id);
+    }
+
+    @PatchMapping(value = "/rate")
+    void rateJoke(@RequestBody JokeRateDto jokeRateDto){
+        jokeService.rateJoke(jokeRateDto);
+    }
+
+    @DeleteMapping(value = "/reset-rate/{id}")
+    void resetJokeRate(@PathVariable("id") Long id) {
+        jokeService.resetJokeRate(id);
     }
 }
