@@ -38,6 +38,7 @@ abstract class TopicMapper {
                 .collect(Collectors.toList());
     }
 
+    @Mapping(target = "text", source = "name")
     abstract TopicItemDto mapTopicToTopicItemDto(Topic topic);
 
     @Mapping(target = "children", ignore = true)

@@ -6,5 +6,5 @@ import lombok.Data;
 public class TopicItemDto {
 
     private Long id;
-    private String name;
+    private String text;
 }

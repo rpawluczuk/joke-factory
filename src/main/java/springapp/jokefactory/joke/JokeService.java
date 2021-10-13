@@ -65,9 +65,7 @@ class JokeService {
     }
 
     JokeCreatorDto getJokeCreatorById(Long id) {
-        Joke joke = jokeRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("No joke found with id: " + id));
-        return jokeMapper.mapJokeToJokeCreatorDto(joke);
+        return jokeMapper.mapJokeToJokeCreatorDto(getJokeById(id));
     }
 
     void addJoke(JokeCreatorDto jokeCreatorDto) {
@@ -87,7 +85,8 @@ class JokeService {
     }
 
     void editJoke(JokeCreatorDto jokeCreatorDto) {
-        Joke joke = jokeMapper.mapJokeCreatorDtoToJoke(jokeCreatorDto);
+        Joke joke = getJokeById(jokeCreatorDto.getId());
+        jokeMapper.updateJokeFromJokeCreatorDto(jokeCreatorDto, joke);
         Set<Structure> structures = jokeCreatorDto.getStructureItemList().stream()
                 .map(structureItemDto -> structureFacade.tryToGetStructureById(structureItemDto.getId()))
                 .collect(Collectors.toSet());
@@ -101,17 +100,14 @@ class JokeService {
     }
 
     void deleteJoke(Long id) {
-        Joke jokeToDelete = jokeRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("No joke found with id: " + id));
-        jokeRepository.delete(jokeToDelete);
+        jokeRepository.delete(getJokeById(id));
     }
 
     void rateJoke(JokeRateDto jokeRateDto) {
-        Joke joke = jokeRepository.findById(jokeRateDto.getJokeId())
-                .orElseThrow(() -> new IllegalArgumentException("No joke found with id: " + jokeRateDto.getJokeId()));
-//        if (joke.getRate() == null) {
-//            joke.setRate(new Rate());
-//        }
+        Joke joke = getJokeById(jokeRateDto.getJokeId());
+        if (joke.getRate() == null) {
+            joke.setRate(new Rate());
+        }
         Float oldRate = joke.getRate().getValue();
         Short count = Optional.ofNullable(joke.getRate().getCount()).orElse((short) 0);
         Rate newRate = Rate.builder()
@@ -123,15 +119,17 @@ class JokeService {
     }
 
     public void resetJokeRate(Long id) {
-        Joke joke = jokeRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("No joke found with id: " + id));
+        Joke joke = getJokeById(id);
         joke.setRate(new Rate());
         jokeRepository.save(joke);
     }
 
     public JokePresenterDto getJokePresenterById(Long id) {
-        Joke joke = jokeRepository.findById(id)
+        return jokeMapper.mapJokeToJokePresenterDto(getJokeById(id));
+    }
+
+    private Joke getJokeById(Long id) {
+        return jokeRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("No joke found with id: " + id));
-        return jokeMapper.mapJokeToJokePresenterDto(joke);
     }
 }

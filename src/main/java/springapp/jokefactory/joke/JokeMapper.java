@@ -53,4 +53,9 @@ abstract class JokeMapper {
                 .map(structure -> new StructureItemDto(structure.getId(), structure.getName()))
                 .collect(Collectors.toList());
     }
+
+    @Mapping(target = "connectingTopic", ignore = true)
+    @Mapping(target = "comedyTopic", ignore = true)
+    @Mapping(target = "ostensibleTopic", ignore = true)
+    abstract void updateJokeFromJokeCreatorDto(JokeCreatorDto jokeCreatorDto, @MappingTarget Joke joke);
 }
