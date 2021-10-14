@@ -85,8 +85,10 @@ class JokeService {
         topicFacade.tryToGetTopicByTopicItem(jokeCreatorDto.getComedyTopic()).ifPresent(joke::setComedyTopic);
         topicFacade.tryToGetTopicByTopicItem(jokeCreatorDto.getOstensibleTopic()).ifPresent(joke::setOstensibleTopic);
         jokeRepository.save(joke);
-        List<JokeBlock> jokeBlockList = jokeBlockFacade.extractJokeBlockList(jokeCreatorDto.getJokeBlockCreatorDtoList(), joke);
-        jokeBlockFacade.saveJokeBlockList(jokeBlockList);
+        if (jokeCreatorDto.getJokeBlockCreatorDtoList() != null) {
+            List<JokeBlock> jokeBlockList = jokeBlockFacade.extractJokeBlockList(jokeCreatorDto.getJokeBlockCreatorDtoList(), joke);
+            jokeBlockFacade.saveJokeBlockList(jokeBlockList);
+        }
     }
 
     void editJoke(JokeCreatorDto jokeCreatorDto) {
