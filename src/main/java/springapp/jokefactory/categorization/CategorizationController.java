@@ -13,6 +13,11 @@ class CategorizationController {
     @Autowired
     CategorizationService categorizationService;
 
+    @GetMapping(value = "/{id}")
+    CategorizationCreatorDto getCategorizationCreator(@PathVariable("id") Long id) {
+        return categorizationService.getCategorizationCreator(id);
+    }
+
     @GetMapping(value = "/presenter-list")
     Iterable<CategorizationPresenterDto> getCategorizationPresenterList() {
         return categorizationService.getCategorizationPresenterList();
@@ -21,6 +26,11 @@ class CategorizationController {
     @PostMapping
     void addCategorization(@RequestBody CategorizationCreatorDto categorizationCreatorDto) {
         categorizationService.addCategorization(categorizationCreatorDto);
+    }
+
+    @PutMapping
+    void editCategorization(@RequestBody CategorizationCreatorDto categorizationCreatorDto) {
+        categorizationService.editCategorization(categorizationCreatorDto);
     }
 
     @DeleteMapping(value = "/{id}")

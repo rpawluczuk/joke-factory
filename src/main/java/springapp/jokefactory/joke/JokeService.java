@@ -65,7 +65,12 @@ class JokeService {
     }
 
     JokeCreatorDto getJokeCreatorById(Long id) {
-        return jokeMapper.mapJokeToJokeCreatorDto(getJokeById(id));
+        Joke joke = getJokeById(id);
+        JokeCreatorDto jokeCreatorDto = jokeMapper.mapJokeToJokeCreatorDto(getJokeById(id));
+        jokeCreatorDto.setConnectingTopic(topicFacade.mapTopicToTopicItemDto(joke.getConnectingTopic()));
+        jokeCreatorDto.setOstensibleTopic(topicFacade.mapTopicToTopicItemDto(joke.getOstensibleTopic()));
+        jokeCreatorDto.setComedyTopic(topicFacade.mapTopicToTopicItemDto(joke.getComedyTopic()));
+        return jokeCreatorDto;
     }
 
     void addJoke(JokeCreatorDto jokeCreatorDto) {

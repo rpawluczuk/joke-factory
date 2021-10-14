@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import springapp.jokefactory.categorization.dto.CategorizationCreatorDto;
 import springapp.jokefactory.categorization.dto.CategorizationPresenterDto;
-import springapp.jokefactory.joke.Joke;
+import springapp.jokefactory.topic.TopicFacade;
 
 import java.util.stream.Collectors;
 
@@ -17,16 +17,38 @@ class CategorizationService {
     @Autowired
     CategorizationMapper categorizationMapper;
 
-    void addCategorization(CategorizationCreatorDto categorizationCreatorDto) {
-        Categorization categorization = new Categorization();
-        categorizationMapper.updateCategorizationFromCategorizationCreatorDto(categorizationCreatorDto, categorization);
-        categorizationRepository.save(categorization);
+    @Autowired
+    TopicFacade topicFacade;
+
+    CategorizationCreatorDto getCategorizationCreator(Long id) {
+        Categorization categorization = getCategorizationById(id);
+        CategorizationCreatorDto categorizationCreatorDto =
+                categorizationMapper.mapCategorizationToCategorizationCreatorDto(categorization);
+        categorizationCreatorDto.setBaseCategory(topicFacade.mapTopicToTopicItemDto(categorization.getBaseCategory()));
+        categorizationCreatorDto.setLinkedCategory(topicFacade.mapTopicToTopicItemDto(categorization.getLinkedCategory()));
+        return categorizationCreatorDto;
     }
 
     Iterable<CategorizationPresenterDto> getCategorizationPresenterList() {
         return categorizationRepository.findAll().stream()
                 .map(categorizationMapper::mapCategorizationToCategorizationPresenterDto)
                 .collect(Collectors.toList());
+    }
+
+    void addCategorization(CategorizationCreatorDto categorizationCreatorDto) {
+        Categorization categorization = new Categorization();
+        categorizationMapper.updateCategorizationFromCategorizationCreatorDto(categorizationCreatorDto, categorization);
+        topicFacade.tryToGetTopicByTopicItem(categorizationCreatorDto.getBaseCategory()).ifPresent(categorization::setBaseCategory);
+        topicFacade.tryToGetTopicByTopicItem(categorizationCreatorDto.getLinkedCategory()).ifPresent(categorization::setLinkedCategory);
+        categorizationRepository.save(categorization);
+    }
+
+    void editCategorization(CategorizationCreatorDto categorizationCreatorDto) {
+        Categorization categorization = getCategorizationById(categorizationCreatorDto.getId());
+        categorizationMapper.updateCategorizationFromCategorizationCreatorDto(categorizationCreatorDto, categorization);
+        topicFacade.tryToGetTopicByTopicItem(categorizationCreatorDto.getBaseCategory()).ifPresent(categorization::setBaseCategory);
+        topicFacade.tryToGetTopicByTopicItem(categorizationCreatorDto.getLinkedCategory()).ifPresent(categorization::setLinkedCategory);
+        categorizationRepository.save(categorization);
     }
 
     void deleteCategorization(Long id) {

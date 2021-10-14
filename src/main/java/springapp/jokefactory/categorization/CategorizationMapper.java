@@ -13,5 +13,9 @@ abstract class CategorizationMapper {
     @Mapping(target = "linkedCategory", source = "linkedCategory.name")
     abstract CategorizationPresenterDto mapCategorizationToCategorizationPresenterDto(Categorization categorization);
 
+    abstract CategorizationCreatorDto mapCategorizationToCategorizationCreatorDto(Categorization categorization);
+
+    @Mapping(target = "baseCategory", ignore = true)
+    @Mapping(target = "linkedCategory", ignore = true)
     abstract void updateCategorizationFromCategorizationCreatorDto(CategorizationCreatorDto categorizationCreatorDto, @MappingTarget Categorization categorization);
 }

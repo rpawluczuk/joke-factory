@@ -12,10 +12,17 @@ public class TopicFacade {
     @Autowired
     private TopicRepository topicRepository;
 
+    @Autowired
+    private TopicMapper topicMapper;
+
     public Optional<Topic> tryToGetTopicByTopicItem(TopicItemDto topicItemDto) {
         if (topicItemDto != null && topicItemDto.getId() != null) {
             return topicRepository.findById(topicItemDto.getId());
         }
         return Optional.empty();
+    }
+
+    public TopicItemDto mapTopicToTopicItemDto(Topic topic) {
+        return topicMapper.mapTopicToTopicItemDto(topic);
     }
 }
