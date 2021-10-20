@@ -14,6 +14,7 @@ import springapp.jokefactory.author.Author;
 import springapp.jokefactory.jokeblock.JokeBlock;
 import springapp.jokefactory.topic.Topic;
 import springapp.jokefactory.structure.Structure;
+import springapp.jokefactory.topicgroup.TopicGroup;
 
 @Entity
 @Data
@@ -49,6 +50,9 @@ public class Joke {
     @ToString.Exclude
     @OneToMany(mappedBy = "joke", cascade = CascadeType.ALL)
     private List<JokeBlock> jokeBlocks;
+
+    @OneToMany(mappedBy = "joke", cascade = CascadeType.ALL)
+    private List<TopicGroup> topicGroups;
 
     private String title;
     private String content;

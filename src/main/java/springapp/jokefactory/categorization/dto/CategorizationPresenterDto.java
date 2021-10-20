@@ -7,7 +7,8 @@ public class CategorizationPresenterDto {
 
     private Long id;
     private String name;
-    private String baseCategory;
+    private String connectingCategory;
     private String questions;
-    private String linkedCategory;
+    private String ostensibleCategory;
+    private String comedyCategory;
 }

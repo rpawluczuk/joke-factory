@@ -4,9 +4,11 @@ import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import springapp.jokefactory.joke.Joke;
+import springapp.jokefactory.topicgroup.TopicGroup;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -36,6 +38,21 @@ public class Topic {
     @ToString.Exclude
     @OneToMany(mappedBy = "ostensibleTopic", cascade = CascadeType.MERGE)
     private Set<Joke> jokesAsOstensibleContext;
+
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    @OneToMany(mappedBy = "connectingTopic", cascade = CascadeType.MERGE)
+    private List<TopicGroup> topicGroupsAsConnecting;
+
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    @OneToMany(mappedBy = "comedyTopic", cascade = CascadeType.MERGE)
+    private List<TopicGroup> topicGroupsAsComedy;
+
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    @OneToMany(mappedBy = "ostensibleTopic", cascade = CascadeType.MERGE)
+    private List<TopicGroup> topicGroupsAsOstensible;
 
     @EqualsAndHashCode.Exclude
     @ToString.Exclude

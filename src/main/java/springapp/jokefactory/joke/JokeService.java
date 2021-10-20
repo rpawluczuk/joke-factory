@@ -14,6 +14,8 @@ import springapp.jokefactory.jokeblock.JokeBlockFacade;
 import springapp.jokefactory.topic.TopicFacade;
 import springapp.jokefactory.structure.Structure;
 import springapp.jokefactory.structure.StructureFacade;
+import springapp.jokefactory.topicgroup.TopicGroup;
+import springapp.jokefactory.topicgroup.TopicGroupFacade;
 import springapp.jokefactory.utils.Pagination;
 
 import java.util.List;
@@ -32,6 +34,9 @@ class JokeService {
 
     @Autowired
     private JokeBlockFacade jokeBlockFacade;
+
+    @Autowired
+    private TopicGroupFacade topicGroupFacade;
 
     @Autowired
     private TopicFacade topicFacade;
@@ -85,6 +90,10 @@ class JokeService {
         topicFacade.tryToGetTopicByTopicItem(jokeCreatorDto.getComedyTopic()).ifPresent(joke::setComedyTopic);
         topicFacade.tryToGetTopicByTopicItem(jokeCreatorDto.getOstensibleTopic()).ifPresent(joke::setOstensibleTopic);
         jokeRepository.save(joke);
+        if (jokeCreatorDto.getTopicGroupCreatorList() != null) {
+            List<TopicGroup> topicGroupList = topicGroupFacade.extractTopicGroupList(jokeCreatorDto.getTopicGroupCreatorList(), joke);
+            topicGroupFacade.saveTopicGroupList(topicGroupList);
+        }
         if (jokeCreatorDto.getJokeBlockCreatorDtoList() != null) {
             List<JokeBlock> jokeBlockList = jokeBlockFacade.extractJokeBlockList(jokeCreatorDto.getJokeBlockCreatorDtoList(), joke);
             jokeBlockFacade.saveJokeBlockList(jokeBlockList);

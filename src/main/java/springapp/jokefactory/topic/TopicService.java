@@ -27,11 +27,11 @@ class TopicService {
     @Autowired
     private TopicMapper topicMapper;
 
+    @Autowired
+    private TopicFacade topicFacade;
+
     TopicCreatorDto getTopicCreator(Long id) {
-        Topic topic = topicRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("No topic found with id: " + id));
-        Set<Topic> connectedTopicSet = topicRepository.findAllConnectedTopics(topic);
-        return topicMapper.mapTopicToTopicCreatorDto(topic, connectedTopicSet);
+        return topicFacade.tryToGetTopicCreator(id);
     }
 
     Iterable<TopicPresenterDto> getTopicPresenterList() {

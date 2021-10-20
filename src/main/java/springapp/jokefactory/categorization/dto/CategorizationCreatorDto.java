@@ -1,14 +1,15 @@
 package springapp.jokefactory.categorization.dto;
 
 import lombok.Data;
-import springapp.jokefactory.topic.dto.TopicItemDto;
+import springapp.jokefactory.topic.dto.TopicCreatorDto;
 
 @Data
 public class CategorizationCreatorDto {
 
     private Long id;
     private String name;
-    private TopicItemDto baseCategory;
+    private TopicCreatorDto connectingCategory;
     private String questions;
-    private TopicItemDto linkedCategory;
+    private TopicCreatorDto ostensibleCategory;
+    private TopicCreatorDto comedyCategory;
 }
