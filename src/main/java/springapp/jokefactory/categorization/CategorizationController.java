@@ -29,6 +29,11 @@ class CategorizationController {
         return categorizationService.getCategorizationItemList();
     }
 
+    @GetMapping(value = "/item-list/{jokeId}")
+    Iterable<CategorizationItemDto> getSelectedCategorizationItemList(@PathVariable("jokeId") Long jokeId) {
+        return categorizationService.getSelectedCategorizationItemList(jokeId);
+    }
+
     @PostMapping
     void addCategorization(@RequestBody CategorizationCreatorDto categorizationCreatorDto) {
         categorizationService.addCategorization(categorizationCreatorDto);

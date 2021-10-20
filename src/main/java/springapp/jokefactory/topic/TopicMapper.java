@@ -1,6 +1,7 @@
 package springapp.jokefactory.topic;
 
 import org.mapstruct.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import springapp.jokefactory.topic.dto.TopicCreatorChildDto;
 import springapp.jokefactory.topic.dto.TopicCreatorDto;
 import springapp.jokefactory.topic.dto.TopicItemDto;
@@ -13,14 +14,18 @@ import java.util.stream.Collectors;
 @Mapper(componentModel = "spring")
 abstract class TopicMapper {
 
+    @Autowired
+    protected TopicRepository topicRepository;
+
     @Mapping(target = "parentId", source = "parentId")
     abstract TopicCreatorChildDto mapTopicToTopicCreatorChildDto(Topic topic, Long parentId);
 
     @Mapping(target = "children", source = "topic", qualifiedByName = "extractCreatorChildDtoList")
-    abstract TopicCreatorDto mapTopicToTopicCreatorDto(Topic topic, @Context Set<Topic> connectedTopicSet);
+    abstract TopicCreatorDto mapTopicToTopicCreatorDto(Topic topic);
 
     @Named("extractCreatorChildDtoList")
-    List<TopicCreatorChildDto> extractCreatorChildDtoList(Topic topic, @Context Set<Topic> connectedTopicSet) {
+    List<TopicCreatorChildDto> extractCreatorChildDtoList(Topic topic) {
+        Set<Topic> connectedTopicSet = topicRepository.findAllConnectedTopics(topic);
         return connectedTopicSet.stream()
                 .map(connectedTopic -> mapTopicToTopicCreatorChildDto(connectedTopic, topic.getId()))
                 .collect(Collectors.toList());

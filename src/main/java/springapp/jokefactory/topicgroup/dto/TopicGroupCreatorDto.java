@@ -8,8 +8,8 @@ import springapp.jokefactory.topic.dto.TopicItemDto;
 public class TopicGroupCreatorDto {
 
     private Long id;
-    private CategorizationCreatorDto categorization;
-    private TopicItemDto connectingTopic;
-    private TopicItemDto comedyTopic;
-    private TopicItemDto ostensibleTopic;
+    private CategorizationCreatorDto categorizationCreator;
+    private TopicItemDto connectingTopicItem;
+    private TopicItemDto comedyTopicItem;
+    private TopicItemDto ostensibleTopicItem;
 }

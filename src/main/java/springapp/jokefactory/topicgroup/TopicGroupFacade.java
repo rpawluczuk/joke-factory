@@ -17,13 +17,25 @@ public class TopicGroupFacade {
     @Autowired
     private TopicGroupRepository topicGroupRepository;
 
-    public List<TopicGroup> extractTopicGroupList(List<TopicGroupCreatorDto> topicGroupCreatorList, Joke joke) {
+    public List<TopicGroup> mapTopicGroupCreatorListToTopicGroupList(List<TopicGroupCreatorDto> topicGroupCreatorList, Joke joke) {
         return topicGroupCreatorList.stream()
-                .map(topicGroupCreatorDto -> topicGroupMapper.topicGroupCreatorDtoToTopicGroup(topicGroupCreatorDto,joke))
+                .map(topicGroupCreatorDto -> topicGroupMapper.mapTopicGroupCreatorDtoToTopicGroup(topicGroupCreatorDto,joke))
+                .collect(Collectors.toList());
+    }
+
+    public List<TopicGroupCreatorDto> mapTopicGroupListToTopicGroupCreatorList(List<TopicGroup> topicGroupList) {
+        return topicGroupList.stream()
+                .map(topicGroupMapper::mapTopicGroupToTopicGroupCreatorDto)
                 .collect(Collectors.toList());
     }
 
     public void saveTopicGroupList(List<TopicGroup> topicGroupList) {
         topicGroupList.forEach(topicGroupRepository::save);
+    }
+
+    public List<TopicGroup> extractTopicGroupList(List<TopicGroupCreatorDto> topicGroupCreatorList, Joke joke) {
+        return topicGroupCreatorList.stream()
+                .map(topicGroupCreator -> topicGroupMapper.mapTopicGroupCreatorDtoToTopicGroup(topicGroupCreator, joke))
+                .collect(Collectors.toList());
     }
 }

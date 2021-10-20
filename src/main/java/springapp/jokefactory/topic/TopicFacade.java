@@ -32,14 +32,19 @@ public class TopicFacade {
         return Optional.empty();
     }
 
-    public TopicItemDto mapTopicToTopicItemDto(Topic topic) {
-        return topicMapper.mapTopicToTopicItemDto(topic);
-    }
-
     public TopicCreatorDto tryToGetTopicCreator(Long id) {
         Topic topic = topicRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("No topic found with id: " + id));
         Set<Topic> connectedTopicSet = topicRepository.findAllConnectedTopics(topic);
-        return topicMapper.mapTopicToTopicCreatorDto(topic, connectedTopicSet);
+        return topicMapper.mapTopicToTopicCreatorDto(topic);
     }
+
+    public TopicItemDto mapTopicToTopicItemDto(Topic topic) {
+        return topicMapper.mapTopicToTopicItemDto(topic);
+    }
+
+    public TopicCreatorDto mapTopicToTopicCreatorDto(Topic topic) {
+        return topicMapper.mapTopicToTopicCreatorDto(topic);
+    }
+
 }

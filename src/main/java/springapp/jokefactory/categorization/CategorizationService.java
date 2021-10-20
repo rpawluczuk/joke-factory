@@ -5,7 +5,11 @@ import org.springframework.stereotype.Service;
 import springapp.jokefactory.categorization.dto.CategorizationCreatorDto;
 import springapp.jokefactory.categorization.dto.CategorizationItemDto;
 import springapp.jokefactory.categorization.dto.CategorizationPresenterDto;
+import springapp.jokefactory.joke.JokeFacade;
+import springapp.jokefactory.joke.dto.JokeCreatorDto;
 import springapp.jokefactory.topic.TopicFacade;
+import springapp.jokefactory.topicgroup.TopicGroup;
+import springapp.jokefactory.topicgroup.dto.TopicGroupCreatorDto;
 
 import java.util.stream.Collectors;
 
@@ -20,6 +24,9 @@ class CategorizationService {
 
     @Autowired
     TopicFacade topicFacade;
+
+    @Autowired
+    JokeFacade jokeFacade;
 
     CategorizationCreatorDto getCategorizationCreator(Long id) {
         Categorization categorization = getCategorizationById(id);
@@ -39,6 +46,14 @@ class CategorizationService {
 
     Iterable<CategorizationItemDto> getCategorizationItemList() {
         return categorizationRepository.findAll().stream()
+                .map(categorizationMapper::mapCategorizationToCategorizationItemDto)
+                .collect(Collectors.toList());
+    }
+
+    Iterable<CategorizationItemDto> getSelectedCategorizationItemList(Long jokeId) {
+        return jokeFacade.getJokeById(jokeId)
+                .getTopicGroups().stream()
+                .map(TopicGroup::getCategorization)
                 .map(categorizationMapper::mapCategorizationToCategorizationItemDto)
                 .collect(Collectors.toList());
     }

@@ -40,4 +40,9 @@ public class JokeFacade {
             jokeRepository.save(joke);
         });
     }
+
+    public Joke getJokeById(Long id) {
+        return jokeRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("No joke found with id: " + id));
+    }
 }

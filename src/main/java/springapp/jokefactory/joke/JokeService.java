@@ -47,6 +47,9 @@ class JokeService {
     @Autowired
     private JokeMapper jokeMapper;
 
+    @Autowired
+    private JokeFacade jokeFacade;
+
     Iterable<JokePresenterDto> getJokePresenterList() {
         PageRequest pageRequest = PageRequest.of(pagination.getCurrentPage(), pagination.getPageSize(),
                 Sort.Direction.DESC, "dateCreated");
@@ -70,11 +73,12 @@ class JokeService {
     }
 
     JokeCreatorDto getJokeCreatorById(Long id) {
-        Joke joke = getJokeById(id);
-        JokeCreatorDto jokeCreatorDto = jokeMapper.mapJokeToJokeCreatorDto(getJokeById(id));
+        Joke joke = jokeFacade.getJokeById(id);
+        JokeCreatorDto jokeCreatorDto = jokeMapper.mapJokeToJokeCreatorDto(jokeFacade.getJokeById(id));
         jokeCreatorDto.setConnectingTopic(topicFacade.mapTopicToTopicItemDto(joke.getConnectingTopic()));
         jokeCreatorDto.setOstensibleTopic(topicFacade.mapTopicToTopicItemDto(joke.getOstensibleTopic()));
         jokeCreatorDto.setComedyTopic(topicFacade.mapTopicToTopicItemDto(joke.getComedyTopic()));
+        jokeCreatorDto.setTopicGroupCreatorList(topicGroupFacade.mapTopicGroupListToTopicGroupCreatorList(joke.getTopicGroups()));
         return jokeCreatorDto;
     }
 
@@ -91,7 +95,7 @@ class JokeService {
         topicFacade.tryToGetTopicByTopicItem(jokeCreatorDto.getOstensibleTopic()).ifPresent(joke::setOstensibleTopic);
         jokeRepository.save(joke);
         if (jokeCreatorDto.getTopicGroupCreatorList() != null) {
-            List<TopicGroup> topicGroupList = topicGroupFacade.extractTopicGroupList(jokeCreatorDto.getTopicGroupCreatorList(), joke);
+            List<TopicGroup> topicGroupList = topicGroupFacade.mapTopicGroupCreatorListToTopicGroupList(jokeCreatorDto.getTopicGroupCreatorList(), joke);
             topicGroupFacade.saveTopicGroupList(topicGroupList);
         }
         if (jokeCreatorDto.getJokeBlockCreatorDtoList() != null) {
@@ -101,7 +105,7 @@ class JokeService {
     }
 
     void editJoke(JokeCreatorDto jokeCreatorDto) {
-        Joke joke = getJokeById(jokeCreatorDto.getId());
+        Joke joke = jokeFacade.getJokeById(jokeCreatorDto.getId());
         jokeMapper.updateJokeFromJokeCreatorDto(jokeCreatorDto, joke);
         Set<Structure> structures = jokeCreatorDto.getStructureItemList().stream()
                 .map(structureItemDto -> structureFacade.tryToGetStructureById(structureItemDto.getId()))
@@ -109,6 +113,8 @@ class JokeService {
         joke.setStructures(structures);
         List<JokeBlock> jokeBlocks = jokeBlockFacade.extractJokeBlockList(jokeCreatorDto.getJokeBlockCreatorDtoList(), joke);
         joke.setJokeBlocks(jokeBlocks);
+        List<TopicGroup> topicGroupList = topicGroupFacade.extractTopicGroupList(jokeCreatorDto.getTopicGroupCreatorList(), joke);
+        joke.setTopicGroups(topicGroupList);
         topicFacade.tryToGetTopicByTopicItem(jokeCreatorDto.getConnectingTopic()).ifPresent(joke::setConnectingTopic);
         topicFacade.tryToGetTopicByTopicItem(jokeCreatorDto.getComedyTopic()).ifPresent(joke::setComedyTopic);
         topicFacade.tryToGetTopicByTopicItem(jokeCreatorDto.getOstensibleTopic()).ifPresent(joke::setOstensibleTopic);
@@ -116,11 +122,11 @@ class JokeService {
     }
 
     void deleteJoke(Long id) {
-        jokeRepository.delete(getJokeById(id));
+        jokeRepository.delete(jokeFacade.getJokeById(id));
     }
 
     void rateJoke(JokeRateDto jokeRateDto) {
-        Joke joke = getJokeById(jokeRateDto.getJokeId());
+        Joke joke = jokeFacade.getJokeById(jokeRateDto.getJokeId());
         if (joke.getRate() == null) {
             joke.setRate(new Rate());
         }
@@ -135,17 +141,12 @@ class JokeService {
     }
 
     public void resetJokeRate(Long id) {
-        Joke joke = getJokeById(id);
+        Joke joke = jokeFacade.getJokeById(id);
         joke.setRate(new Rate());
         jokeRepository.save(joke);
     }
 
     public JokePresenterDto getJokePresenterById(Long id) {
-        return jokeMapper.mapJokeToJokePresenterDto(getJokeById(id));
-    }
-
-    private Joke getJokeById(Long id) {
-        return jokeRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("No joke found with id: " + id));
+        return jokeMapper.mapJokeToJokePresenterDto(jokeFacade.getJokeById(id));
     }
 }

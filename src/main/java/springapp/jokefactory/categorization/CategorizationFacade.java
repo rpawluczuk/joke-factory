@@ -2,6 +2,7 @@ package springapp.jokefactory.categorization;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import springapp.jokefactory.categorization.dto.CategorizationCreatorDto;
 import springapp.jokefactory.categorization.dto.CategorizationPresenterDto;
 
 @Service
@@ -20,5 +21,9 @@ public class CategorizationFacade {
 
     public CategorizationPresenterDto mapCategorizationToCategorizationPresenterDto(Categorization categorization) {
         return categorizationMapper.mapCategorizationToCategorizationPresenterDto(categorization);
+    }
+
+    public CategorizationCreatorDto mapCategorizationToCategorizationCreatorDto(Categorization categorization) {
+        return categorizationMapper.mapCategorizationToCategorizationCreatorDto(categorization);
     }
 }
