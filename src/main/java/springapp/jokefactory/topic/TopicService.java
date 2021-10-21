@@ -31,7 +31,7 @@ class TopicService {
     private TopicFacade topicFacade;
 
     TopicCreatorDto getTopicCreator(Long id) {
-        return topicFacade.tryToGetTopicCreator(id);
+        return topicFacade.tryToGetTopicCreator(id).orElse(null);
     }
 
     Iterable<TopicPresenterDto> getTopicPresenterList() {
@@ -60,9 +60,11 @@ class TopicService {
         Topic topic = topicRepository.findTopicByName(topicCreatorDTO.getName())
                 .orElseGet(() -> topicRepository.save(topicMapper.mapTopicCreatorDtoToTopic(topicCreatorDTO)));
         topicCreatorDTO.getChildren().forEach(topicCreatorDTOChild -> {
-            Topic topicChild = topicRepository.findTopicByName(topicCreatorDTOChild.getName())
-                    .orElseGet(() -> topicRepository.save(topicMapper.mapTopicCreatorChildDtoToTopic(topicCreatorDTOChild)));
-            topicRelationRepository.save(new TopicRelation(topic, topicChild));
+            if (!topicCreatorDTOChild.getName().isEmpty()){
+                Topic topicChild = topicRepository.findTopicByName(topicCreatorDTOChild.getName())
+                        .orElseGet(() -> topicRepository.save(topicMapper.mapTopicCreatorChildDtoToTopic(topicCreatorDTOChild)));
+                topicRelationRepository.save(new TopicRelation(topic, topicChild));
+            }
         });
     }
 

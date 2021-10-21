@@ -2,10 +2,12 @@ package springapp.jokefactory.joke;
 
 import org.mapstruct.*;
 import springapp.jokefactory.author.Author;
+import springapp.jokefactory.categorization.Categorization;
 import springapp.jokefactory.joke.dto.JokeCreatorDto;
 import springapp.jokefactory.joke.dto.JokePresenterDto;
 import springapp.jokefactory.structure.Structure;
 import springapp.jokefactory.structure.dto.StructureItemDto;
+import springapp.jokefactory.topicgroup.TopicGroup;
 
 import java.util.List;
 import java.util.Set;
@@ -21,12 +23,22 @@ abstract class JokeMapper {
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE,
             nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
-    @Mapping(target = "connectingTopic", source = "joke.connectingTopic.name")
-    @Mapping(target = "comedyTopic", source = "joke.comedyTopic.name")
-    @Mapping(target = "ostensibleTopic", source = "joke.ostensibleTopic.name")
-    @Mapping(target = "author", source = "joke.author", qualifiedByName = "extractAuthor")
-    @Mapping(target = "rate", source = "joke.rate", qualifiedByName = "handleRate")
+    @Mapping(target = "connectingTopic", source = "connectingTopic.name")
+    @Mapping(target = "comedyTopic", source = "comedyTopic.name")
+    @Mapping(target = "ostensibleTopic", source = "ostensibleTopic.name")
+    @Mapping(target = "structurePresenterList", source = "structures")
+    @Mapping(target = "categorizationList", source = "topicGroups", qualifiedByName = "extractCategorizationList")
+    @Mapping(target = "author", source = "author", qualifiedByName = "extractAuthor")
+    @Mapping(target = "rate", source = "rate", qualifiedByName = "handleRate")
     abstract JokePresenterDto mapJokeToJokePresenterDto(Joke joke);
+
+    @Named("extractCategorizationList")
+    List<String> extractCategorizationList(List<TopicGroup> topicGroups) {
+        return topicGroups.stream()
+                .map(TopicGroup::getCategorization)
+                .map(Categorization::getName)
+                .collect(Collectors.toList());
+    }
 
     @Named("extractAuthor")
     String extractAuthor(Author author) {

@@ -8,6 +8,7 @@ import springapp.jokefactory.categorization.dto.CategorizationPresenterDto;
 import springapp.jokefactory.joke.JokeFacade;
 import springapp.jokefactory.joke.dto.JokeCreatorDto;
 import springapp.jokefactory.topic.TopicFacade;
+import springapp.jokefactory.topic.dto.TopicCreatorDto;
 import springapp.jokefactory.topicgroup.TopicGroup;
 import springapp.jokefactory.topicgroup.dto.TopicGroupCreatorDto;
 
@@ -32,9 +33,18 @@ class CategorizationService {
         Categorization categorization = getCategorizationById(id);
         CategorizationCreatorDto categorizationCreatorDto =
                 categorizationMapper.mapCategorizationToCategorizationCreatorDto(categorization);
-        categorizationCreatorDto.setConnectingCategory(topicFacade.tryToGetTopicCreator(categorization.getConnectingCategory().getId()));
-        categorizationCreatorDto.setOstensibleCategory(topicFacade.tryToGetTopicCreator(categorization.getOstensibleCategory().getId()));
-        categorizationCreatorDto.setComedyCategory(topicFacade.tryToGetTopicCreator(categorization.getComedyCategory().getId()));
+        if (categorization.getConnectingCategory() != null) {
+            TopicCreatorDto connectingCategory = topicFacade.tryToGetTopicCreator(categorization.getConnectingCategory().getId()).orElse(null);
+            categorizationCreatorDto.setConnectingCategory(connectingCategory);
+        }
+        if (categorization.getOstensibleCategory() != null) {
+            TopicCreatorDto ostensibleCategory = topicFacade.tryToGetTopicCreator(categorization.getOstensibleCategory().getId()).orElse(null);
+            categorizationCreatorDto.setOstensibleCategory(ostensibleCategory);
+        }
+        if (categorization.getComedyCategory() != null) {
+            TopicCreatorDto comedyCategory = topicFacade.tryToGetTopicCreator(categorization.getComedyCategory().getId()).orElse(null);
+            categorizationCreatorDto.setComedyCategory(comedyCategory);
+        }
         return categorizationCreatorDto;
     }
 

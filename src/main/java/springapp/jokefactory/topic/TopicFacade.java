@@ -2,12 +2,10 @@ package springapp.jokefactory.topic;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import springapp.jokefactory.categorization.Categorization;
 import springapp.jokefactory.topic.dto.TopicCreatorDto;
 import springapp.jokefactory.topic.dto.TopicItemDto;
 
 import java.util.Optional;
-import java.util.Set;
 
 @Service
 public class TopicFacade {
@@ -32,11 +30,8 @@ public class TopicFacade {
         return Optional.empty();
     }
 
-    public TopicCreatorDto tryToGetTopicCreator(Long id) {
-        Topic topic = topicRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("No topic found with id: " + id));
-        Set<Topic> connectedTopicSet = topicRepository.findAllConnectedTopics(topic);
-        return topicMapper.mapTopicToTopicCreatorDto(topic);
+    public Optional<TopicCreatorDto> tryToGetTopicCreator(Long id) {
+        return topicRepository.findById(id).map(topic -> topicMapper.mapTopicToTopicCreatorDto(topic));
     }
 
     public TopicItemDto mapTopicToTopicItemDto(Topic topic) {

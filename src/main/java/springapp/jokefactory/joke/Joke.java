@@ -51,6 +51,7 @@ public class Joke {
     @OneToMany(mappedBy = "joke", cascade = CascadeType.ALL)
     private List<JokeBlock> jokeBlocks;
 
+    @ToString.Exclude
     @OneToMany(mappedBy = "joke", cascade = CascadeType.ALL)
     private List<TopicGroup> topicGroups;
 

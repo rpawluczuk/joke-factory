@@ -2,8 +2,11 @@ package springapp.jokefactory.joke.dto;
 
 import lombok.Data;
 import springapp.jokefactory.structure.dto.StructurePresenterDto;
+import springapp.jokefactory.topicgroup.dto.TopicGroupCreatorDto;
+import springapp.jokefactory.topicgroup.dto.TopicGroupPresenterDto;
 
 import java.sql.Timestamp;
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -13,7 +16,8 @@ public class JokePresenterDto {
     private String title;
     private String content;
     private Byte rate;
-    private Set<StructurePresenterDto> structures;
+    private List<StructurePresenterDto> structurePresenterList;
+    private List<String> CategorizationList;
     private String author;
     private String connectingTopic;
     private String comedyTopic;
