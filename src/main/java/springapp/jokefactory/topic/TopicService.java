@@ -42,6 +42,14 @@ class TopicService {
         }).collect(Collectors.toList());
     }
 
+    public Iterable<TopicPresenterDto> getTopicPresenterListByName(String name) {
+        List<Topic> topicList = topicRepository.findTopicByNameContaining(name);
+        return topicList.stream().map(topic -> {
+            Set<Topic> connectedTopicList = topicRepository.findAllConnectedTopics(topic);
+            return topicMapper.mapTopicToTopicPresenterDto(topic, connectedTopicList);
+        }).collect(Collectors.toList());
+    }
+
     Iterable<TopicItemDto> getTopicItemList() {
         return topicRepository.findAll().stream()
                 .map(topicMapper::mapTopicToTopicItemDto)

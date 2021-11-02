@@ -20,6 +20,11 @@ class TopicController {
         return topicService.getTopicPresenterList();
     }
 
+    @GetMapping(value = "/by-name", params = "name")
+    Iterable<TopicPresenterDto> getTopicPresenterListByName(@RequestParam("name") String name) {
+        return topicService.getTopicPresenterListByName(name);
+    }
+
     @GetMapping(value = "/topic-creator-children", params = "parent-id")
     Iterable<TopicCreatorChildDto> getTopicCreatorChildList(@RequestParam("parent-id") Long parentId) {
         return topicService.getTopicCreatorChildList(parentId);

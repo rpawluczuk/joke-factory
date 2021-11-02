@@ -3,7 +3,9 @@ package springapp.jokefactory.topic;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -17,4 +19,6 @@ interface TopicRepository extends JpaRepository<Topic, Long> {
             "LEFT JOIN t.children children " +
             "WHERE parents.topicParent = :topic OR children.topicChild = :topic")
     Set<Topic> findAllConnectedTopics(@Param("topic") Topic topic);
+
+    List<Topic> findTopicByNameContaining(@RequestParam("name") String name);
 }
