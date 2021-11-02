@@ -55,9 +55,9 @@ class TopicController {
         topicService.deleteTopic(id);
     }
 
-    @DeleteMapping(value = "/remove-relation", params = {"topic-parent-id", "topic-child-id"})
-    void deleteTopicRelation(@RequestParam("topicParentId") Long topicParentId,
-                              @RequestParam("topicChildId") Long topicChildId) {
+    @DeleteMapping(value = "/remove-relation")
+    void deleteTopicRelation(@RequestParam("topic-parent-id") Long topicParentId,
+                              @RequestParam("topic-child-id") Long topicChildId) {
         topicService.deleteTopicRelation(topicParentId, topicChildId);
     }
 }

@@ -94,7 +94,7 @@ class TopicService {
 
     void deleteTopicRelation(Long topicParentId, Long topicChildId) {
         TopicRelation topicRelation = topicRelationRepository
-                .findById(new TopicRelationKey(topicParentId, topicChildId))
+                .findTopicRelationByParentIdAndChildId(topicParentId, topicChildId)
                 .orElseThrow(() -> new IllegalArgumentException("No topic relation found with parent id: "
                         + topicParentId + " and child id: " + topicChildId));
         topicRelationRepository.delete(topicRelation);
