@@ -1,16 +1,17 @@
 package springapp.jokefactory.categorization;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import springapp.jokefactory.categorization.dto.CategorizationCreatorDto;
 import springapp.jokefactory.categorization.dto.CategorizationItemDto;
 import springapp.jokefactory.categorization.dto.CategorizationPresenterDto;
 import springapp.jokefactory.joke.JokeFacade;
-import springapp.jokefactory.joke.dto.JokeCreatorDto;
 import springapp.jokefactory.topic.TopicFacade;
 import springapp.jokefactory.topic.dto.TopicCreatorDto;
 import springapp.jokefactory.topicgroup.TopicGroup;
-import springapp.jokefactory.topicgroup.dto.TopicGroupCreatorDto;
 
 import java.util.stream.Collectors;
 
@@ -22,6 +23,9 @@ class CategorizationService {
 
     @Autowired
     CategorizationMapper categorizationMapper;
+
+    @Autowired
+    CategorizationPagination categorizationPagination;
 
     @Autowired
     TopicFacade topicFacade;
@@ -49,7 +53,24 @@ class CategorizationService {
     }
 
     Iterable<CategorizationPresenterDto> getCategorizationPresenterList() {
-        return categorizationRepository.findAll().stream()
+        PageRequest pageRequest = PageRequest.of(categorizationPagination.getCurrentPage(), categorizationPagination.getPageSize(),
+                Sort.Direction.DESC, "dateCreated");
+        Page<Categorization> categorizationPage = categorizationRepository.findAll(pageRequest);
+        categorizationPagination.setTotalPages(categorizationPage.getTotalPages());
+        categorizationPagination.setTotalItems(categorizationPage.getTotalElements());
+        return categorizationPage.getContent().stream()
+                .map(categorizationMapper::mapCategorizationToCategorizationPresenterDto)
+                .collect(Collectors.toList());
+    }
+
+
+    Iterable<CategorizationPresenterDto> getCategorizationPresenterListByName(String name) {
+        PageRequest pageRequest = PageRequest.of(categorizationPagination.getCurrentPage(), categorizationPagination.getPageSize(),
+                Sort.Direction.DESC, "dateCreated");
+        Page<Categorization> categorizationPage = categorizationRepository.findCategorizationByNameContaining(name, pageRequest);
+        categorizationPagination.setTotalPages(categorizationPage.getTotalPages());
+        categorizationPagination.setTotalItems(categorizationPage.getTotalElements());
+        return categorizationPage.getContent().stream()
                 .map(categorizationMapper::mapCategorizationToCategorizationPresenterDto)
                 .collect(Collectors.toList());
     }
@@ -68,6 +89,10 @@ class CategorizationService {
                 .collect(Collectors.toList());
     }
 
+    CategorizationPagination getCategorizationPagination() {
+        return categorizationPagination;
+    }
+
     void addCategorization(CategorizationCreatorDto categorizationCreatorDto) {
         Categorization categorization = new Categorization();
         categorizationMapper.updateCategorizationFromCategorizationCreatorDto(categorizationCreatorDto, categorization);
@@ -84,6 +109,13 @@ class CategorizationService {
         topicFacade.tryToGetTopicByTopicCreator(categorizationCreatorDto.getOstensibleCategory()).ifPresent(categorization::setOstensibleCategory);
         topicFacade.tryToGetTopicByTopicCreator(categorizationCreatorDto.getComedyCategory()).ifPresent(categorization::setComedyCategory);
         categorizationRepository.save(categorization);
+    }
+
+    void updateCategorizationPagination(CategorizationPagination categorizationPagination) {
+        this.categorizationPagination.setCurrentPage(categorizationPagination.getCurrentPage());
+        this.categorizationPagination.setTotalItems(categorizationPagination.getTotalItems());
+        this.categorizationPagination.setTotalPages(categorizationPagination.getTotalPages());
+        this.categorizationPagination.setPageSize(categorizationPagination.getPageSize());
     }
 
     void deleteCategorization(Long id) {

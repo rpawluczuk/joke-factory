@@ -24,6 +24,11 @@ class CategorizationController {
         return categorizationService.getCategorizationPresenterList();
     }
 
+    @GetMapping(value = "/presenter-list/by-name", params = "name")
+    Iterable<CategorizationPresenterDto> getTopicPresenterListByName(@RequestParam("name") String name) {
+        return categorizationService.getCategorizationPresenterListByName(name);
+    }
+
     @GetMapping(value = "/item-list")
     Iterable<CategorizationItemDto> getCategorizationItemList() {
         return categorizationService.getCategorizationItemList();
@@ -34,6 +39,12 @@ class CategorizationController {
         return categorizationService.getSelectedCategorizationItemList(jokeId);
     }
 
+    @GetMapping(value = "/pagination")
+    CategorizationPagination getCategorizationPagination(){
+        return categorizationService.getCategorizationPagination();
+    }
+
+
     @PostMapping
     void addCategorization(@RequestBody CategorizationCreatorDto categorizationCreatorDto) {
         categorizationService.addCategorization(categorizationCreatorDto);
@@ -42,6 +53,11 @@ class CategorizationController {
     @PutMapping
     void editCategorization(@RequestBody CategorizationCreatorDto categorizationCreatorDto) {
         categorizationService.editCategorization(categorizationCreatorDto);
+    }
+
+    @PutMapping(value = "/pagination")
+    void updateCategorizationPagination(@RequestBody CategorizationPagination categorizationPagination){
+        categorizationService.updateCategorizationPagination(categorizationPagination);
     }
 
     @DeleteMapping(value = "/{id}")

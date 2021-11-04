@@ -46,10 +46,11 @@ class TopicService {
         Page<Topic> topicPage = topicRepository.findAll(pageRequest);
         topicPagination.setTotalPages(topicPage.getTotalPages());
         topicPagination.setTotalItems(topicPage.getTotalElements());
-        return topicPage.getContent().stream().map(topic -> {
-            Set<Topic> connectedTopicList = topicRepository.findAllConnectedTopics(topic);
-            return topicMapper.mapTopicToTopicPresenterDto(topic, connectedTopicList);
-        }).collect(Collectors.toList());
+        return topicPage.getContent().stream()
+                .map(topic -> {
+                    Set<Topic> connectedTopicList = topicRepository.findAllConnectedTopics(topic);
+                    return topicMapper.mapTopicToTopicPresenterDto(topic, connectedTopicList);
+                }).collect(Collectors.toList());
     }
 
     public Iterable<TopicPresenterDto> getTopicPresenterListByName(String name) {
@@ -82,18 +83,11 @@ class TopicService {
         return topicPagination;
     }
 
-    void updateTopicPagination(TopicPagination topicPagination){
-        this.topicPagination.setCurrentPage(topicPagination.getCurrentPage());
-        this.topicPagination.setTotalItems(topicPagination.getTotalItems());
-        this.topicPagination.setTotalPages(topicPagination.getTotalPages());
-        this.topicPagination.setPageSize(topicPagination.getPageSize());
-    }
-
     void addTopic(TopicCreatorDto topicCreatorDTO) {
         Topic topic = topicRepository.findTopicByName(topicCreatorDTO.getName())
                 .orElseGet(() -> topicRepository.save(topicMapper.mapTopicCreatorDtoToTopic(topicCreatorDTO)));
         topicCreatorDTO.getChildren().forEach(topicCreatorDTOChild -> {
-            if (!topicCreatorDTOChild.getName().isEmpty()){
+            if (!topicCreatorDTOChild.getName().isEmpty()) {
                 Topic topicChild = topicRepository.findTopicByName(topicCreatorDTOChild.getName())
                         .orElseGet(() -> topicRepository.save(topicMapper.mapTopicCreatorChildDtoToTopic(topicCreatorDTOChild)));
                 topicRelationRepository.save(new TopicRelation(topic, topicChild));
@@ -114,6 +108,13 @@ class TopicService {
                 .orElseThrow(() -> new IllegalArgumentException("No topic found with id: " + topicCreatorDTO.getId()));
         topicToEdit.setName(topicCreatorDTO.getName());
         topicRepository.save(topicToEdit);
+    }
+
+    void updateTopicPagination(TopicPagination topicPagination) {
+        this.topicPagination.setCurrentPage(topicPagination.getCurrentPage());
+        this.topicPagination.setTotalItems(topicPagination.getTotalItems());
+        this.topicPagination.setTotalPages(topicPagination.getTotalPages());
+        this.topicPagination.setPageSize(topicPagination.getPageSize());
     }
 
     void deleteTopic(Long id) {
