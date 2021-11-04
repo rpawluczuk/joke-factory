@@ -1,7 +1,9 @@
 package springapp.jokefactory.structure;
 
-import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import springapp.jokefactory.joke.JokeFacade;
 import springapp.jokefactory.structure.dto.StructureCreatorDto;
@@ -18,6 +20,9 @@ class StructureService {
 
     @Autowired
     private StructureRepository structureRepository;
+
+    @Autowired
+    private StructurePagination structurePagination;
 
     @Autowired
     private StructureFacade structureFacade;
@@ -37,7 +42,23 @@ class StructureService {
     }
 
     Iterable<StructurePresenterDto> getStructurePresenterList() {
-        return structureRepository.findAll().stream()
+        PageRequest pageRequest = PageRequest.of(structurePagination.getCurrentPage(), structurePagination.getPageSize(),
+                Sort.Direction.DESC, "dateCreated");
+        Page<Structure> structurePage = structureRepository.findAll(pageRequest);
+        structurePagination.setTotalPages(structurePage.getTotalPages());
+        structurePagination.setTotalItems(structurePage.getTotalElements());
+        return structurePage.getContent().stream()
+                .map(structureMapper::mapStructureToStructurePresenterDto)
+                .collect(Collectors.toList());
+    }
+
+    Iterable<StructurePresenterDto> getStructurePresenterListByName(String name) {
+        PageRequest pageRequest = PageRequest.of(structurePagination.getCurrentPage(), structurePagination.getPageSize(),
+                Sort.Direction.DESC, "dateCreated");
+        Page<Structure> structurePage = structureRepository.findStructureByNameContaining(name, pageRequest);
+        structurePagination.setTotalPages(structurePage.getTotalPages());
+        structurePagination.setTotalItems(structurePage.getTotalElements());
+        return structurePage.getContent().stream()
                 .map(structureMapper::mapStructureToStructurePresenterDto)
                 .collect(Collectors.toList());
     }
@@ -52,6 +73,10 @@ class StructureService {
         return structureRepository.findStructuresByJokeID(jokeID).stream()
                 .map(structureMapper::mapStructureToStructureItemDto)
                 .collect(Collectors.toList());
+    }
+
+    StructurePagination getStructurePagination() {
+        return structurePagination;
     }
 
     void addStructure(StructureCreatorDto structureCreatorDto) {
@@ -70,6 +95,13 @@ class StructureService {
                 structureCreatorDto.getStructureBlockCreatorDtoList(), structureBlockList, structure);
         updatedStructure.setStructureBlockScheme(updatedStructureBlockList);
         structureRepository.save(updatedStructure);
+    }
+
+    void updateStructurePagination(StructurePagination structurePagination) {
+        this.structurePagination.setCurrentPage(structurePagination.getCurrentPage());
+        this.structurePagination.setTotalItems(structurePagination.getTotalItems());
+        this.structurePagination.setTotalPages(structurePagination.getTotalPages());
+        this.structurePagination.setPageSize(structurePagination.getPageSize());
     }
 
     void deleteStructure(Long id) {

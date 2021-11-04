@@ -2,16 +2,7 @@ package springapp.jokefactory.structure;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import springapp.jokefactory.structure.dto.StructureCreatorDto;
 import springapp.jokefactory.structure.dto.StructureItemDto;
 import springapp.jokefactory.structure.dto.StructurePresenterDto;
@@ -29,6 +20,11 @@ class StructureController {
         return structureService.getStructurePresenterList();
     }
 
+    @GetMapping(value = "/by-name", params = "name")
+    Iterable<StructurePresenterDto> getStructurePresenterListByName(@RequestParam("name") String name) {
+        return structureService.getStructurePresenterListByName(name);
+    }
+
     @GetMapping(value = "/list-items")
     Iterable<StructureItemDto> getStructureItemList() {
         return structureService.getStructureItemList();
@@ -44,6 +40,11 @@ class StructureController {
         return structureService.getStructureItemListByJokeID(jokeID);
     }
 
+    @GetMapping(value = "/pagination")
+    StructurePagination getTopicPagination(){
+        return structureService.getStructurePagination();
+    }
+
     @PostMapping(consumes={"application/json"})
     @ResponseStatus(HttpStatus.CREATED)
     void addStructure(@RequestBody StructureCreatorDto structureCreatorDto){
@@ -53,6 +54,11 @@ class StructureController {
     @PutMapping
     void editStructure(@RequestBody StructureCreatorDto structureCreatorDto){
         structureService.editStructure(structureCreatorDto);
+    }
+
+    @PutMapping(value = "/pagination")
+    void updateStructurePagination(@RequestBody StructurePagination structurePagination){
+        structureService.updateStructurePagination(structurePagination);
     }
 
     @DeleteMapping(value = "/{id}")

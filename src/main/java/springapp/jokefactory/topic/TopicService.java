@@ -33,8 +33,9 @@ class TopicService {
 
     @Autowired
     private TopicFacade topicFacade;
+
     @Autowired
-    TopicPagination topicPagination;
+    private TopicPagination topicPagination;
 
     TopicCreatorDto getTopicCreator(Long id) {
         return topicFacade.tryToGetTopicCreator(id).orElse(null);

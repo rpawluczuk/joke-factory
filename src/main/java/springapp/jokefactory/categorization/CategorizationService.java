@@ -63,7 +63,6 @@ class CategorizationService {
                 .collect(Collectors.toList());
     }
 
-
     Iterable<CategorizationPresenterDto> getCategorizationPresenterListByName(String name) {
         PageRequest pageRequest = PageRequest.of(categorizationPagination.getCurrentPage(), categorizationPagination.getPageSize(),
                 Sort.Direction.DESC, "dateCreated");
