@@ -1,7 +1,11 @@
 package springapp.jokefactory.topic;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 import springapp.jokefactory.joke.JokeFacade;
 import springapp.jokefactory.topic.dto.TopicCreatorChildDto;
 import springapp.jokefactory.topic.dto.TopicCreatorDto;
@@ -29,22 +33,32 @@ class TopicService {
 
     @Autowired
     private TopicFacade topicFacade;
+    @Autowired
+    TopicPagination topicPagination;
 
     TopicCreatorDto getTopicCreator(Long id) {
         return topicFacade.tryToGetTopicCreator(id).orElse(null);
     }
 
     Iterable<TopicPresenterDto> getTopicPresenterList() {
-        List<Topic> topicList = topicRepository.findAll();
-        return topicList.stream().map(topic -> {
+        PageRequest pageRequest = PageRequest.of(topicPagination.getCurrentPage(), topicPagination.getPageSize(),
+                Sort.Direction.DESC, "dateCreated");
+        Page<Topic> topicPage = topicRepository.findAll(pageRequest);
+        topicPagination.setTotalPages(topicPage.getTotalPages());
+        topicPagination.setTotalItems(topicPage.getTotalElements());
+        return topicPage.getContent().stream().map(topic -> {
             Set<Topic> connectedTopicList = topicRepository.findAllConnectedTopics(topic);
             return topicMapper.mapTopicToTopicPresenterDto(topic, connectedTopicList);
         }).collect(Collectors.toList());
     }
 
     public Iterable<TopicPresenterDto> getTopicPresenterListByName(String name) {
-        List<Topic> topicList = topicRepository.findTopicByNameContaining(name);
-        return topicList.stream().map(topic -> {
+        PageRequest pageRequest = PageRequest.of(topicPagination.getCurrentPage(), topicPagination.getPageSize(),
+                Sort.Direction.DESC, "dateCreated");
+        Page<Topic> topicPage = topicRepository.findTopicByNameContaining(name, pageRequest);
+        topicPagination.setTotalPages(topicPage.getTotalPages());
+        topicPagination.setTotalItems(topicPage.getTotalElements());
+        return topicPage.getContent().stream().map(topic -> {
             Set<Topic> connectedTopicList = topicRepository.findAllConnectedTopics(topic);
             return topicMapper.mapTopicToTopicPresenterDto(topic, connectedTopicList);
         }).collect(Collectors.toList());
@@ -62,6 +76,17 @@ class TopicService {
         return topicRepository.findAllConnectedTopics(topic)
                 .stream().map(connectedTopic -> topicMapper.mapTopicToTopicCreatorChildDto(connectedTopic, parentId))
                 .collect(Collectors.toList());
+    }
+
+    TopicPagination getTopicPagination() {
+        return topicPagination;
+    }
+
+    void updateTopicPagination(TopicPagination topicPagination){
+        this.topicPagination.setCurrentPage(topicPagination.getCurrentPage());
+        this.topicPagination.setTotalItems(topicPagination.getTotalItems());
+        this.topicPagination.setTotalPages(topicPagination.getTotalPages());
+        this.topicPagination.setPageSize(topicPagination.getPageSize());
     }
 
     void addTopic(TopicCreatorDto topicCreatorDTO) {

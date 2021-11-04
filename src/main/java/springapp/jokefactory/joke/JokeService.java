@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 import springapp.jokefactory.joke.dto.JokeCreatorDto;
 import springapp.jokefactory.joke.dto.JokePresenterDto;
 import springapp.jokefactory.joke.dto.JokeRateDto;
@@ -16,7 +17,6 @@ import springapp.jokefactory.structure.Structure;
 import springapp.jokefactory.structure.StructureFacade;
 import springapp.jokefactory.topicgroup.TopicGroup;
 import springapp.jokefactory.topicgroup.TopicGroupFacade;
-import springapp.jokefactory.utils.Pagination;
 
 import java.util.List;
 import java.util.Optional;
@@ -42,7 +42,7 @@ class JokeService {
     private TopicFacade topicFacade;
 
     @Autowired
-    private Pagination pagination;
+    private JokePagination jokePagination;
 
     @Autowired
     private JokeMapper jokeMapper;
@@ -51,22 +51,22 @@ class JokeService {
     private JokeFacade jokeFacade;
 
     Iterable<JokePresenterDto> getJokePresenterList() {
-        PageRequest pageRequest = PageRequest.of(pagination.getCurrentPage(), pagination.getPageSize(),
+        PageRequest pageRequest = PageRequest.of(jokePagination.getCurrentPage(), jokePagination.getPageSize(),
                 Sort.Direction.DESC, "dateCreated");
         Page<Joke> pageJokes = jokeRepository.findAll(pageRequest);
-        pagination.setTotalPages(pageJokes.getTotalPages());
-        pagination.setTotalItems(pageJokes.getTotalElements());
+        jokePagination.setTotalPages(pageJokes.getTotalPages());
+        jokePagination.setTotalItems(pageJokes.getTotalElements());
         return pageJokes.getContent().stream()
                 .map(jokeMapper::mapJokeToJokePresenterDto)
                 .collect(Collectors.toList());
     }
 
     Iterable<JokePresenterDto> getFilteredJokePresenterList(Predicate predicate) {
-        PageRequest pageRequest = PageRequest.of(pagination.getCurrentPage(), pagination.getPageSize(),
+        PageRequest pageRequest = PageRequest.of(jokePagination.getCurrentPage(), jokePagination.getPageSize(),
                 Sort.Direction.DESC, "dateCreated");
         Page<Joke> pageJokes = jokeRepository.findAll(predicate, pageRequest);
-        pagination.setTotalPages(pageJokes.getTotalPages());
-        pagination.setTotalItems(pageJokes.getTotalElements());
+        jokePagination.setTotalPages(pageJokes.getTotalPages());
+        jokePagination.setTotalItems(pageJokes.getTotalElements());
         return pageJokes.getContent().stream()
                 .map(jokeMapper::mapJokeToJokePresenterDto)
                 .collect(Collectors.toList());
@@ -80,6 +80,10 @@ class JokeService {
         jokeCreatorDto.setComedyTopic(topicFacade.mapTopicToTopicItemDto(joke.getComedyTopic()));
         jokeCreatorDto.setTopicGroupCreatorList(topicGroupFacade.mapTopicGroupListToTopicGroupCreatorList(joke.getTopicGroups()));
         return jokeCreatorDto;
+    }
+
+    JokePagination getJokePagination() {
+        return jokePagination;
     }
 
     void addJoke(JokeCreatorDto jokeCreatorDto) {
@@ -121,6 +125,13 @@ class JokeService {
         jokeRepository.save(joke);
     }
 
+    void updatePagination(JokePagination jokePagination){
+        this.jokePagination.setCurrentPage(jokePagination.getCurrentPage());
+        this.jokePagination.setTotalItems(jokePagination.getTotalItems());
+        this.jokePagination.setTotalPages(jokePagination.getTotalPages());
+        this.jokePagination.setPageSize(jokePagination.getPageSize());
+    }
+
     void deleteJoke(Long id) {
         jokeRepository.delete(jokeFacade.getJokeById(id));
     }
@@ -149,4 +160,5 @@ class JokeService {
     public JokePresenterDto getJokePresenterById(Long id) {
         return jokeMapper.mapJokeToJokePresenterDto(jokeFacade.getJokeById(id));
     }
+
 }

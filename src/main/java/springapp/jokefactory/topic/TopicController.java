@@ -40,6 +40,11 @@ class TopicController {
         return topicService.getTopicCreator(id);
     }
 
+    @GetMapping(value = "/pagination")
+    TopicPagination getTopicPagination(){
+        return topicService.getTopicPagination();
+    }
+
     @PostMapping
     void addTopic(@RequestBody TopicCreatorDto topicCreatorDTO) {
         topicService.addTopic(topicCreatorDTO);
@@ -48,6 +53,11 @@ class TopicController {
     @PostMapping(value = "/add-topic-child")
     void addTopicChild(@RequestBody TopicCreatorChildDto topicCreatorChildDto) {
         topicService.addTopicChild(topicCreatorChildDto);
+    }
+
+    @PutMapping(value = "/pagination")
+    void updateTopicPagination(@RequestBody TopicPagination topicPagination){
+        topicService.updateTopicPagination(topicPagination);
     }
 
     @PatchMapping

@@ -37,6 +37,11 @@ class JokeController {
         return jokeService.getJokePresenterById(id);
     }
 
+    @GetMapping(value = "/pagination")
+    public JokePagination getPagination(){
+        return jokeService.getJokePagination();
+    }
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     void addJoke(@RequestBody JokeCreatorDto jokeCreatorDTO) {
@@ -46,6 +51,11 @@ class JokeController {
     @PutMapping
     void editJoke(@RequestBody JokeCreatorDto jokeCreatorDTO) {
         jokeService.editJoke(jokeCreatorDTO);
+    }
+
+    @PutMapping(value = "/pagination")
+    public void updatePagination(@RequestBody JokePagination jokePagination){
+        this.jokeService.updatePagination(jokePagination);
     }
 
     @DeleteMapping(value = "/{id}")
