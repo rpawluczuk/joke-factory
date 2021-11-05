@@ -5,12 +5,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 import springapp.jokefactory.joke.JokeFacade;
-import springapp.jokefactory.topic.dto.TopicCreatorChildDto;
-import springapp.jokefactory.topic.dto.TopicCreatorDto;
-import springapp.jokefactory.topic.dto.TopicItemDto;
-import springapp.jokefactory.topic.dto.TopicPresenterDto;
+import springapp.jokefactory.topic.dto.*;
 
 import java.util.List;
 import java.util.Set;
@@ -35,18 +31,18 @@ class TopicService {
     private TopicFacade topicFacade;
 
     @Autowired
-    private TopicPagination topicPagination;
+    private TopicPaginationDto topicPaginationDto;
 
     TopicCreatorDto getTopicCreator(Long id) {
         return topicFacade.tryToGetTopicCreator(id).orElse(null);
     }
 
     Iterable<TopicPresenterDto> getTopicPresenterList() {
-        PageRequest pageRequest = PageRequest.of(topicPagination.getCurrentPage(), topicPagination.getPageSize(),
+        PageRequest pageRequest = PageRequest.of(topicPaginationDto.getCurrentPage(), topicPaginationDto.getPageSize(),
                 Sort.Direction.DESC, "dateCreated");
         Page<Topic> topicPage = topicRepository.findAll(pageRequest);
-        topicPagination.setTotalPages(topicPage.getTotalPages());
-        topicPagination.setTotalItems(topicPage.getTotalElements());
+        topicPaginationDto.setTotalPages(topicPage.getTotalPages());
+        topicPaginationDto.setTotalItems(topicPage.getTotalElements());
         return topicPage.getContent().stream()
                 .map(topic -> {
                     Set<Topic> connectedTopicList = topicRepository.findAllConnectedTopics(topic);
@@ -55,11 +51,11 @@ class TopicService {
     }
 
     public Iterable<TopicPresenterDto> getTopicPresenterListByName(String name) {
-        PageRequest pageRequest = PageRequest.of(topicPagination.getCurrentPage(), topicPagination.getPageSize(),
+        PageRequest pageRequest = PageRequest.of(topicPaginationDto.getCurrentPage(), topicPaginationDto.getPageSize(),
                 Sort.Direction.DESC, "dateCreated");
         Page<Topic> topicPage = topicRepository.findTopicByNameContaining(name, pageRequest);
-        topicPagination.setTotalPages(topicPage.getTotalPages());
-        topicPagination.setTotalItems(topicPage.getTotalElements());
+        topicPaginationDto.setTotalPages(topicPage.getTotalPages());
+        topicPaginationDto.setTotalItems(topicPage.getTotalElements());
         return topicPage.getContent().stream().map(topic -> {
             Set<Topic> connectedTopicList = topicRepository.findAllConnectedTopics(topic);
             return topicMapper.mapTopicToTopicPresenterDto(topic, connectedTopicList);
@@ -80,8 +76,24 @@ class TopicService {
                 .collect(Collectors.toList());
     }
 
-    TopicPagination getTopicPagination() {
-        return topicPagination;
+    TopicCreatorChildRowAndPageDto getTopicCreatorChildRowAndPage(Long parentId, int currentPage, int pageSize) {
+        PageRequest pageRequest = PageRequest.of(currentPage, pageSize, Sort.Direction.ASC, "name");
+        Topic topic = topicRepository.findById(parentId)
+                .orElseThrow(() -> new IllegalArgumentException("No topic found with id: " + parentId));
+        Page<Topic> topicPage = topicRepository.findConnectedTopics(topic, pageRequest);
+        List<TopicCreatorChildDto> topicCreatorChildList = topicPage.getContent().stream()
+                .map(connectedTopic -> topicMapper.mapTopicToTopicCreatorChildDto(connectedTopic, parentId))
+                .collect(Collectors.toList());
+        return TopicCreatorChildRowAndPageDto.builder()
+                .topicCreatorChildList(topicCreatorChildList)
+                .parentId(parentId)
+                .totalItems(topicPage.getTotalElements())
+                .totalPages(topicPage.getTotalPages())
+                .build();
+    }
+
+    TopicPaginationDto getTopicPagination() {
+        return topicPaginationDto;
     }
 
     void addTopic(TopicCreatorDto topicCreatorDTO) {
@@ -111,11 +123,11 @@ class TopicService {
         topicRepository.save(topicToEdit);
     }
 
-    void updateTopicPagination(TopicPagination topicPagination) {
-        this.topicPagination.setCurrentPage(topicPagination.getCurrentPage());
-        this.topicPagination.setTotalItems(topicPagination.getTotalItems());
-        this.topicPagination.setTotalPages(topicPagination.getTotalPages());
-        this.topicPagination.setPageSize(topicPagination.getPageSize());
+    void updateTopicPagination(TopicPaginationDto topicPaginationDto) {
+        this.topicPaginationDto.setCurrentPage(topicPaginationDto.getCurrentPage());
+        this.topicPaginationDto.setTotalItems(topicPaginationDto.getTotalItems());
+        this.topicPaginationDto.setTotalPages(topicPaginationDto.getTotalPages());
+        this.topicPaginationDto.setPageSize(topicPaginationDto.getPageSize());
     }
 
     void deleteTopic(Long id) {

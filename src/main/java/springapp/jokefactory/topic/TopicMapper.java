@@ -2,10 +2,8 @@ package springapp.jokefactory.topic;
 
 import org.mapstruct.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import springapp.jokefactory.topic.dto.TopicCreatorChildDto;
-import springapp.jokefactory.topic.dto.TopicCreatorDto;
-import springapp.jokefactory.topic.dto.TopicItemDto;
-import springapp.jokefactory.topic.dto.TopicPresenterDto;
+import org.springframework.data.domain.Page;
+import springapp.jokefactory.topic.dto.*;
 
 import java.util.List;
 import java.util.Set;
@@ -48,5 +46,4 @@ abstract class TopicMapper {
 
     @Mapping(target = "children", ignore = true)
     abstract Topic mapTopicCreatorDtoToTopic(TopicCreatorDto topicCreatorDto);
-
 }

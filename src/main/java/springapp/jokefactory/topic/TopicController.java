@@ -2,10 +2,7 @@ package springapp.jokefactory.topic;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import springapp.jokefactory.topic.dto.TopicCreatorChildDto;
-import springapp.jokefactory.topic.dto.TopicCreatorDto;
-import springapp.jokefactory.topic.dto.TopicItemDto;
-import springapp.jokefactory.topic.dto.TopicPresenterDto;
+import springapp.jokefactory.topic.dto.*;
 
 @RestController
 @RequestMapping("/api/topics")
@@ -30,6 +27,13 @@ class TopicController {
         return topicService.getTopicCreatorChildList(parentId);
     }
 
+    @GetMapping(value = "/topic-creator-child-row")
+    TopicCreatorChildRowAndPageDto getTopicCreatorChildRowAndPage(@RequestParam("parent-id") Long parentId,
+                                                                  @RequestParam("current-page") int currentPage,
+                                                                  @RequestParam("page-size") int pageSize) {
+        return topicService.getTopicCreatorChildRowAndPage(parentId, currentPage, pageSize);
+    }
+
     @GetMapping(value = "/list-items")
     Iterable<TopicItemDto> getTopicItemList() {
         return topicService.getTopicItemList();
@@ -41,7 +45,7 @@ class TopicController {
     }
 
     @GetMapping(value = "/pagination")
-    TopicPagination getTopicPagination(){
+    TopicPaginationDto getTopicPagination(){
         return topicService.getTopicPagination();
     }
 
@@ -56,8 +60,8 @@ class TopicController {
     }
 
     @PutMapping(value = "/pagination")
-    void updateTopicPagination(@RequestBody TopicPagination topicPagination){
-        topicService.updateTopicPagination(topicPagination);
+    void updateTopicPagination(@RequestBody TopicPaginationDto topicPaginationDto){
+        topicService.updateTopicPagination(topicPaginationDto);
     }
 
     @PatchMapping
