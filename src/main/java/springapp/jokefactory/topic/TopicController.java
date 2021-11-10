@@ -34,6 +34,12 @@ class TopicController {
         return topicService.getTopicCreatorChildRowAndPage(parentId, currentPage, pageSize);
     }
 
+    @GetMapping(value = "/topic-creator-child-row-without-parent")
+    TopicCreatorChildRowAndPageDto getTopicCreatorChildRowAndPage(@RequestParam("current-page") int currentPage,
+                                                                  @RequestParam("page-size") int pageSize) {
+        return topicService.getTopicCreatorChildRowAndPage(currentPage, pageSize);
+    }
+
     @GetMapping(value = "/list-items")
     Iterable<TopicItemDto> getTopicItemList() {
         return topicService.getTopicItemList();

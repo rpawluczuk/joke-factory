@@ -18,6 +18,8 @@ abstract class TopicMapper {
     @Mapping(target = "parentId", source = "parentId")
     abstract TopicCreatorChildDto mapTopicToTopicCreatorChildDto(Topic topic, Long parentId);
 
+    abstract TopicCreatorChildDto mapTopicToTopicCreatorChildDto(Topic topic);
+
     @Mapping(target = "children", source = "topic", qualifiedByName = "extractCreatorChildDtoList")
     abstract TopicCreatorDto mapTopicToTopicCreatorDto(Topic topic);
 

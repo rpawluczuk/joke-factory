@@ -92,6 +92,20 @@ class TopicService {
                 .build();
     }
 
+    TopicCreatorChildRowAndPageDto getTopicCreatorChildRowAndPage(int currentPage, int pageSize) {
+        PageRequest pageRequest = PageRequest.of(currentPage, pageSize, Sort.Direction.ASC, "name");
+        Page<Topic> topicPage = topicRepository.findAll(pageRequest);
+        List<TopicCreatorChildDto> topicCreatorChildList = topicPage.getContent().stream()
+                .map(connectedTopic -> topicMapper.mapTopicToTopicCreatorChildDto(connectedTopic))
+                .collect(Collectors.toList());
+        return TopicCreatorChildRowAndPageDto.builder()
+                .topicCreatorChildList(topicCreatorChildList)
+                .parentId(null)
+                .totalItems(topicPage.getTotalElements())
+                .totalPages(topicPage.getTotalPages())
+                .build();
+    }
+
     TopicPaginationDto getTopicPagination() {
         return topicPaginationDto;
     }
