@@ -25,20 +25,20 @@ abstract class TopicMapper {
 
     @Named("extractCreatorChildDtoList")
     List<TopicCreatorChildDto> extractCreatorChildDtoList(Topic topic) {
-        Set<Topic> connectedTopicSet = topicRepository.findAllConnectedTopics(topic);
-        return connectedTopicSet.stream()
+        List<Topic> connectedTopicList = topicRepository.findAllConnectedTopics(topic);
+        return connectedTopicList.stream()
                 .map(connectedTopic -> mapTopicToTopicCreatorChildDto(connectedTopic, topic.getId()))
                 .collect(Collectors.toList());
     }
 
     abstract Topic mapTopicCreatorChildDtoToTopic(TopicCreatorChildDto topicCreatorChildDto);
 
-    @Mapping(target = "children", source = "connectedTopicSet", qualifiedByName = "extractTopicNameSet")
-    abstract TopicPresenterDto mapTopicToTopicPresenterDto(Topic topic, Set<Topic> connectedTopicSet);
+    @Mapping(target = "children", source = "connectedTopicList", qualifiedByName = "extractTopicNameList")
+    abstract TopicPresenterDto mapTopicToTopicPresenterDto(Topic topic, List<Topic> connectedTopicList);
 
-    @Named("extractTopicNameSet")
-    List<String> extractTopicNameSet(Set<Topic> connectedTopicSet) {
-        return connectedTopicSet.stream()
+    @Named("extractTopicNameList")
+    List<String> extractTopicNameList(List<Topic> connectedTopicList) {
+        return connectedTopicList.stream()
                 .map(Topic::getName)
                 .collect(Collectors.toList());
     }

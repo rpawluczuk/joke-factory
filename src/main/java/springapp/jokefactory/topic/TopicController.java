@@ -1,5 +1,7 @@
 package springapp.jokefactory.topic;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import springapp.jokefactory.topic.dto.*;
@@ -11,6 +13,9 @@ class TopicController {
 
     @Autowired
     private TopicService topicService;
+
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @GetMapping
     Iterable<TopicPresenterDto> getTopicPresenterList() {
@@ -28,16 +33,9 @@ class TopicController {
     }
 
     @GetMapping(value = "/topic-creator-child-row")
-    TopicCreatorChildRowAndPageDto getTopicCreatorChildRowAndPage(@RequestParam("parent-id") Long parentId,
-                                                                  @RequestParam("current-page") int currentPage,
-                                                                  @RequestParam("page-size") int pageSize) {
-        return topicService.getTopicCreatorChildRowAndPage(parentId, currentPage, pageSize);
-    }
-
-    @GetMapping(value = "/topic-creator-child-row-without-parent")
-    TopicCreatorChildRowAndPageDto getTopicCreatorChildRowAndPage(@RequestParam("current-page") int currentPage,
-                                                                  @RequestParam("page-size") int pageSize) {
-        return topicService.getTopicCreatorChildRowAndPage(currentPage, pageSize);
+    TopicCreatorChildRowResponseDto getTopicCreatorChildRowAndPage(@RequestParam("topicCreatorChildRowRequestDto") String topicCreatorChildRowRequestDto) throws JsonProcessingException {
+        TopicCreatorChildRowRequestDto request = objectMapper.readValue(topicCreatorChildRowRequestDto, TopicCreatorChildRowRequestDto.class);
+        return topicService.getTopicCreatorChildRowAndPage(request);
     }
 
     @GetMapping(value = "/list-items")
@@ -53,6 +51,11 @@ class TopicController {
     @GetMapping(value = "/pagination")
     TopicPaginationDto getTopicPagination(){
         return topicService.getTopicPagination();
+    }
+
+    @GetMapping(value = "/random")
+    Long getRandomTopicResponse(@RequestParam("parent-id") Long parentId){
+        return topicService.getRandomTopicResponse(parentId);
     }
 
     @PostMapping

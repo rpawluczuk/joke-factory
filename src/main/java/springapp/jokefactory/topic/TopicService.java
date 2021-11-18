@@ -9,7 +9,7 @@ import springapp.jokefactory.joke.JokeFacade;
 import springapp.jokefactory.topic.dto.*;
 
 import java.util.List;
-import java.util.Set;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 @Service
@@ -45,7 +45,7 @@ class TopicService {
         topicPaginationDto.setTotalItems(topicPage.getTotalElements());
         return topicPage.getContent().stream()
                 .map(topic -> {
-                    Set<Topic> connectedTopicList = topicRepository.findAllConnectedTopics(topic);
+                    List<Topic> connectedTopicList = topicRepository.findAllConnectedTopics(topic);
                     return topicMapper.mapTopicToTopicPresenterDto(topic, connectedTopicList);
                 }).collect(Collectors.toList());
     }
@@ -57,7 +57,7 @@ class TopicService {
         topicPaginationDto.setTotalPages(topicPage.getTotalPages());
         topicPaginationDto.setTotalItems(topicPage.getTotalElements());
         return topicPage.getContent().stream().map(topic -> {
-            Set<Topic> connectedTopicList = topicRepository.findAllConnectedTopics(topic);
+            List<Topic> connectedTopicList = topicRepository.findAllConnectedTopics(topic);
             return topicMapper.mapTopicToTopicPresenterDto(topic, connectedTopicList);
         }).collect(Collectors.toList());
     }
@@ -76,33 +76,22 @@ class TopicService {
                 .collect(Collectors.toList());
     }
 
-    TopicCreatorChildRowAndPageDto getTopicCreatorChildRowAndPage(Long parentId, int currentPage, int pageSize) {
-        PageRequest pageRequest = PageRequest.of(currentPage, pageSize, Sort.Direction.ASC, "name");
+    TopicCreatorChildRowResponseDto getTopicCreatorChildRowAndPage(TopicCreatorChildRowRequestDto topicCreatorChildRowRequest) {
+        TopicPaginationDto topicPagination = topicCreatorChildRowRequest.getTopicPagination();
+        Long parentId = topicCreatorChildRowRequest.getParentId();
+        PageRequest pageRequest = PageRequest.of(topicPagination.getCurrentPage(), topicPagination.getPageSize(), Sort.Direction.ASC, "name");
         Topic topic = topicRepository.findById(parentId)
                 .orElseThrow(() -> new IllegalArgumentException("No topic found with id: " + parentId));
         Page<Topic> topicPage = topicRepository.findConnectedTopics(topic, pageRequest);
         List<TopicCreatorChildDto> topicCreatorChildList = topicPage.getContent().stream()
                 .map(connectedTopic -> topicMapper.mapTopicToTopicCreatorChildDto(connectedTopic, parentId))
                 .collect(Collectors.toList());
-        return TopicCreatorChildRowAndPageDto.builder()
+        topicPagination.setTotalItems(topicPage.getTotalElements());
+        topicPagination.setTotalPages(topicPage.getTotalPages());
+        return TopicCreatorChildRowResponseDto.builder()
                 .topicCreatorChildList(topicCreatorChildList)
                 .parentId(parentId)
-                .totalItems(topicPage.getTotalElements())
-                .totalPages(topicPage.getTotalPages())
-                .build();
-    }
-
-    TopicCreatorChildRowAndPageDto getTopicCreatorChildRowAndPage(int currentPage, int pageSize) {
-        PageRequest pageRequest = PageRequest.of(currentPage, pageSize, Sort.Direction.ASC, "name");
-        Page<Topic> topicPage = topicRepository.findAll(pageRequest);
-        List<TopicCreatorChildDto> topicCreatorChildList = topicPage.getContent().stream()
-                .map(connectedTopic -> topicMapper.mapTopicToTopicCreatorChildDto(connectedTopic))
-                .collect(Collectors.toList());
-        return TopicCreatorChildRowAndPageDto.builder()
-                .topicCreatorChildList(topicCreatorChildList)
-                .parentId(null)
-                .totalItems(topicPage.getTotalElements())
-                .totalPages(topicPage.getTotalPages())
+                .topicPagination(topicPagination)
                 .build();
     }
 
@@ -159,5 +148,13 @@ class TopicService {
                 .orElseThrow(() -> new IllegalArgumentException("No topic relation found with parent id: "
                         + topicParentId + " and child id: " + topicChildId));
         topicRelationRepository.delete(topicRelation);
+    }
+
+    Long getRandomTopicResponse(Long parentId) {
+        Topic topic = topicRepository.findById(parentId)
+                .orElseThrow(() -> new IllegalArgumentException("No topic found with id: " + parentId));
+        List<Topic> connectedTopicList = topicRepository.findAllConnectedTopics(topic);
+        Random rand = new Random();
+        return connectedTopicList.get(rand.nextInt(connectedTopicList.size())).getId();
     }
 }

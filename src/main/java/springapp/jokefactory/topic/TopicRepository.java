@@ -21,7 +21,7 @@ interface TopicRepository extends JpaRepository<Topic, Long> {
             "LEFT JOIN t.children children " +
             "WHERE parents.topicParent = :topic OR children.topicChild = :topic " +
             "ORDER BY t.name")
-    Set<Topic> findAllConnectedTopics(@Param("topic") Topic topic);
+    List<Topic> findAllConnectedTopics(@Param("topic") Topic topic);
 
     Page<Topic> findTopicByNameContaining(@RequestParam("name") String name, Pageable pageable);
 

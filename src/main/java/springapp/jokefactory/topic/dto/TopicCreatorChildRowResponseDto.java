@@ -7,10 +7,9 @@ import java.util.List;
 
 @Data
 @Builder
-public class TopicCreatorChildRowAndPageDto {
+public class TopicCreatorChildRowResponseDto {
 
     private List<TopicCreatorChildDto> topicCreatorChildList;
     private Long parentId;
-    private long totalItems;
-    private int totalPages;
+    private TopicPaginationDto topicPagination;
 }
