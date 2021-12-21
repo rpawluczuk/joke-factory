@@ -7,14 +7,9 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
-interface JokeRepository extends
-                                JpaRepository<Joke, Long>,
+interface JokeRepository extends JpaRepository<Joke, Long>,
                                 QuerydslPredicateExecutor<Joke> {
 
     @Query(value = "SELECT MAX(id) FROM Joke")
     long findHighestID();
-
-    @Query(value = "SELECT j FROM Joke j " +
-            "WHERE j.connectingTopic.id = :topicId OR j.comedyTopic.id = :topicId OR j.ostensibleTopic.id = :topicId")
-    List<Joke> findAllJokesConnectedWithTopic(@Param("topicId") Long topicId);
 }

@@ -10,6 +10,7 @@ public class TopicPresenterDto {
 
     private Long id;
     private String name;
+    private boolean isCategory;
     private List<String> children;
     private Timestamp dateCreated;
 }

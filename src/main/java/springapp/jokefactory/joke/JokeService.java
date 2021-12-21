@@ -75,9 +75,6 @@ class JokeService {
     JokeCreatorDto getJokeCreatorById(Long id) {
         Joke joke = jokeFacade.getJokeById(id);
         JokeCreatorDto jokeCreatorDto = jokeMapper.mapJokeToJokeCreatorDto(jokeFacade.getJokeById(id));
-        jokeCreatorDto.setConnectingTopic(topicFacade.mapTopicToTopicItemDto(joke.getConnectingTopic()));
-        jokeCreatorDto.setOstensibleTopic(topicFacade.mapTopicToTopicItemDto(joke.getOstensibleTopic()));
-        jokeCreatorDto.setComedyTopic(topicFacade.mapTopicToTopicItemDto(joke.getComedyTopic()));
         jokeCreatorDto.setTopicGroupCreatorList(topicGroupFacade.mapTopicGroupListToTopicGroupCreatorList(joke.getTopicGroups()));
         return jokeCreatorDto;
     }
@@ -94,9 +91,6 @@ class JokeService {
                     .collect(Collectors.toSet());
             joke.setStructures(structures);
         }
-        topicFacade.tryToGetTopicByTopicItem(jokeCreatorDto.getConnectingTopic()).ifPresent(joke::setConnectingTopic);
-        topicFacade.tryToGetTopicByTopicItem(jokeCreatorDto.getComedyTopic()).ifPresent(joke::setComedyTopic);
-        topicFacade.tryToGetTopicByTopicItem(jokeCreatorDto.getOstensibleTopic()).ifPresent(joke::setOstensibleTopic);
         jokeRepository.save(joke);
         if (jokeCreatorDto.getTopicGroupCreatorList() != null) {
             List<TopicGroup> topicGroupList = topicGroupFacade.mapTopicGroupCreatorListToTopicGroupList(jokeCreatorDto.getTopicGroupCreatorList(), joke);
@@ -119,9 +113,6 @@ class JokeService {
         joke.setJokeBlocks(jokeBlocks);
         List<TopicGroup> topicGroupList = topicGroupFacade.extractTopicGroupList(jokeCreatorDto.getTopicGroupCreatorList(), joke);
         joke.setTopicGroups(topicGroupList);
-        topicFacade.tryToGetTopicByTopicItem(jokeCreatorDto.getConnectingTopic()).ifPresent(joke::setConnectingTopic);
-        topicFacade.tryToGetTopicByTopicItem(jokeCreatorDto.getComedyTopic()).ifPresent(joke::setComedyTopic);
-        topicFacade.tryToGetTopicByTopicItem(jokeCreatorDto.getOstensibleTopic()).ifPresent(joke::setOstensibleTopic);
         jokeRepository.save(joke);
     }
 

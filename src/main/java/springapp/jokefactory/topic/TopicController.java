@@ -35,12 +35,20 @@ class TopicController {
     @GetMapping(value = "/topic-creator-child-row")
     TopicCreatorChildRowResponseDto getTopicCreatorChildRowAndPage(@RequestParam("topicCreatorChildRowRequestDto") String topicCreatorChildRowRequestDto) throws JsonProcessingException {
         TopicCreatorChildRowRequestDto request = objectMapper.readValue(topicCreatorChildRowRequestDto, TopicCreatorChildRowRequestDto.class);
+        if (request.getParentId() == null) {
+            return topicService.getAllTopicCreatorChildPage(request);
+        }
         return topicService.getTopicCreatorChildRowAndPage(request);
     }
 
     @GetMapping(value = "/list-items")
     Iterable<TopicItemDto> getTopicItemList() {
         return topicService.getTopicItemList();
+    }
+
+    @GetMapping(value = "/category-list")
+    Iterable<TopicItemDto> getCategoryList() {
+        return topicService.getCategoryList();
     }
 
     @GetMapping(value = "/{id}")
@@ -54,8 +62,9 @@ class TopicController {
     }
 
     @GetMapping(value = "/random")
-    Long getRandomTopicResponse(@RequestParam("parent-id") Long parentId){
-        return topicService.getRandomTopicResponse(parentId);
+    RandomTopicIdResponseDto getRandomTopicResponse(@RequestParam("randomTopicIdRequestDto") String randomTopicIdRequest) throws JsonProcessingException {
+        RandomTopicIdRequestDto request = objectMapper.readValue(randomTopicIdRequest, RandomTopicIdRequestDto.class);
+        return topicService.getRandomTopicResponse(request);
     }
 
     @PostMapping
@@ -76,6 +85,11 @@ class TopicController {
     @PatchMapping
     void editTopicName(@RequestBody TopicCreatorDto topicCreatorDTO) {
         topicService.editTopicName(topicCreatorDTO);
+    }
+
+    @PatchMapping(value = "/changeCategoryStatus")
+    void changeCategoryStatus(@RequestBody Long id) {
+        topicService.changeCategoryStatus(id);
     }
 
     @DeleteMapping(value = "/{id}")

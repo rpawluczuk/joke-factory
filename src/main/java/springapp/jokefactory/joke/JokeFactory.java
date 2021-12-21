@@ -20,9 +20,6 @@ public class JokeFactory {
                 .content("joke content")
                 .structures(structureFactory.createStructureSet(1, 3))
                 .author(authorFactory.createAuthor())
-                .connectingTopic(topicFactory.createTopic(1))
-                .comedyTopic(topicFactory.createTopic(2))
-                .ostensibleTopic(topicFactory.createTopic(3))
                 .jokeBlocks(jokeBlockFactory.createJokeBlockSet(1, 5))
                 .build();
         joke.getStructures().forEach(structure -> structure.setJokes(Sets.newHashSet(joke)));

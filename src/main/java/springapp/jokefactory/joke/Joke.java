@@ -37,15 +37,6 @@ public class Joke {
     @ManyToOne
     private Author author;
 
-    @ManyToOne
-    private Topic connectingTopic;
-
-    @ManyToOne
-    private Topic comedyTopic;
-
-    @ManyToOne
-    private Topic ostensibleTopic;
-
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     @OneToMany(mappedBy = "joke", cascade = CascadeType.ALL)

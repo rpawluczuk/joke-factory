@@ -20,4 +20,9 @@ public class TopicPaginationDto {
         this.totalPages = 0;
         this.pageSize = 10;
     }
+
+    public TopicPaginationDto(int currentPage, long totalItems) {
+        this.currentPage = currentPage;
+        this.totalItems = totalItems;
+    }
 }

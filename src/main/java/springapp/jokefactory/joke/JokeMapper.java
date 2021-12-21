@@ -16,16 +16,10 @@ import java.util.stream.Collectors;
 @Mapper(componentModel = "spring")
 abstract class JokeMapper {
 
-    @Mapping(target = "connectingTopic", ignore = true)
-    @Mapping(target = "comedyTopic", ignore = true)
-    @Mapping(target = "ostensibleTopic", ignore = true)
     abstract Joke mapJokeCreatorDtoToJoke(JokeCreatorDto jokeCreatorDTO);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE,
             nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
-    @Mapping(target = "connectingTopic", source = "connectingTopic.name")
-    @Mapping(target = "comedyTopic", source = "comedyTopic.name")
-    @Mapping(target = "ostensibleTopic", source = "ostensibleTopic.name")
     @Mapping(target = "structurePresenterList", source = "structures")
     @Mapping(target = "categorizationList", source = "topicGroups", qualifiedByName = "extractCategorizationList")
     @Mapping(target = "author", source = "author", qualifiedByName = "extractAuthor")
@@ -53,9 +47,6 @@ abstract class JokeMapper {
         return rate.getValue();
     }
 
-    @Mapping(target = "connectingTopic", source = "joke.connectingTopic")
-    @Mapping(target = "comedyTopic", source = "joke.comedyTopic")
-    @Mapping(target = "ostensibleTopic", source = "joke.ostensibleTopic")
     @Mapping(target = "structureItemList", source = "joke.structures", qualifiedByName = "extractStructureItem")
     abstract JokeCreatorDto mapJokeToJokeCreatorDto(Joke joke);
 
@@ -66,8 +57,5 @@ abstract class JokeMapper {
                 .collect(Collectors.toList());
     }
 
-    @Mapping(target = "connectingTopic", ignore = true)
-    @Mapping(target = "comedyTopic", ignore = true)
-    @Mapping(target = "ostensibleTopic", ignore = true)
     abstract void updateJokeFromJokeCreatorDto(JokeCreatorDto jokeCreatorDto, @MappingTarget Joke joke);
 }
