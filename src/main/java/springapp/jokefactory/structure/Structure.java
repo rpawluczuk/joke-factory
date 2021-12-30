@@ -34,14 +34,12 @@ public class Structure {
 
     @EqualsAndHashCode.Exclude @ToString.Exclude
     @ManyToMany(mappedBy = "structures")
-    @JsonBackReference
     private Set<Joke> jokes;
 
     private String name;
     private String description;
 
     @EqualsAndHashCode.Exclude @ToString.Exclude
-    @JsonIgnore
     @OneToMany(mappedBy = "structure", cascade = CascadeType.ALL)
     private List<StructureBlock> structureBlockScheme;
 

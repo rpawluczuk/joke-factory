@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import springapp.jokefactory.joke.JokeFacade;
 import springapp.jokefactory.topic.dto.*;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
@@ -86,7 +87,7 @@ class TopicService {
     TopicCreatorChildRowResponseDto getTopicCreatorChildRowAndPage(TopicCreatorChildRowRequestDto topicCreatorChildRowRequest) {
         TopicPaginationDto topicPagination = topicCreatorChildRowRequest.getTopicPagination();
         Long parentId = topicCreatorChildRowRequest.getParentId();
-        PageRequest pageRequest = PageRequest.of(topicPagination.getCurrentPage(), topicPagination.getPageSize(), Sort.Direction.ASC, "name");
+        PageRequest pageRequest = PageRequest.of(topicPagination.getCurrentPage(), topicPagination.getPageSize());
         Topic topic = topicRepository.findById(parentId)
                 .orElseThrow(() -> new IllegalArgumentException("No topic found with id: " + parentId));
         Page<Topic> topicPage = topicRepository.findConnectedTopics(topic, pageRequest);
@@ -176,6 +177,19 @@ class TopicService {
         Topic topicToEdit = topicRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("No topic found with id: " + id));
         topicToEdit.setCategory(!topicToEdit.isCategory());
+        topicToEdit.getTopicsOfCategory().forEach(topic -> {
+            topic.setCategories(Collections.emptyList());
+            topicRepository.save(topic);
+        });
+        if (topicToEdit.isCategory()) {
+            List<Topic> topicsOfCategory = topicRepository.findAllConnectedTopics(topicToEdit);
+            topicsOfCategory.forEach(topic -> {
+                List<Topic> categories = topic.getCategories();
+                categories.add(topicToEdit);
+                topic.setCategories(categories);
+                topicRepository.save(topic);
+            });
+        }
         topicRepository.save(topicToEdit);
     }
 

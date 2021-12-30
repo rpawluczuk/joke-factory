@@ -3,6 +3,7 @@ package springapp.jokefactory.topic;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import springapp.jokefactory.structure.Structure;
 import springapp.jokefactory.topicgroup.TopicGroup;
 
 import javax.persistence.*;
@@ -47,6 +48,20 @@ public class Topic {
     @ToString.Exclude
     @OneToMany(mappedBy = "topicChild", cascade = CascadeType.MERGE)
     private Set<TopicRelation> parents;
+
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    @ManyToMany(cascade={CascadeType.ALL})
+    @JoinTable(name = "topics_categories",
+            joinColumns = {@JoinColumn(name = "topic_id")},
+            inverseJoinColumns = {@JoinColumn(name = "category_id")}
+    )
+    private List<Topic> categories;
+
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    @ManyToMany(mappedBy = "categories")
+    private List<Topic> topicsOfCategory;
 
     @Column(unique = true)
     private String name;

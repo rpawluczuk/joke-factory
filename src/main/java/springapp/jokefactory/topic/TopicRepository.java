@@ -31,6 +31,8 @@ interface TopicRepository extends JpaRepository<Topic, Long> {
     @Query(value = "SELECT DISTINCT t FROM Topic t " +
             "LEFT JOIN t.parents parents " +
             "LEFT JOIN t.children children " +
-            "WHERE parents.topicParent = :topic OR children.topicChild = :topic")
+            "LEFT JOIN t.categories categories " +
+            "WHERE parents.topicParent = :topic OR children.topicChild = :topic " +
+            "ORDER BY categories.name NULLS LAST, t.name NULLS LAST")
     Page<Topic> findConnectedTopics(@Param("topic") Topic topic, Pageable pageable);
 }
