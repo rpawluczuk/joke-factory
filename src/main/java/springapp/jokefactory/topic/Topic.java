@@ -51,17 +51,13 @@ public class Topic {
 
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    @ManyToMany(cascade={CascadeType.ALL})
-    @JoinTable(name = "topics_categories",
-            joinColumns = {@JoinColumn(name = "topic_id")},
-            inverseJoinColumns = {@JoinColumn(name = "category_id")}
-    )
-    private List<Topic> categories;
+    @OneToMany(mappedBy = "topic", cascade = CascadeType.MERGE)
+    private List<TopicCategory> categories;
 
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    @ManyToMany(mappedBy = "categories")
-    private List<Topic> topicsOfCategory;
+    @OneToMany(mappedBy = "category", cascade = CascadeType.MERGE)
+    private List<TopicCategory> topicsOfCategory;
 
     @Column(unique = true)
     private String name;

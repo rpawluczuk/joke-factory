@@ -1,25 +1,15 @@
 package springapp.jokefactory.structure;
 
-import java.sql.Timestamp;
-import java.util.List;
-import java.util.Set;
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-
-import com.fasterxml.jackson.annotation.JsonBackReference;
-
 import springapp.jokefactory.joke.Joke;
 import springapp.jokefactory.structureblock.StructureBlock;
+
+import javax.persistence.*;
+import java.sql.Timestamp;
+import java.util.List;
+import java.util.Set;
 
 @Entity
 @NoArgsConstructor

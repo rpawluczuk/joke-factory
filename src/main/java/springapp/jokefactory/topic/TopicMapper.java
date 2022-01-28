@@ -15,10 +15,19 @@ abstract class TopicMapper {
     @Autowired
     protected TopicRepository topicRepository;
 
+    @Mapping(target = "categories", source = "topic", qualifiedByName = "extractCategoryNameList")
     @Mapping(target = "parentId", source = "parentId")
     abstract TopicCreatorChildDto mapTopicToTopicCreatorChildDto(Topic topic, Long parentId);
 
-    abstract TopicCreatorChildDto mapTopicToTopicCreatorChildDto(Topic topic);
+    @Named("extractCategoryNameList")
+    List<String> extractCategoryNameList(Topic topic) {
+        return topic.getCategories().stream()
+                .map(TopicCategory::getCategory)
+                .map(Topic::getName)
+                .collect(Collectors.toList());
+    }
+
+//    abstract TopicCreatorChildDto mapTopicToTopicCreatorChildDto(Topic topic);
 
     @Mapping(target = "children", source = "topic", qualifiedByName = "extractCreatorChildDtoList")
     abstract TopicCreatorDto mapTopicToTopicCreatorDto(Topic topic);
@@ -31,6 +40,7 @@ abstract class TopicMapper {
                 .collect(Collectors.toList());
     }
 
+    @Mapping(target = "categories", ignore = true)
     abstract Topic mapTopicCreatorChildDtoToTopic(TopicCreatorChildDto topicCreatorChildDto);
 
     @Mapping(target = "children", source = "connectedTopicList", qualifiedByName = "extractTopicNameList")

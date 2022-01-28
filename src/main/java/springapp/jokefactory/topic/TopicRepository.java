@@ -33,6 +33,6 @@ interface TopicRepository extends JpaRepository<Topic, Long> {
             "LEFT JOIN t.children children " +
             "LEFT JOIN t.categories categories " +
             "WHERE parents.topicParent = :topic OR children.topicChild = :topic " +
-            "ORDER BY categories.name NULLS LAST, t.name NULLS LAST")
+            "ORDER BY categories.category.id NULLS LAST, t.name")
     Page<Topic> findConnectedTopics(@Param("topic") Topic topic, Pageable pageable);
 }

@@ -20,6 +20,9 @@ class TopicService {
     private TopicRepository topicRepository;
 
     @Autowired
+    private TopicCategoryRepository topicCategoryRepository;
+
+    @Autowired
     private JokeFacade jokeFacade;
 
     @Autowired
@@ -164,6 +167,11 @@ class TopicService {
         Topic topicChild = topicRepository.findTopicByName(topicCreatorChildDto.getName())
                 .orElseGet(() -> topicRepository.save(topicMapper.mapTopicCreatorChildDtoToTopic(topicCreatorChildDto)));
         topicRelationRepository.save(new TopicRelation(topicParent, topicChild));
+        if (topicChild.isCategory()) {
+            topicCategoryRepository.save(new TopicCategory(topicParent, topicChild));
+        } else if (topicParent.isCategory()) {
+            topicCategoryRepository.save(new TopicCategory(topicChild, topicParent));
+        }
     }
 
     void editTopicName(TopicCreatorDto topicCreatorDTO) {
@@ -177,18 +185,11 @@ class TopicService {
         Topic topicToEdit = topicRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("No topic found with id: " + id));
         topicToEdit.setCategory(!topicToEdit.isCategory());
-        topicToEdit.getTopicsOfCategory().forEach(topic -> {
-            topic.setCategories(Collections.emptyList());
-            topicRepository.save(topic);
-        });
-        if (topicToEdit.isCategory()) {
-            List<Topic> topicsOfCategory = topicRepository.findAllConnectedTopics(topicToEdit);
-            topicsOfCategory.forEach(topic -> {
-                List<Topic> categories = topic.getCategories();
-                categories.add(topicToEdit);
-                topic.setCategories(categories);
-                topicRepository.save(topic);
-            });
+        if (topicToEdit.isCategory()){
+            topicRepository.findAllConnectedTopics(topicToEdit)
+                    .forEach(connectedTopic -> topicCategoryRepository.save(new TopicCategory(connectedTopic, topicToEdit)));
+        } else {
+            topicCategoryRepository.deleteTopicCategoriesByCategory_Id(topicToEdit.getId());
         }
         topicRepository.save(topicToEdit);
     }
@@ -214,5 +215,8 @@ class TopicService {
                 .orElseThrow(() -> new IllegalArgumentException("No topic relation found with parent id: "
                         + topicParentId + " and child id: " + topicChildId));
         topicRelationRepository.delete(topicRelation);
+        topicCategoryRepository
+                .findTopicCategoryByParentIdAndChildId(topicParentId, topicChildId)
+                .ifPresent(topicCategory -> topicCategoryRepository.delete(topicCategory));
     }
 }
