@@ -3,6 +3,8 @@ package springapp.jokefactory.topic;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import springapp.jokefactory.jokeblock.JokeBlock;
+import springapp.jokefactory.question.Question;
 import springapp.jokefactory.structure.Structure;
 import springapp.jokefactory.topicgroup.TopicGroup;
 
@@ -58,6 +60,11 @@ public class Topic {
     @ToString.Exclude
     @OneToMany(mappedBy = "category", cascade = CascadeType.MERGE)
     private List<TopicCategory> topicsOfCategory;
+
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
+    private List<Question> questions;
 
     @Column(unique = true)
     private String name;

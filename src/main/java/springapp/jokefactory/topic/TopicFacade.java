@@ -16,6 +16,11 @@ public class TopicFacade {
     @Autowired
     private TopicMapper topicMapper;
 
+    public Topic getTopicById(Long topicId) {
+        return topicRepository.findById(topicId)
+                .orElseThrow(() -> new IllegalArgumentException("No topic found with id: " + topicId));
+    }
+
     public Optional<Topic> tryToGetTopicByTopicItem(TopicItemDto topicItemDto) {
         if (topicItemDto != null && topicItemDto.getId() != null) {
             return topicRepository.findById(topicItemDto.getId());
@@ -41,5 +46,4 @@ public class TopicFacade {
     public TopicCreatorDto mapTopicToTopicCreatorDto(Topic topic) {
         return topicMapper.mapTopicToTopicCreatorDto(topic);
     }
-
 }
