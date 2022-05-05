@@ -6,5 +6,5 @@ import lombok.Data;
 public class QuestionDto {
 
     private Long id;
-    private String text;
+    private String question;
 }

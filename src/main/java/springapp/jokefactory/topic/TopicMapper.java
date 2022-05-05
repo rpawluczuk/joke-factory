@@ -2,11 +2,10 @@ package springapp.jokefactory.topic;
 
 import org.mapstruct.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
+import springapp.jokefactory.question.Question;
 import springapp.jokefactory.topic.dto.*;
 
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Mapper(componentModel = "spring")
@@ -44,12 +43,20 @@ abstract class TopicMapper {
     abstract Topic mapTopicCreatorChildDtoToTopic(TopicCreatorChildDto topicCreatorChildDto);
 
     @Mapping(target = "children", source = "connectedTopicList", qualifiedByName = "extractTopicNameList")
+    @Mapping(target = "questions", source = "topic", qualifiedByName = "extractQuestionList")
     abstract TopicPresenterDto mapTopicToTopicPresenterDto(Topic topic, List<Topic> connectedTopicList);
 
     @Named("extractTopicNameList")
     List<String> extractTopicNameList(List<Topic> connectedTopicList) {
         return connectedTopicList.stream()
                 .map(Topic::getName)
+                .collect(Collectors.toList());
+    }
+
+    @Named("extractQuestionList")
+    List<String> extractQuestionList(Topic topic) {
+        return topic.getQuestions().stream()
+                .map(Question::getQuestion)
                 .collect(Collectors.toList());
     }
 

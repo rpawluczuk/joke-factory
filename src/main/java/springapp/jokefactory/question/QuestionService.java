@@ -1,8 +1,10 @@
 package springapp.jokefactory.question;
 
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import springapp.jokefactory.question.dto.QuestionListDto;
+import springapp.jokefactory.question.dto.QuestionCreatorDto;
+import springapp.jokefactory.question.dto.QuestionDto;
 import springapp.jokefactory.topic.Topic;
 import springapp.jokefactory.topic.TopicFacade;
 
@@ -10,20 +12,27 @@ import springapp.jokefactory.topic.TopicFacade;
 class QuestionService {
 
     @Autowired
-    QuestionRepository questionRepository;
+    private QuestionRepository questionRepository;
 
     @Autowired
-    TopicFacade topicFacade;
+    private QuestionMapper questionMapper;
 
-    void addQuestion(QuestionListDto questionListDto) {
-        Topic category = topicFacade.getTopicById(questionListDto.getCategoryId());
-        questionListDto.getQuestions().forEach(questionDto -> {
-            Question question = Question.builder()
-                    .id(questionDto.getId())
-                    .text(questionDto.getText())
-                    .category(category)
-                    .build();
-            questionRepository.save(question);
-        });
+    @Autowired
+    private TopicFacade topicFacade;
+
+
+    void addQuestion(QuestionCreatorDto questionCreatorDto) {
+        Topic category = topicFacade.getTopicById(questionCreatorDto.getCategoryId());
+        Question question = Question.builder()
+            .question(questionCreatorDto.getQuestion())
+            .category(category)
+            .build();
+        questionRepository.save(question);
+    }
+
+    public Iterable<QuestionDto> getQuestionByCategoryId(Long categoryId) {
+        return questionRepository.findAllByCategory_Id(categoryId).stream()
+            .map(questionMapper::mapQuestionToQuestionDto)
+            .collect(Collectors.toList());
     }
 }

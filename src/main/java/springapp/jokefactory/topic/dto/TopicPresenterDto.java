@@ -12,5 +12,6 @@ public class TopicPresenterDto {
     private String name;
     private boolean isCategory;
     private List<String> children;
+    private List<String> questions;
     private Timestamp dateCreated;
 }

@@ -18,7 +18,7 @@ public class Question {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String text;
+    private String question;
 
     @ManyToOne(cascade = CascadeType.MERGE)
     @EqualsAndHashCode.Exclude @ToString.Exclude
