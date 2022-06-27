@@ -11,7 +11,7 @@ import springapp.jokefactory.joke.dto.JokeRateDto;
 
 @RestController
 @RequestMapping("/api/jokes")
-@CrossOrigin("http://localhost:4200")
+@CrossOrigin("http://localhost:3000")
 class JokeController {
 
     @Autowired
