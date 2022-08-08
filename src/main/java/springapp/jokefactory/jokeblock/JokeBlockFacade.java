@@ -5,7 +5,9 @@ import org.springframework.stereotype.Service;
 import springapp.jokefactory.joke.Joke;
 import springapp.jokefactory.jokeblock.dto.JokeBlockCreatorDto;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -18,7 +20,7 @@ public class JokeBlockFacade {
     private JokeBlockMapper jokeBlockMapper;
 
     public List<JokeBlock> extractJokeBlockList(List<JokeBlockCreatorDto> jokeBlockCreatorDtoList, Joke joke) {
-        return jokeBlockCreatorDtoList.stream()
+        return Optional.ofNullable(jokeBlockCreatorDtoList).orElse(Collections.emptyList()).stream()
                 .map(jokeBlockCreatorDto -> jokeBlockMapper.jokeBlockCreatorDtoToJokeBlock(jokeBlockCreatorDto, joke))
                 .collect(Collectors.toList());
     }

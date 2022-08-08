@@ -49,8 +49,8 @@ class JokeController {
     }
 
     @PutMapping
-    void editJoke(@RequestBody JokeCreatorDto jokeCreatorDTO) {
-        jokeService.editJoke(jokeCreatorDTO);
+    void editJoke(@RequestBody JokeCreatorDto jokeCreatorDto) {
+        jokeService.editJoke(jokeCreatorDto);
     }
 
     @PutMapping(value = "/pagination")

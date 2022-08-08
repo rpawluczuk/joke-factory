@@ -57,5 +57,6 @@ abstract class JokeMapper {
                 .collect(Collectors.toList());
     }
 
+    @Mapping(target = "dateCreated", ignore = true)
     abstract void updateJokeFromJokeCreatorDto(JokeCreatorDto jokeCreatorDto, @MappingTarget Joke joke);
 }

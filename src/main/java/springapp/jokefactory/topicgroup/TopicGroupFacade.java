@@ -5,7 +5,9 @@ import org.springframework.stereotype.Service;
 import springapp.jokefactory.joke.Joke;
 import springapp.jokefactory.topicgroup.dto.TopicGroupCreatorDto;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -34,7 +36,7 @@ public class TopicGroupFacade {
     }
 
     public List<TopicGroup> extractTopicGroupList(List<TopicGroupCreatorDto> topicGroupCreatorList, Joke joke) {
-        return topicGroupCreatorList.stream()
+        return Optional.ofNullable(topicGroupCreatorList).orElse(Collections.emptyList()).stream()
                 .map(topicGroupCreator -> topicGroupMapper.mapTopicGroupCreatorDtoToTopicGroup(topicGroupCreator, joke))
                 .collect(Collectors.toList());
     }

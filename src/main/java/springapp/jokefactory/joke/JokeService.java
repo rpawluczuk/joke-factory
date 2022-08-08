@@ -18,6 +18,7 @@ import springapp.jokefactory.structure.StructureFacade;
 import springapp.jokefactory.topicgroup.TopicGroup;
 import springapp.jokefactory.topicgroup.TopicGroupFacade;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -105,7 +106,8 @@ class JokeService {
     void editJoke(JokeCreatorDto jokeCreatorDto) {
         Joke joke = jokeFacade.getJokeById(jokeCreatorDto.getId());
         jokeMapper.updateJokeFromJokeCreatorDto(jokeCreatorDto, joke);
-        Set<Structure> structures = jokeCreatorDto.getStructureItemList().stream()
+        Set<Structure> structures = Optional.ofNullable(jokeCreatorDto.getStructureItemList())
+                .orElse(Collections.emptyList()).stream()
                 .map(structureItemDto -> structureFacade.tryToGetStructureById(structureItemDto.getId()))
                 .collect(Collectors.toSet());
         joke.setStructures(structures);
