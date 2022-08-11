@@ -1,7 +1,10 @@
 package springapp.jokefactory.joke;
 
 import org.mapstruct.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import springapp.jokefactory.author.Author;
+import springapp.jokefactory.author.AuthorFacade;
+import springapp.jokefactory.author.dto.AuthorItemDto;
 import springapp.jokefactory.categorization.Categorization;
 import springapp.jokefactory.joke.dto.JokeCreatorDto;
 import springapp.jokefactory.joke.dto.JokePresenterDto;
@@ -16,7 +19,16 @@ import java.util.stream.Collectors;
 @Mapper(componentModel = "spring")
 abstract class JokeMapper {
 
+    @Autowired
+    protected AuthorFacade authorFacade;
+
+    @Mapping(target = "author", source = "authorItem", qualifiedByName = "transformAuthorItemToAuthor")
     abstract Joke mapJokeCreatorDtoToJoke(JokeCreatorDto jokeCreatorDTO);
+
+    @Named("transformAuthorItemToAuthor")
+    Author transformAuthorItemToAuthor(AuthorItemDto authorItemDto) {
+        return authorFacade.tryToGetAuthorById(authorItemDto.getId());
+    }
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE,
             nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
