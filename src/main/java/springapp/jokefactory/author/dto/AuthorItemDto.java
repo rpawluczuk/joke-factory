@@ -7,6 +7,6 @@ import lombok.Data;
 @AllArgsConstructor
 public class AuthorItemDto {
 
-    private Long id;
-    private String text;
+    private Long value;
+    private String label;
 }

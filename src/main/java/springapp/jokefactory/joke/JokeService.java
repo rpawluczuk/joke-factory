@@ -75,7 +75,7 @@ class JokeService {
 
     JokeCreatorDto getJokeCreatorById(Long id) {
         Joke joke = jokeFacade.getJokeById(id);
-        JokeCreatorDto jokeCreatorDto = jokeMapper.mapJokeToJokeCreatorDto(jokeFacade.getJokeById(id));
+        JokeCreatorDto jokeCreatorDto = jokeMapper.mapJokeToJokeCreatorDto(joke);
         jokeCreatorDto.setTopicGroupCreatorList(topicGroupFacade.mapTopicGroupListToTopicGroupCreatorList(joke.getTopicGroups()));
         return jokeCreatorDto;
     }

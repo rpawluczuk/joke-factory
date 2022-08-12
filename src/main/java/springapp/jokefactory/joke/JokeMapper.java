@@ -27,7 +27,7 @@ abstract class JokeMapper {
 
     @Named("transformAuthorItemToAuthor")
     Author transformAuthorItemToAuthor(AuthorItemDto authorItemDto) {
-        return authorFacade.tryToGetAuthorById(authorItemDto.getId());
+        return authorFacade.tryToGetAuthorById(authorItemDto.getValue());
     }
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE,
@@ -60,7 +60,13 @@ abstract class JokeMapper {
     }
 
     @Mapping(target = "structureItemList", source = "joke.structures", qualifiedByName = "extractStructureItem")
+    @Mapping(target = "authorItem", source = "author", qualifiedByName = "transformAuthorToAuthorItem")
     abstract JokeCreatorDto mapJokeToJokeCreatorDto(Joke joke);
+
+    @Named("transformAuthorToAuthorItem")
+    AuthorItemDto transformAuthorToAuthorItem(Author author) {
+        return new AuthorItemDto(author.getId(), extractAuthor(author));
+    }
 
     @Named("extractStructureItem")
     List<StructureItemDto> extractStructureItem(Set<Structure> structures) {
@@ -70,5 +76,6 @@ abstract class JokeMapper {
     }
 
     @Mapping(target = "dateCreated", ignore = true)
+    @Mapping(target = "author", source = "authorItem", qualifiedByName = "transformAuthorItemToAuthor")
     abstract void updateJokeFromJokeCreatorDto(JokeCreatorDto jokeCreatorDto, @MappingTarget Joke joke);
 }
