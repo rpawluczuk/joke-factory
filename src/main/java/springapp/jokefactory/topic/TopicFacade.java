@@ -22,8 +22,8 @@ public class TopicFacade {
     }
 
     public Optional<Topic> tryToGetTopicByTopicItem(TopicItemDto topicItemDto) {
-        if (topicItemDto != null && topicItemDto.getId() != null) {
-            return topicRepository.findById(topicItemDto.getId());
+        if (topicItemDto != null && topicItemDto.getValue() != null) {
+            return topicRepository.findById(topicItemDto.getValue());
         }
         return Optional.empty();
     }

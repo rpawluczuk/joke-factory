@@ -8,7 +8,7 @@ import springapp.jokefactory.topic.dto.*;
 
 @RestController
 @RequestMapping("/api/topics")
-@CrossOrigin("http://localhost:4200")
+@CrossOrigin("http://localhost:3000")
 class TopicController {
 
     @Autowired
