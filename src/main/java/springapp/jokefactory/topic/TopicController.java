@@ -28,7 +28,7 @@ class TopicController {
     }
 
     @GetMapping(value = "/topic-creator-children", params = "parent-id")
-    Iterable<TopicCreatorChildDto> getTopicCreatorChildList(@RequestParam("parent-id") Long parentId) {
+    Iterable<TopicCreatorDto> getTopicCreatorChildList(@RequestParam("parent-id") Long parentId) {
         return topicService.getTopicCreatorChildList(parentId);
     }
 
@@ -68,13 +68,12 @@ class TopicController {
     }
 
     @PostMapping
-    void addTopic(@RequestBody TopicCreatorDto topicCreatorDTO) {
-        topicService.addTopic(topicCreatorDTO);
-    }
-
-    @PostMapping(value = "/add-topic-child")
-    void addTopicChild(@RequestBody TopicCreatorChildDto topicCreatorChildDto) {
-        topicService.addTopicChild(topicCreatorChildDto);
+    TopicCreatorDto addTopic(@RequestBody TopicCreatorDto topicCreatorDto) {
+        if (topicCreatorDto.getParentId() == null) {
+            return topicService.addTopic(topicCreatorDto);
+        } else {
+            return topicService.addTopicChild(topicCreatorDto);
+        }
     }
 
     @PutMapping(value = "/pagination")
@@ -87,8 +86,8 @@ class TopicController {
         topicService.editTopicName(topicCreatorDTO);
     }
 
-    @PatchMapping(value = "/changeCategoryStatus")
-    void changeCategoryStatus(@RequestBody Long id) {
+    @PatchMapping(value = "/changeCategoryStatus/{id}")
+    void changeCategoryStatus(@PathVariable Long id) {
         topicService.changeCategoryStatus(id);
     }
 

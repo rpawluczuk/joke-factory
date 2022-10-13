@@ -6,5 +6,5 @@ import lombok.Data;
 public class TopicCreatorChildRowRequestDto {
 
     private Long parentId;
-    private TopicPaginationDto topicPagination;
+    private TopicPackPaginationDto topicPackPagination;
 }

@@ -9,7 +9,7 @@ import springapp.jokefactory.structure.dto.StructurePresenterDto;
 
 @RestController
 @RequestMapping("/api/structures")
-@CrossOrigin("http://localhost:4200")
+@CrossOrigin("http://localhost:3000")
 class StructureController {
 
     @Autowired

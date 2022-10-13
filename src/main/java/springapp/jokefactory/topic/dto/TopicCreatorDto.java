@@ -9,5 +9,6 @@ public class TopicCreatorDto {
 
     private Long id;
     private String name;
-    private List<TopicCreatorChildDto> children;
+    private List<String> categories;
+    private Long parentId;
 }

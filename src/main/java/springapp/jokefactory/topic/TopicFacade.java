@@ -36,7 +36,7 @@ public class TopicFacade {
     }
 
     public Optional<TopicCreatorDto> tryToGetTopicCreator(Long id) {
-        return topicRepository.findById(id).map(topic -> topicMapper.mapTopicToTopicCreatorDto(topic));
+        return topicRepository.findById(id).map(topic -> topicMapper.mapTopicToTopicCreatorDto(topic, null));
     }
 
     public TopicItemDto mapTopicToTopicItemDto(Topic topic) {
@@ -44,6 +44,6 @@ public class TopicFacade {
     }
 
     public TopicCreatorDto mapTopicToTopicCreatorDto(Topic topic) {
-        return topicMapper.mapTopicToTopicCreatorDto(topic);
+        return topicMapper.mapTopicToTopicCreatorDto(topic, null);
     }
 }

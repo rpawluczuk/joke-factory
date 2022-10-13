@@ -27,7 +27,10 @@ abstract class JokeMapper {
 
     @Named("transformAuthorItemToAuthor")
     Author transformAuthorItemToAuthor(AuthorItemDto authorItemDto) {
-        return authorFacade.tryToGetAuthorById(authorItemDto.getValue());
+        if (authorItemDto != null) {
+            return authorFacade.tryToGetAuthorById(authorItemDto.getValue());
+        }
+        return null;
     }
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE,

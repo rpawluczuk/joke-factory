@@ -6,7 +6,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 import springapp.jokefactory.joke.dto.JokeCreatorDto;
 import springapp.jokefactory.joke.dto.JokePresenterDto;
 import springapp.jokefactory.joke.dto.JokeRateDto;
@@ -88,7 +87,7 @@ class JokeService {
         Joke joke = jokeMapper.mapJokeCreatorDtoToJoke(jokeCreatorDto);
         if (jokeCreatorDto.getStructureItemList() != null) {
             Set<Structure> structures = jokeCreatorDto.getStructureItemList().stream()
-                    .map(structureItemDto -> structureFacade.tryToGetStructureById(structureItemDto.getId()))
+                    .map(structureItemDto -> structureFacade.tryToGetStructureById(structureItemDto.getValue()))
                     .collect(Collectors.toSet());
             joke.setStructures(structures);
         }
@@ -108,7 +107,7 @@ class JokeService {
         jokeMapper.updateJokeFromJokeCreatorDto(jokeCreatorDto, joke);
         Set<Structure> structures = Optional.ofNullable(jokeCreatorDto.getStructureItemList())
                 .orElse(Collections.emptyList()).stream()
-                .map(structureItemDto -> structureFacade.tryToGetStructureById(structureItemDto.getId()))
+                .map(structureItemDto -> structureFacade.tryToGetStructureById(structureItemDto.getValue()))
                 .collect(Collectors.toSet());
         joke.setStructures(structures);
         List<JokeBlock> jokeBlocks = jokeBlockFacade.extractJokeBlockList(jokeCreatorDto.getJokeBlockCreatorDtoList(), joke);

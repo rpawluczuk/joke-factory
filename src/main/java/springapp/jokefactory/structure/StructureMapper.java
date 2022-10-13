@@ -11,7 +11,7 @@ abstract class StructureMapper {
 
     abstract StructurePresenterDto mapStructureToStructurePresenterDto(Structure structure);
 
-    @Mapping(target = "text", source = "structure.name")
+    @Mapping(target = "value", source = "structure.name")
     abstract StructureItemDto mapStructureToStructureItemDto(Structure structure);
 
     abstract Structure mapStructureCreatorDtoToStructure(StructureCreatorDto structureCreatorDto);

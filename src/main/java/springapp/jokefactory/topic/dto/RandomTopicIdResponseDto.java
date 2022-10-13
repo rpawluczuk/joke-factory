@@ -11,5 +11,5 @@ public class RandomTopicIdResponseDto {
 
     private Long randomTopicId;
     private int randomPage;
-    private List<TopicCreatorChildDto> topicCreatorChildList;
+    private List<TopicCreatorDto> topicCreatorChildList;
 }

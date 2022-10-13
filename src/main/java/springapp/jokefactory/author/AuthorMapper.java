@@ -15,11 +15,12 @@ abstract class AuthorMapper {
 
     abstract AuthorCreatorDto mapAuthorToAuthorCreatorDto(Author author);
 
-    @Mapping(target = "text", source = "author", qualifiedByName = "extractAuthorItemText")
+    @Mapping(target = "label", source = "author", qualifiedByName = "extractAuthorItemLabel")
+    @Mapping(target = "value", source = "id")
     abstract AuthorItemDto mapAuthorToAuthorItemDto(Author author);
 
-    @Named("extractAuthorItemText")
-    String extractAuthorItemText(Author author) {
+    @Named("extractAuthorItemLabel")
+    String extractAuthorItemLabel(Author author) {
         return author.getName() + " " + author.getSurname();
     }
 

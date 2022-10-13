@@ -8,9 +8,7 @@ import org.springframework.stereotype.Service;
 import springapp.jokefactory.joke.JokeFacade;
 import springapp.jokefactory.topic.dto.*;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -74,51 +72,55 @@ class TopicService {
 
 
     public Iterable<TopicItemDto> getCategoryList() {
-        return topicRepository.getAllCategoryTopics().stream()
+        TopicItemDto all = new TopicItemDto("All");
+        Set<TopicItemDto> categorySet = new TreeSet<>(new TopicItemComparator());
+        categorySet.add(all);
+        topicRepository.getAllCategoryTopics().stream()
                 .map(topicMapper::mapTopicToTopicItemDto)
-                .collect(Collectors.toList());
+                .forEach(categorySet::add);
+        return categorySet;
     }
 
-    Iterable<TopicCreatorChildDto> getTopicCreatorChildList(Long parentId) {
+    Iterable<TopicCreatorDto> getTopicCreatorChildList(Long parentId) {
         Topic topic = topicRepository.findById(parentId)
                 .orElseThrow(() -> new IllegalArgumentException("No topic found with id: " + parentId));
         return topicRepository.findAllConnectedTopics(topic)
-                .stream().map(connectedTopic -> topicMapper.mapTopicToTopicCreatorChildDto(connectedTopic, parentId))
+                .stream().map(connectedTopic -> topicMapper.mapTopicToTopicCreatorDto(connectedTopic, parentId))
                 .collect(Collectors.toList());
     }
 
     TopicCreatorChildRowResponseDto getTopicCreatorChildRowAndPage(TopicCreatorChildRowRequestDto topicCreatorChildRowRequest) {
-        TopicPaginationDto topicPagination = topicCreatorChildRowRequest.getTopicPagination();
+        TopicPackPaginationDto topicPackPagination = topicCreatorChildRowRequest.getTopicPackPagination();
         Long parentId = topicCreatorChildRowRequest.getParentId();
-        PageRequest pageRequest = PageRequest.of(topicPagination.getCurrentPage(), topicPagination.getPageSize());
+        PageRequest pageRequest = PageRequest.of(topicPackPagination.getCurrentPage(), topicPackPagination.getPageSize());
         Topic topic = topicRepository.findById(parentId)
                 .orElseThrow(() -> new IllegalArgumentException("No topic found with id: " + parentId));
         Page<Topic> topicPage = topicRepository.findConnectedTopics(topic, pageRequest);
-        List<TopicCreatorChildDto> topicCreatorChildList = topicPage.getContent().stream()
-                .map(connectedTopic -> topicMapper.mapTopicToTopicCreatorChildDto(connectedTopic, parentId))
+        List<TopicCreatorDto> topicCreatorChildList = topicPage.getContent().stream()
+                .map(connectedTopic -> topicMapper.mapTopicToTopicCreatorDto(connectedTopic, parentId))
                 .collect(Collectors.toList());
-        topicPagination.setTotalItems(topicPage.getTotalElements());
-        topicPagination.setTotalPages(topicPage.getTotalPages());
+        topicPackPagination.setTotalItems(topicPage.getTotalElements());
+        topicPackPagination.setTotalPages(topicPage.getTotalPages());
         return TopicCreatorChildRowResponseDto.builder()
                 .topicCreatorChildList(topicCreatorChildList)
                 .parentId(parentId)
-                .topicPagination(topicPagination)
+                .topicPackPagination(topicPackPagination)
                 .build();
     }
 
     TopicCreatorChildRowResponseDto getAllTopicCreatorChildPage(TopicCreatorChildRowRequestDto topicCreatorChildRowRequest) {
-        TopicPaginationDto topicPagination = topicCreatorChildRowRequest.getTopicPagination();
-        PageRequest pageRequest = PageRequest.of(topicPagination.getCurrentPage(), topicPagination.getPageSize(), Sort.Direction.ASC, "name");
+        TopicPackPaginationDto topicPackPagination = topicCreatorChildRowRequest.getTopicPackPagination();
+        PageRequest pageRequest = PageRequest.of(topicPackPagination.getCurrentPage(), topicPackPagination.getPageSize(), Sort.Direction.ASC, "name");
         Page<Topic> topicPage = topicRepository.findAll(pageRequest);
-        List<TopicCreatorChildDto> topicCreatorChildList = topicPage.getContent().stream()
-                .map(connectedTopic -> topicMapper.mapTopicToTopicCreatorChildDto(connectedTopic, null))
+        List<TopicCreatorDto> topicCreatorChildList = topicPage.getContent().stream()
+                .map(connectedTopic -> topicMapper.mapTopicToTopicCreatorDto(connectedTopic,null))
                 .collect(Collectors.toList());
-        topicPagination.setTotalItems(topicPage.getTotalElements());
-        topicPagination.setTotalPages(topicPage.getTotalPages());
+        topicPackPagination.setTotalItems(topicPage.getTotalElements());
+        topicPackPagination.setTotalPages(topicPage.getTotalPages());
         return TopicCreatorChildRowResponseDto.builder()
                 .topicCreatorChildList(topicCreatorChildList)
                 .parentId(null)
-                .topicPagination(topicPagination)
+                .topicPackPagination(topicPackPagination)
                 .build();
     }
 
@@ -139,8 +141,8 @@ class TopicService {
             topicPage = topicRepository.findAll(pageRequest);
         }
         Long randomTopicId = topicPage.getContent().get(rand.nextInt(topicPage.getContent().size())).getId();
-        List<TopicCreatorChildDto> topicCreatorChildList = topicPage.getContent().stream()
-                .map(connectedTopic -> topicMapper.mapTopicToTopicCreatorChildDto(connectedTopic, null))
+        List<TopicCreatorDto> topicCreatorChildList = topicPage.getContent().stream()
+                .map(connectedTopic -> topicMapper.mapTopicToTopicCreatorDto(connectedTopic,null))
                 .collect(Collectors.toList());
         return RandomTopicIdResponseDto.builder()
                 .randomTopicId(randomTopicId)
@@ -149,29 +151,23 @@ class TopicService {
                 .build();
     }
 
-    void addTopic(TopicCreatorDto topicCreatorDTO) {
-        Topic topic = topicRepository.findTopicByName(topicCreatorDTO.getName())
-                .orElseGet(() -> topicRepository.save(topicMapper.mapTopicCreatorDtoToTopic(topicCreatorDTO)));
-        topicCreatorDTO.getChildren().forEach(topicCreatorDTOChild -> {
-            if (!topicCreatorDTOChild.getName().isEmpty()) {
-                Topic topicChild = topicRepository.findTopicByName(topicCreatorDTOChild.getName())
-                        .orElseGet(() -> topicRepository.save(topicMapper.mapTopicCreatorChildDtoToTopic(topicCreatorDTOChild)));
-                topicRelationRepository.save(new TopicRelation(topic, topicChild));
-            }
-        });
+    TopicCreatorDto addTopic(TopicCreatorDto topicCreatorDto) {
+        Topic topic = topicRepository.save(topicMapper.mapTopicCreatorDtoToTopic(topicCreatorDto));
+        return topicMapper.mapTopicToTopicCreatorDto(topic, null);
     }
 
-    void addTopicChild(TopicCreatorChildDto topicCreatorChildDto) {
-        Topic topicParent = topicRepository.findById(topicCreatorChildDto.getParentId())
-                .orElseThrow(() -> new IllegalArgumentException("No topic found with id: " + topicCreatorChildDto.getParentId()));
-        Topic topicChild = topicRepository.findTopicByName(topicCreatorChildDto.getName())
-                .orElseGet(() -> topicRepository.save(topicMapper.mapTopicCreatorChildDtoToTopic(topicCreatorChildDto)));
+    TopicCreatorDto addTopicChild(TopicCreatorDto topicCreatorDto) {
+        Topic topicParent = topicRepository.findById(topicCreatorDto.getParentId())
+                .orElseThrow(() -> new IllegalArgumentException("No topic found with id: " + topicCreatorDto.getParentId()));
+        Topic topicChild = topicRepository.findTopicByName(topicCreatorDto.getName())
+                .orElseGet(() -> topicRepository.save(topicMapper.mapTopicCreatorDtoToTopic(topicCreatorDto)));
         topicRelationRepository.save(new TopicRelation(topicParent, topicChild));
         if (topicChild.isCategory()) {
             topicCategoryRepository.save(new TopicCategory(topicParent, topicChild));
         } else if (topicParent.isCategory()) {
             topicCategoryRepository.save(new TopicCategory(topicChild, topicParent));
         }
+        return topicMapper.mapTopicToTopicCreatorDto(topicChild, topicCreatorDto.getParentId());
     }
 
     void editTopicName(TopicCreatorDto topicCreatorDTO) {
@@ -204,8 +200,7 @@ class TopicService {
     void deleteTopic(Long id) {
         Topic topicToDelete = topicRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("No topic found with id: " + id));
-        topicRelationRepository.findAllTopicRelationsConnectedWithTopic(topicToDelete.getId())
-                .forEach(topicRelationRepository::delete);
+        topicRelationRepository.deleteAll(topicRelationRepository.findAllTopicRelations(topicToDelete.getId()));
         topicRepository.delete(topicToDelete);
     }
 

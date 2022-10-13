@@ -9,7 +9,7 @@ import java.util.List;
 @Builder
 public class TopicCreatorChildRowResponseDto {
 
-    private List<TopicCreatorChildDto> topicCreatorChildList;
+    private List<TopicCreatorDto> topicCreatorChildList;
     private Long parentId;
-    private TopicPaginationDto topicPagination;
+    private TopicPackPaginationDto topicPackPagination;
 }

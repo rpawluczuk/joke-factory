@@ -2,7 +2,7 @@ package springapp.jokefactory.topic.dto;
 
 import lombok.Data;
 
-import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 
 @Data
@@ -13,5 +13,5 @@ public class TopicPresenterDto {
     private boolean isCategory;
     private List<String> children;
     private List<String> questions;
-    private Timestamp dateCreated;
+    private String dateCreated;
 }

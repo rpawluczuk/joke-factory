@@ -7,4 +7,8 @@ public class TopicItemDto {
 
     private Long value;
     private String label;
+
+    public TopicItemDto(String label) {
+        this.label = label;
+    }
 }
