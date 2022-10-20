@@ -201,6 +201,7 @@ class TopicService {
         Topic topicToDelete = topicRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("No topic found with id: " + id));
         topicRelationRepository.deleteAll(topicRelationRepository.findAllTopicRelations(topicToDelete.getId()));
+        topicCategoryRepository.deleteTopicCategoriesByTopic_Id(topicToDelete.getId());
         topicRepository.delete(topicToDelete);
     }
 

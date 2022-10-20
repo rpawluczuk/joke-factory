@@ -15,6 +15,12 @@ public interface TopicCategoryRepository extends JpaRepository<TopicCategory, To
     @Query("delete from TopicCategory tc where tc.category.id=:category_id")
     void deleteTopicCategoriesByCategory_Id(@Param("category_id") Long categoryId);
 
+
+    @Modifying
+    @Transactional
+    @Query("delete from TopicCategory tc where tc.topic.id=:topic_id")
+    void deleteTopicCategoriesByTopic_Id(@Param("topic_id") Long topicId);
+
     @Query(value = "SELECT tc FROM TopicCategory tc " +
             "WHERE (tc.topic.id = :topicParentId AND tc.category.id = :topicChildId) " +
             "OR (tc.category.id = :topicParentId AND tc.topic.id = :topicChildId)")
