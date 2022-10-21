@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import springapp.jokefactory.topic.dto.*;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping("/api/topics")
 @CrossOrigin("http://localhost:3000")
@@ -68,7 +70,7 @@ class TopicController {
     }
 
     @PostMapping
-    TopicCreatorDto addTopic(@RequestBody TopicCreatorDto topicCreatorDto) {
+    TopicCreatorDto addTopic(@Valid @RequestBody TopicCreatorDto topicCreatorDto) {
         if (topicCreatorDto.getParentId() == null) {
             return topicService.addTopic(topicCreatorDto);
         } else {

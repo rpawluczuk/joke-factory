@@ -9,6 +9,7 @@ import springapp.jokefactory.structure.Structure;
 import springapp.jokefactory.topicgroup.TopicGroup;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.Set;
@@ -66,6 +67,7 @@ public class Topic {
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
     private List<Question> questions;
 
+    @NotBlank(message = "Name of topic is mandatory")
     @Column(unique = true)
     private String name;
 
