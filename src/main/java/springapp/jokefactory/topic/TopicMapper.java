@@ -17,6 +17,7 @@ abstract class TopicMapper {
 //    @Mapping(target = "categories", source = "topic", qualifiedByName = "extractCategoryNameList")
     @Mapping(target = "categories", ignore = true)
     @Mapping(target = "parentId", source = "parentId")
+    @Mapping(target = "questions", source = "topic", qualifiedByName = "extractQuestionList")
     abstract TopicCreatorDto mapTopicToTopicCreatorDto(Topic topic, Long parentId);
 
     @Named("extractCategoryNameList")
@@ -39,6 +40,7 @@ abstract class TopicMapper {
     }
 
     @Mapping(target = "categories", ignore = true)
+    @Mapping(target = "questions", ignore = true)
     abstract Topic mapTopicCreatorDtoToTopic(TopicCreatorDto topicCreatorDto);
 
     @Mapping(target = "dateCreated", source = "topic.dateCreated", dateFormat = "dd-MM-yyyy")

@@ -12,6 +12,7 @@ public class TopicCreatorDto {
     @NotBlank(message = "Name of topic is mandatory")
     private String name;
     private List<String> categories;
+    private List<String> questions;
     private Long parentId;
     private boolean isCategory;
 }

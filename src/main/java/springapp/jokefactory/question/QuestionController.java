@@ -4,11 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import springapp.jokefactory.question.dto.QuestionCreatorDto;
 import springapp.jokefactory.question.dto.QuestionDto;
-import springapp.jokefactory.question.dto.QuestionListDto;
 
 @RestController
 @RequestMapping("/api/questions")
-@CrossOrigin("http://localhost:4200")
+@CrossOrigin("http://localhost:3000")
 class QuestionController {
 
     @Autowired
