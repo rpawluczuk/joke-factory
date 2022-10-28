@@ -13,4 +13,5 @@ public class TopicCreatorDto {
     private String name;
     private List<String> categories;
     private Long parentId;
+    private boolean isCategory;
 }

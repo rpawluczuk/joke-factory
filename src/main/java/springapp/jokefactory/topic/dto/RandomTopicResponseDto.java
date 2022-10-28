@@ -7,9 +7,9 @@ import java.util.List;
 
 @Data
 @Builder
-public class RandomTopicIdResponseDto {
+public class RandomTopicResponseDto {
 
-    private Long randomTopicId;
+    private TopicCreatorDto randomTopic;
     private int randomPage;
     private List<TopicCreatorDto> topicCreatorChildList;
 }

@@ -1,10 +1,12 @@
 package springapp.jokefactory.topic;
 
+import com.querydsl.core.types.Predicate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import springapp.jokefactory.joke.Joke;
 import springapp.jokefactory.joke.JokeFacade;
 import springapp.jokefactory.topic.dto.*;
 
@@ -34,6 +36,20 @@ class TopicService {
 
     @Autowired
     private TopicPaginationDto topicPaginationDto;
+
+    private static final Random RANDOM = new Random();
+
+
+    Iterable<TopicCreatorDto> getFilteredTopicPack(Long categoryId, int pageSize, Long parentId) {
+        PageRequest pageRequest = PageRequest.of(0, pageSize,
+                Sort.Direction.DESC, "name");
+        Topic parentTopic = topicFacade.getTopicById(parentId);
+        Topic categoryTopic = topicFacade.getTopicById(categoryId);
+        Page<Topic> pageTopics = topicRepository.findConnectedTopicsByCategory(parentTopic, categoryTopic, pageRequest);
+        return pageTopics.getContent().stream()
+                .map(topic -> topicMapper.mapTopicToTopicCreatorDto(topic, parentId))
+                .collect(Collectors.toList());
+    }
 
     TopicCreatorDto getTopicCreator(Long id) {
         return topicFacade.tryToGetTopicCreator(id).orElse(null);
@@ -72,7 +88,7 @@ class TopicService {
 
 
     public Iterable<TopicItemDto> getCategoryList() {
-        TopicItemDto all = new TopicItemDto("All");
+        TopicItemDto all = new TopicItemDto("All", 0L);
         Set<TopicItemDto> categorySet = new TreeSet<>(new TopicItemComparator());
         categorySet.add(all);
         topicRepository.getAllCategoryTopics().stream()
@@ -128,24 +144,25 @@ class TopicService {
         return topicPaginationDto;
     }
 
-    RandomTopicIdResponseDto getRandomTopicResponse(RandomTopicIdRequestDto request) {
-        Random rand = new Random();
-        int randomPage = rand.nextInt(request.getTotalPages());
-        PageRequest pageRequest = PageRequest.of(randomPage, request.getPageSize(), Sort.Direction.ASC, "name");
+    RandomTopicResponseDto getRandomTopicResponse(Long parentId, int totalPages, int pageSize) {
+        int randomPage = RANDOM.nextInt(totalPages);
+        PageRequest pageRequest = PageRequest.of(RANDOM.nextInt(totalPages), pageSize, Sort.Direction.ASC, "name");
         Page<Topic> topicPage;
-        if (request.getParentId() != null) {
-            Topic topic = topicRepository.findById(request.getParentId())
-                    .orElseThrow(() -> new IllegalArgumentException("No topic found with id: " + request.getParentId()));
+        if (parentId != null) {
+            Topic topic = topicFacade.getTopicById(parentId);
             topicPage = topicRepository.findConnectedTopics(topic, pageRequest);
         } else {
             topicPage = topicRepository.findAll(pageRequest);
         }
-        Long randomTopicId = topicPage.getContent().get(rand.nextInt(topicPage.getContent().size())).getId();
+        Topic topic = topicPage.getContent().get(RANDOM.nextInt(topicPage.getContent().size()));
+
         List<TopicCreatorDto> topicCreatorChildList = topicPage.getContent().stream()
                 .map(connectedTopic -> topicMapper.mapTopicToTopicCreatorDto(connectedTopic,null))
                 .collect(Collectors.toList());
-        return RandomTopicIdResponseDto.builder()
-                .randomTopicId(randomTopicId)
+
+        TopicCreatorDto randomTopic = topicMapper.mapTopicToTopicCreatorDto(topic, parentId);
+        return RandomTopicResponseDto.builder()
+                .randomTopic(randomTopic)
                 .randomPage(randomPage)
                 .topicCreatorChildList(topicCreatorChildList)
                 .build();

@@ -2,8 +2,12 @@ package springapp.jokefactory.topic;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.querydsl.core.types.Predicate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.querydsl.binding.QuerydslPredicate;
 import org.springframework.web.bind.annotation.*;
+import springapp.jokefactory.joke.Joke;
+import springapp.jokefactory.joke.dto.JokePresenterDto;
 import springapp.jokefactory.topic.dto.*;
 
 import javax.validation.Valid;
@@ -64,9 +68,21 @@ class TopicController {
     }
 
     @GetMapping(value = "/random")
-    RandomTopicIdResponseDto getRandomTopicResponse(@RequestParam("randomTopicIdRequestDto") String randomTopicIdRequest) throws JsonProcessingException {
+    RandomTopicResponseDto getRandomTopicResponse(@RequestParam("randomTopicIdRequestDto") String randomTopicIdRequest) throws JsonProcessingException {
         RandomTopicIdRequestDto request = objectMapper.readValue(randomTopicIdRequest, RandomTopicIdRequestDto.class);
-        return topicService.getRandomTopicResponse(request);
+        return topicService.getRandomTopicResponse(request.getParentId(), request.getTotalPages(), request.getPageSize());
+    }
+
+    @GetMapping(value = "/pack-filter")
+    Iterable<TopicCreatorDto> getFilteredTopicPack(
+            @RequestParam("categoryId") Long categoryId,
+            @RequestParam("pageSize") int pageSize,
+            @RequestParam("parentId") Long parentId) {
+        if (categoryId == 0) {
+            return topicService.getTopicCreatorChildList(parentId);
+        } else {
+            return topicService.getFilteredTopicPack(categoryId, pageSize, parentId);
+        }
     }
 
     @PostMapping
