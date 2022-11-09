@@ -19,9 +19,6 @@ class TopicController {
     @Autowired
     private TopicPanelService topicPanelService;
 
-    @Autowired
-    private ObjectMapper objectMapper;
-
     @GetMapping
     Iterable<TopicPresenterDto> getTopicPresenterList() {
         return topicService.getTopicPresenterList();
@@ -31,19 +28,6 @@ class TopicController {
     Iterable<TopicPresenterDto> getTopicPresenterListByName(@RequestParam("name") String name) {
         return topicService.getTopicPresenterListByName(name);
     }
-
-    @GetMapping(value = "/topic-creator-children", params = "parent-id")
-    Iterable<TopicDto> getTopicCreatorChildList(@RequestParam("parent-id") Long parentId) {
-        return topicService.getConnectedTopicDtoList(parentId);
-    }
-
-//    @GetMapping(value = "/topic-pack")
-//    TopicPackDto getTopicPack(@RequestParam("parentId") Long parentId) {
-////        if (parentId == 0L) {
-////            return topicService.getAllTopicPack();
-////        }
-////        return topicPanelService.getTopicPackDto(parentId);
-//    }
 
     @GetMapping(value = "/list-items")
     Iterable<TopicItemDto> getTopicItemList() {

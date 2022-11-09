@@ -5,7 +5,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import springapp.jokefactory.joke.JokeFacade;
 import springapp.jokefactory.topic.dto.*;
 
 import java.util.*;
@@ -21,9 +20,6 @@ class TopicService {
     private TopicCategoryRepository topicCategoryRepository;
 
     @Autowired
-    private JokeFacade jokeFacade;
-
-    @Autowired
     private TopicRelationRepository topicRelationRepository;
 
     @Autowired
@@ -36,21 +32,7 @@ class TopicService {
     private TopicPaginationDto topicPaginationDto;
 
     @Autowired
-    private TopicPanel topicPanel;
-
-    @Autowired
     private TopicPanelService topicPanelService;
-
-    Iterable<TopicDto> getFilteredTopicPack(Long categoryId, int pageSize, Long parentId) {
-        PageRequest pageRequest = PageRequest.of(0, pageSize,
-                Sort.Direction.DESC, "name");
-        Topic parentTopic = topicFacade.getTopicById(parentId);
-        Topic categoryTopic = topicFacade.getTopicById(categoryId);
-        Page<Topic> pageTopics = topicRepository.findConnectedTopicsByCategory(parentTopic, categoryTopic, pageRequest);
-        return pageTopics.getContent().stream()
-                .map(topic -> topicMapper.mapTopicToTopicDto(topic, parentId))
-                .collect(Collectors.toList());
-    }
 
     TopicDto getTopic(Long id) {
         return topicFacade.getTopicDto(id);
@@ -91,7 +73,6 @@ class TopicService {
                 .collect(Collectors.toList());
     }
 
-
     public Iterable<TopicItemDto> getCategoryList() {
         TopicItemDto all = new TopicItemDto("All", 0L);
         Set<TopicItemDto> categorySet = new TreeSet<>(new TopicItemComparator());
@@ -102,49 +83,9 @@ class TopicService {
         return categorySet;
     }
 
-    Iterable<TopicDto> getConnectedTopicDtoList(Long parentId) {
-        Topic topic = topicRepository.findById(parentId)
-                .orElseThrow(() -> new IllegalArgumentException("No topic found with id: " + parentId));
-        return topicRepository.findAllConnectedTopics(topic)
-                .stream().map(connectedTopic -> topicMapper.mapTopicToTopicDto(connectedTopic, parentId))
-                .collect(Collectors.toList());
-    }
-
-    @Deprecated
-    TopicPackResponseDto getTopicPack(Long parentId, int pageSize, int currentPage) {
-        PageRequest pageRequest = PageRequest.of(currentPage, pageSize);
-        Topic topic = topicFacade.getTopicById(parentId);
-        Page<Topic> topicPage = topicRepository.findConnectedTopics(topic, pageRequest);
-        List<TopicCreatorDto> topicCreatorChildList = topicPage.getContent().stream()
-                .map(connectedTopic -> topicMapper.mapTopicToTopicCreatorDto(connectedTopic, parentId))
-                .collect(Collectors.toList());
-        return TopicPackResponseDto.builder()
-                .topicCreatorChildList(topicCreatorChildList)
-                .parentId(parentId)
-                .topicPackPagination(new TopicPackPaginationDto(currentPage, topicPage))
-                .build();
-    }
-
-    TopicPackResponseDto getAllTopicPack() {
-        int currentPage = topicPanel.getTopicPackList().get(0).getTopicPage().getNumber();
-        int pageSize = topicPanel.getTopicPackList().get(0).getTopicPage().getNumberOfElements();
-        PageRequest pageRequest = PageRequest.of(currentPage, pageSize, Sort.Direction.ASC, "name");
-        Page<Topic> topicPage = topicRepository.findAll(pageRequest);
-        List<TopicCreatorDto> topicCreatorChildList = topicPage.getContent().stream()
-                .map(connectedTopic -> topicMapper.mapTopicToTopicCreatorDto(connectedTopic,null))
-                .collect(Collectors.toList());
-        return TopicPackResponseDto.builder()
-                .topicCreatorChildList(topicCreatorChildList)
-                .parentId(null)
-                .topicPackPagination(new TopicPackPaginationDto(currentPage, topicPage))
-                .build();
-    }
-
     TopicPaginationDto getTopicPagination() {
         return topicPaginationDto;
     }
-
-
 
     TopicCreatorDto addTopic(TopicCreatorDto topicCreatorDto) {
         Topic topic = topicRepository.save(topicMapper.mapTopicCreatorDtoToTopic(topicCreatorDto));
