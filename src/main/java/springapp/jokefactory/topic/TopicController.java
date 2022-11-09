@@ -1,16 +1,12 @@
 package springapp.jokefactory.topic;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.querydsl.core.types.Predicate;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.querydsl.binding.QuerydslPredicate;
 import org.springframework.web.bind.annotation.*;
-import springapp.jokefactory.joke.Joke;
-import springapp.jokefactory.joke.dto.JokePresenterDto;
 import springapp.jokefactory.topic.dto.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/topics")
@@ -19,6 +15,9 @@ class TopicController {
 
     @Autowired
     private TopicService topicService;
+
+    @Autowired
+    private TopicPanelService topicPanelService;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -34,18 +33,17 @@ class TopicController {
     }
 
     @GetMapping(value = "/topic-creator-children", params = "parent-id")
-    Iterable<TopicCreatorDto> getTopicCreatorChildList(@RequestParam("parent-id") Long parentId) {
-        return topicService.getTopicCreatorChildList(parentId);
+    Iterable<TopicDto> getTopicCreatorChildList(@RequestParam("parent-id") Long parentId) {
+        return topicService.getConnectedTopicDtoList(parentId);
     }
 
-    @GetMapping(value = "/topic-creator-child-row")
-    TopicCreatorChildRowResponseDto getTopicCreatorChildRowAndPage(@RequestParam("topicCreatorChildRowRequestDto") String topicCreatorChildRowRequestDto) throws JsonProcessingException {
-        TopicCreatorChildRowRequestDto request = objectMapper.readValue(topicCreatorChildRowRequestDto, TopicCreatorChildRowRequestDto.class);
-        if (request.getParentId() == null) {
-            return topicService.getAllTopicCreatorChildPage(request);
-        }
-        return topicService.getTopicCreatorChildRowAndPage(request);
-    }
+//    @GetMapping(value = "/topic-pack")
+//    TopicPackDto getTopicPack(@RequestParam("parentId") Long parentId) {
+////        if (parentId == 0L) {
+////            return topicService.getAllTopicPack();
+////        }
+////        return topicPanelService.getTopicPackDto(parentId);
+//    }
 
     @GetMapping(value = "/list-items")
     Iterable<TopicItemDto> getTopicItemList() {
@@ -58,31 +56,44 @@ class TopicController {
     }
 
     @GetMapping(value = "/{id}")
-    TopicCreatorDto getTopicCreator(@PathVariable("id") Long id) {
-        return topicService.getTopicCreator(id);
+    TopicDto getTopic(@PathVariable("id") Long id) {
+        if (id == 0L) {
+            return new TopicDto();
+        }
+        return topicService.getTopic(id);
+    }
+
+    @GetMapping(value = "/panel/{initialId}")
+    TopicPanelDto getTopicPanel(@PathVariable("initialId") Long initialId) {
+        return topicService.getTopicPanel(initialId);
+    }
+
+    @GetMapping(value = "/panel/get-pack-by-page")
+    TopicPackDto getPackByPage(@RequestParam("pageNumber") int pageNumber,
+                               @RequestParam("topicPackIndex") int topicPackIndex) {
+        return topicPanelService.getPackByPage(topicPackIndex, pageNumber);
+    }
+
+    @GetMapping(value = "/panel/show-children")
+    List<TopicPackDto> showChildren(@RequestParam("topicPackIndex") int topicPackIndex,
+                                    @RequestParam("parentId") Long parentId) {
+        return topicPanelService.showChildren(topicPackIndex, parentId);
     }
 
     @GetMapping(value = "/pagination")
-    TopicPaginationDto getTopicPagination(){
+    TopicPaginationDto getTopicPagination() {
         return topicService.getTopicPagination();
     }
 
-    @GetMapping(value = "/random")
-    RandomTopicResponseDto getRandomTopicResponse(@RequestParam("randomTopicIdRequestDto") String randomTopicIdRequest) throws JsonProcessingException {
-        RandomTopicIdRequestDto request = objectMapper.readValue(randomTopicIdRequest, RandomTopicIdRequestDto.class);
-        return topicService.getRandomTopicResponse(request.getParentId(), request.getTotalPages(), request.getPageSize());
+    @GetMapping(value = "/panel/random")
+    List<TopicPackDto> getRandomTopicResponse(@RequestParam("topicPackIndex") int topicPackIndex) {
+        return topicPanelService.getRandomTopicPack(topicPackIndex);
     }
 
-    @GetMapping(value = "/pack-filter")
-    Iterable<TopicCreatorDto> getFilteredTopicPack(
-            @RequestParam("categoryId") Long categoryId,
-            @RequestParam("pageSize") int pageSize,
-            @RequestParam("parentId") Long parentId) {
-        if (categoryId == 0) {
-            return topicService.getTopicCreatorChildList(parentId);
-        } else {
-            return topicService.getFilteredTopicPack(categoryId, pageSize, parentId);
-        }
+    @GetMapping(value = "/panel/pack-filter")
+    TopicPackDto getFilteredTopicPack(@RequestParam("categoryId") Long categoryId,
+                                      @RequestParam("topicPackIndex") int topicPackIndex) {
+        return topicPanelService.getFilteredTopicPack(categoryId, topicPackIndex);
     }
 
     @PostMapping
@@ -95,7 +106,7 @@ class TopicController {
     }
 
     @PutMapping(value = "/pagination")
-    void updateTopicPagination(@RequestBody TopicPaginationDto topicPaginationDto){
+    void updateTopicPagination(@RequestBody TopicPaginationDto topicPaginationDto) {
         topicService.updateTopicPagination(topicPaginationDto);
     }
 
@@ -116,7 +127,7 @@ class TopicController {
 
     @DeleteMapping(value = "/remove-relation")
     void deleteTopicRelation(@RequestParam("topic-parent-id") Long topicParentId,
-                              @RequestParam("topic-child-id") Long topicChildId) {
+                             @RequestParam("topic-child-id") Long topicChildId) {
         topicService.deleteTopicRelation(topicParentId, topicChildId);
     }
 }

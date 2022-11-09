@@ -7,7 +7,7 @@ import java.util.List;
 
 @Data
 @Builder
-public class TopicCreatorChildRowResponseDto {
+public class TopicPackResponseDto {
 
     private List<TopicCreatorDto> topicCreatorChildList;
     private Long parentId;

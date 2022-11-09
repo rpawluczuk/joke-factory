@@ -20,6 +20,15 @@ abstract class TopicMapper {
     @Mapping(target = "questions", source = "topic", qualifiedByName = "extractQuestionList")
     abstract TopicCreatorDto mapTopicToTopicCreatorDto(Topic topic, Long parentId);
 
+    @Mapping(target = "categories", ignore = true)
+    @Mapping(target = "parentId", source = "parentId")
+    @Mapping(target = "questions", source = "topic", qualifiedByName = "extractQuestionList")
+    abstract TopicDto mapTopicToTopicDto(Topic topic, Long parentId);
+
+    @Mapping(target = "categories", ignore = true)
+    @Mapping(target = "questions", source = "topic", qualifiedByName = "extractQuestionList")
+    abstract TopicDto mapTopicToTopicDto(Topic topic);
+
     @Named("extractCategoryNameList")
     List<String> extractCategoryNameList(Topic topic) {
         return topic.getCategories().stream()

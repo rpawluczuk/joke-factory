@@ -3,6 +3,7 @@ package springapp.jokefactory.topic;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import springapp.jokefactory.topic.dto.TopicCreatorDto;
+import springapp.jokefactory.topic.dto.TopicDto;
 import springapp.jokefactory.topic.dto.TopicItemDto;
 
 import java.util.Optional;
@@ -17,6 +18,9 @@ public class TopicFacade {
     private TopicMapper topicMapper;
 
     public Topic getTopicById(Long topicId) {
+        if (topicId == 0L) {
+            return Topic.getBasicTopic();
+        }
         return topicRepository.findById(topicId)
                 .orElseThrow(() -> new IllegalArgumentException("No topic found with id: " + topicId));
     }
@@ -35,15 +39,15 @@ public class TopicFacade {
         return Optional.empty();
     }
 
-    public Optional<TopicCreatorDto> tryToGetTopicCreator(Long id) {
-        return topicRepository.findById(id).map(topic -> topicMapper.mapTopicToTopicCreatorDto(topic, null));
+    public TopicDto getTopicDto(Long id) {
+        return topicMapper.mapTopicToTopicDto(getTopicById(id), null);
     }
 
     public TopicItemDto mapTopicToTopicItemDto(Topic topic) {
         return topicMapper.mapTopicToTopicItemDto(topic);
     }
 
-    public TopicCreatorDto mapTopicToTopicCreatorDto(Topic topic) {
-        return topicMapper.mapTopicToTopicCreatorDto(topic, null);
+    public TopicDto mapTopicToTopicDto(Topic topic) {
+        return topicMapper.mapTopicToTopicDto(topic, null);
     }
 }

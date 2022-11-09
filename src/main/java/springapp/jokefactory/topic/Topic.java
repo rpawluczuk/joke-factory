@@ -11,6 +11,7 @@ import springapp.jokefactory.topicgroup.TopicGroup;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.sql.Timestamp;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -73,10 +74,20 @@ public class Topic {
 
     private boolean isCategory;
 
+    private boolean isSelected;
+
     @CreationTimestamp
     private Timestamp dateCreated;
 
     @UpdateTimestamp
     private Timestamp lastUpdated;
 
+    static Topic getBasicTopic() {
+        return Topic.builder()
+                .id(0L)
+                .name("All")
+                .isCategory(true)
+                .questions(new LinkedList<>())
+                .build();
+    }
 }
