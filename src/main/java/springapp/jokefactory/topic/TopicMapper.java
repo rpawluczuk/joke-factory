@@ -4,6 +4,8 @@ import org.mapstruct.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import springapp.jokefactory.question.Question;
 import springapp.jokefactory.topic.dto.*;
+import springapp.jokefactory.topic.panel.TopicBlockDto;
+import springapp.jokefactory.topic.view.TopicPresenterDto;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -23,11 +25,7 @@ abstract class TopicMapper {
     @Mapping(target = "categories", ignore = true)
     @Mapping(target = "parentId", source = "parentId")
     @Mapping(target = "questions", source = "topic", qualifiedByName = "extractQuestionList")
-    abstract TopicDto mapTopicToTopicDto(Topic topic, Long parentId);
-
-    @Mapping(target = "categories", ignore = true)
-    @Mapping(target = "questions", source = "topic", qualifiedByName = "extractQuestionList")
-    abstract TopicDto mapTopicToTopicDto(Topic topic);
+    abstract TopicBlockDto mapTopicToTopicDto(Topic topic, Long parentId);
 
     @Named("extractCategoryNameList")
     List<String> extractCategoryNameList(Topic topic) {
@@ -36,9 +34,6 @@ abstract class TopicMapper {
                 .map(Topic::getName)
                 .collect(Collectors.toList());
     }
-
-//    @Mapping(target = "children", source = "topic", qualifiedByName = "extractCreatorChildDtoList")
-//    abstract TopicCreatorDto mapTopicToTopicCreatorDto(Topic topic);
 
     @Named("extractCreatorChildDtoList")
     List<TopicCreatorDto> extractCreatorChildDtoList(Topic topic) {

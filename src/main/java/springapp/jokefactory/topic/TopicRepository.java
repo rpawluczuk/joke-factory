@@ -18,6 +18,9 @@ interface TopicRepository extends JpaRepository<Topic, Long> {
     @Query(value = "SELECT t FROM Topic t WHERE t.isCategory = true")
     List<Topic> getAllCategoryTopics();
 
+    @Query(value = "SELECT t FROM Topic t WHERE t.isCategory = true")
+    Page<Topic> getAllCategoryTopicsPage(Pageable pageable);
+
     @Query(value = "SELECT DISTINCT t FROM Topic t " +
             "LEFT JOIN t.parents parents " +
             "LEFT JOIN t.children children " +

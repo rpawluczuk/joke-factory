@@ -1,4 +1,4 @@
-package springapp.jokefactory.topic.dto;
+package springapp.jokefactory.topic.panel;
 
 import lombok.Builder;
 import lombok.Data;
@@ -9,6 +9,6 @@ import java.util.List;
 @Builder
 public class TopicPanelDto {
 
-    private TopicDto initialTopic;
+    private TopicBlockDto initialTopic;
     private List<TopicPackDto> topicPackList;
 }

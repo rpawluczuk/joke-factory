@@ -1,29 +1,26 @@
-package springapp.jokefactory.topic;
+package springapp.jokefactory.topic.panel;
 
-import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import springapp.jokefactory.topic.dto.*;
+import springapp.jokefactory.topic.*;
 
 import java.util.List;
 import java.util.Random;
 
 @Service
-public class TopicPanelService {
+class TopicPanelService {
 
     @Autowired
     private TopicFacade topicFacade;
 
     @Autowired
-    private TopicRepository topicRepository;
-
-    @Autowired
     private TopicPanel topicPanel;
 
-    private final TopicPanelMapper topicPanelMapper = Mappers.getMapper(TopicPanelMapper.class);
+    @Autowired
+    private TopicPanelMapper topicPanelMapper;
 
     private static final Random RANDOM = new Random();
     private static final PageRequest BASIC_PAGE_REQUEST = PageRequest.of(0, 20, Sort.Direction.ASC, "name");
@@ -37,12 +34,7 @@ public class TopicPanelService {
 
     TopicPack getTopicPack(Long parentId, PageRequest pageRequest) {
         Topic topicParent = topicFacade.getTopicById(parentId);
-        Page<Topic> topicPage;
-        if (parentId == 0L) {
-            topicPage = topicRepository.findAll(pageRequest);
-        } else {
-            topicPage = topicRepository.findConnectedTopics(topicParent, pageRequest);
-        }
+        Page<Topic> topicPage = topicFacade.getConnectedTopicsPage(topicParent, pageRequest);
         return TopicPack.builder()
                 .topicParent(topicParent)
                 .topicPage(topicPage)
@@ -84,13 +76,8 @@ public class TopicPanelService {
 
     TopicPackDto getFilteredTopicPack(Long categoryId, int topicPackIndex) {
         Topic parentTopic = topicPanel.getTopicParent(topicPackIndex);
-        Page<Topic> topicPage;
-        if (categoryId != 0) {
-            Topic categoryTopic = topicFacade.getTopicById(categoryId);
-            topicPage = topicRepository.findConnectedTopicsByCategory(parentTopic, categoryTopic, BASIC_PAGE_REQUEST);
-        } else {
-            topicPage = topicRepository.findConnectedTopics(parentTopic, BASIC_PAGE_REQUEST);
-        }
+        Topic categoryTopic = topicFacade.getTopicById(categoryId);
+        Page<Topic> topicPage = topicFacade.getConnectedTopicsByCategory(parentTopic, categoryTopic, BASIC_PAGE_REQUEST);
         return topicPanelMapper.mapTopicPackToDto(topicPanel.changeTopicPage(topicPackIndex, topicPage));
     }
 }

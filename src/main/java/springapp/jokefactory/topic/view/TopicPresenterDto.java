@@ -1,10 +1,14 @@
-package springapp.jokefactory.topic.dto;
+package springapp.jokefactory.topic.view;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 
 import java.util.List;
 
 @Data
+@Builder
+@AllArgsConstructor
 public class TopicPresenterDto {
 
     private Long id;

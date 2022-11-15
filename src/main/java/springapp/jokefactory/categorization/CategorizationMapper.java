@@ -10,8 +10,7 @@ import springapp.jokefactory.categorization.dto.CategorizationItemDto;
 import springapp.jokefactory.categorization.dto.CategorizationPresenterDto;
 import springapp.jokefactory.topic.Topic;
 import springapp.jokefactory.topic.TopicFacade;
-import springapp.jokefactory.topic.dto.TopicCreatorDto;
-import springapp.jokefactory.topic.dto.TopicDto;
+import springapp.jokefactory.topic.panel.TopicBlockDto;
 
 @Mapper(componentModel = "spring")
 abstract class CategorizationMapper {
@@ -41,7 +40,7 @@ abstract class CategorizationMapper {
     abstract void updateCategorizationFromCategorizationCreatorDto(CategorizationCreatorDto categorizationCreatorDto, @MappingTarget Categorization categorization);
 
     @Named("extractTopicCreator")
-    protected TopicDto extractTopicCreator(Topic topic) {
+    protected TopicBlockDto extractTopicCreator(Topic topic) {
         return topicFacade.mapTopicToTopicDto(topic);
     }
 }

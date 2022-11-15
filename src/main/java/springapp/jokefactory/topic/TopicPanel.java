@@ -4,7 +4,6 @@ import lombok.Data;
 import org.springframework.context.annotation.Scope;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
-import springapp.jokefactory.topic.dto.TopicPackDto;
 
 import java.util.LinkedList;
 import java.util.List;

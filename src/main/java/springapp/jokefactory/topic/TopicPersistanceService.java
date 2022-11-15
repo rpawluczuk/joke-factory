@@ -1,17 +1,16 @@
 package springapp.jokefactory.topic;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import springapp.jokefactory.topic.dto.*;
+import springapp.jokefactory.topic.panel.TopicBlockDto;
+import springapp.jokefactory.topic.view.TopicPresenterDto;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
-class TopicService {
+class TopicPersistanceService {
 
     @Autowired
     private TopicRepository topicRepository;
@@ -31,56 +30,9 @@ class TopicService {
     @Autowired
     private TopicPaginationDto topicPaginationDto;
 
-    @Autowired
-    private TopicPanelService topicPanelService;
 
-    TopicDto getTopic(Long id) {
+    TopicBlockDto getTopic(Long id) {
         return topicFacade.getTopicDto(id);
-    }
-
-    TopicPanelDto getTopicPanel(Long initialId) {
-        return topicPanelService.initializeTopicPanel(initialId);
-    }
-
-    Iterable<TopicPresenterDto> getTopicPresenterList() {
-        PageRequest pageRequest = PageRequest.of(topicPaginationDto.getCurrentPage(), topicPaginationDto.getPageSize(),
-                Sort.Direction.DESC, "dateCreated");
-        Page<Topic> topicPage = topicRepository.findAll(pageRequest);
-        topicPaginationDto.setTotalPages(topicPage.getTotalPages());
-        topicPaginationDto.setTotalItems(topicPage.getTotalElements());
-        return topicPage.getContent().stream()
-                .map(topic -> {
-                    List<Topic> connectedTopicList = topicRepository.findAllConnectedTopics(topic);
-                    return topicMapper.mapTopicToTopicPresenterDto(topic, connectedTopicList);
-                }).collect(Collectors.toList());
-    }
-
-    public Iterable<TopicPresenterDto> getTopicPresenterListByName(String name) {
-        PageRequest pageRequest = PageRequest.of(topicPaginationDto.getCurrentPage(), topicPaginationDto.getPageSize(),
-                Sort.Direction.DESC, "dateCreated");
-        Page<Topic> topicPage = topicRepository.findTopicByNameContaining(name, pageRequest);
-        topicPaginationDto.setTotalPages(topicPage.getTotalPages());
-        topicPaginationDto.setTotalItems(topicPage.getTotalElements());
-        return topicPage.getContent().stream().map(topic -> {
-            List<Topic> connectedTopicList = topicRepository.findAllConnectedTopics(topic);
-            return topicMapper.mapTopicToTopicPresenterDto(topic, connectedTopicList);
-        }).collect(Collectors.toList());
-    }
-
-    Iterable<TopicItemDto> getTopicItemList() {
-        return topicRepository.findAll().stream()
-                .map(topicMapper::mapTopicToTopicItemDto)
-                .collect(Collectors.toList());
-    }
-
-    public Iterable<TopicItemDto> getCategoryList() {
-        TopicItemDto all = new TopicItemDto("All", 0L);
-        Set<TopicItemDto> categorySet = new TreeSet<>(new TopicItemComparator());
-        categorySet.add(all);
-        topicRepository.getAllCategoryTopics().stream()
-                .map(topicMapper::mapTopicToTopicItemDto)
-                .forEach(categorySet::add);
-        return categorySet;
     }
 
     TopicPaginationDto getTopicPagination() {
@@ -151,4 +103,16 @@ class TopicService {
                 .findTopicCategoryByParentIdAndChildId(topicParentId, topicChildId)
                 .ifPresent(topicCategory -> topicCategoryRepository.delete(topicCategory));
     }
+
+//    Iterable<TopicPresenterDto> getViewByCategorySwitch(boolean isSwitchOn) {
+//
+//        if (isSwitchOn) {
+//            return topicRepository.getAllCategoryTopics().stream().map(topic -> {
+//                List<Topic> connectedTopicList = topicRepository.findAllConnectedTopics(topic);
+//                return topicMapper.mapTopicToTopicPresenterDto(topic, connectedTopicList);
+//            }).collect(Collectors.toList());
+//        } else {
+//            return getTopicPresenterList();
+//        }
+//    }
 }
