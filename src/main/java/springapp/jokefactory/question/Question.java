@@ -6,11 +6,9 @@ import springapp.jokefactory.topic.Topic;
 import javax.persistence.*;
 
 @Entity
-@Getter
-@Setter
+@Data
 @Builder
-@EqualsAndHashCode
-@RequiredArgsConstructor
+@NoArgsConstructor
 @AllArgsConstructor
 public class Question {
 
@@ -20,7 +18,9 @@ public class Question {
 
     private String question;
 
-    @ManyToOne(cascade = CascadeType.MERGE)
-    @EqualsAndHashCode.Exclude @ToString.Exclude
-    private Topic category;
+    @ManyToOne
+    private Topic sourceCategory;
+
+    @ManyToOne
+    private Topic targetCategory;
 }

@@ -1,8 +1,10 @@
 package springapp.jokefactory.topic;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import springapp.jokefactory.joke.Joke;
 import springapp.jokefactory.jokeblock.JokeBlock;
 import springapp.jokefactory.question.Question;
 import springapp.jokefactory.structure.Structure;
@@ -65,8 +67,13 @@ public class Topic {
 
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
-    private List<Question> questions;
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "sourceCategory", cascade = CascadeType.MERGE)
+    private List<Question> questionsBySource;
+
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    @OneToMany(mappedBy = "targetCategory", cascade = CascadeType.MERGE)
+    private List<Question> questionsByTarget;
 
     @NotBlank(message = "Name of topic is mandatory")
     @Column(unique = true)
@@ -87,7 +94,7 @@ public class Topic {
                 .id(0L)
                 .name("All")
                 .isCategory(true)
-                .questions(new LinkedList<>())
+                .questionsBySource(new LinkedList<>())
                 .build();
     }
 }

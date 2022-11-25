@@ -3,6 +3,7 @@ package springapp.jokefactory.topic.view;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import springapp.jokefactory.question.dto.QuestionItemDto;
 
 import java.util.List;
 
@@ -15,6 +16,6 @@ public class TopicPresenterDto {
     private String name;
     private boolean isCategory;
     private List<String> children;
-    private List<String> questions;
+    private List<QuestionItemDto> questions;
     private String dateCreated;
 }

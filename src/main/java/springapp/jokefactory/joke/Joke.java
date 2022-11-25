@@ -12,7 +12,6 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import springapp.jokefactory.author.Author;
 import springapp.jokefactory.jokeblock.JokeBlock;
-import springapp.jokefactory.topic.Topic;
 import springapp.jokefactory.structure.Structure;
 import springapp.jokefactory.topicgroup.TopicGroup;
 

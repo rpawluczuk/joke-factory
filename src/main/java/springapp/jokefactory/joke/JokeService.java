@@ -15,7 +15,7 @@ import springapp.jokefactory.topic.TopicFacade;
 import springapp.jokefactory.structure.Structure;
 import springapp.jokefactory.structure.StructureFacade;
 import springapp.jokefactory.topicgroup.TopicGroup;
-import springapp.jokefactory.topicgroup.TopicGroupFacade;
+//import springapp.jokefactory.topicgroup.TopicGroupFacade;
 
 import java.util.Collections;
 import java.util.List;
@@ -35,8 +35,8 @@ class JokeService {
     @Autowired
     private JokeBlockFacade jokeBlockFacade;
 
-    @Autowired
-    private TopicGroupFacade topicGroupFacade;
+//    @Autowired
+//    private TopicGroupFacade topicGroupFacade;
 
     @Autowired
     private TopicFacade topicFacade;
@@ -75,7 +75,7 @@ class JokeService {
     JokeCreatorDto getJokeCreatorById(Long id) {
         Joke joke = jokeFacade.getJokeById(id);
         JokeCreatorDto jokeCreatorDto = jokeMapper.mapJokeToJokeCreatorDto(joke);
-        jokeCreatorDto.setTopicGroupCreatorList(topicGroupFacade.mapTopicGroupListToTopicGroupCreatorList(joke.getTopicGroups()));
+//     jokeCreatorDto.setTopicGroupCreatorList(topicGroupFacade.mapTopicGroupListToTopicGroupCreatorList(joke.getTopicGroups()));
         return jokeCreatorDto;
     }
 
@@ -92,10 +92,10 @@ class JokeService {
             joke.setStructures(structures);
         }
         jokeRepository.save(joke);
-        if (jokeCreatorDto.getTopicGroupCreatorList() != null) {
-            List<TopicGroup> topicGroupList = topicGroupFacade.mapTopicGroupCreatorListToTopicGroupList(jokeCreatorDto.getTopicGroupCreatorList(), joke);
-            topicGroupFacade.saveTopicGroupList(topicGroupList);
-        }
+//        if (jokeCreatorDto.getTopicGroupCreatorList() != null) {
+//            List<TopicGroup> topicGroupList = topicGroupFacade.mapTopicGroupCreatorListToTopicGroupList(jokeCreatorDto.getTopicGroupCreatorList(), joke);
+//            topicGroupFacade.saveTopicGroupList(topicGroupList);
+//        }
         if (jokeCreatorDto.getJokeBlockCreatorDtoList() != null) {
             List<JokeBlock> jokeBlockList = jokeBlockFacade.extractJokeBlockList(jokeCreatorDto.getJokeBlockCreatorDtoList(), joke);
             jokeBlockFacade.saveJokeBlockList(jokeBlockList);
@@ -112,8 +112,8 @@ class JokeService {
         joke.setStructures(structures);
         List<JokeBlock> jokeBlocks = jokeBlockFacade.extractJokeBlockList(jokeCreatorDto.getJokeBlockCreatorDtoList(), joke);
         joke.setJokeBlocks(jokeBlocks);
-        List<TopicGroup> topicGroupList = topicGroupFacade.extractTopicGroupList(jokeCreatorDto.getTopicGroupCreatorList(), joke);
-        joke.setTopicGroups(topicGroupList);
+//        List<TopicGroup> topicGroupList = topicGroupFacade.extractTopicGroupList(jokeCreatorDto.getTopicGroupCreatorList(), joke);
+//        joke.setTopicGroups(topicGroupList);
         jokeRepository.save(joke);
     }
 

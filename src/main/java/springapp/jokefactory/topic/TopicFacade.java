@@ -5,7 +5,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import springapp.jokefactory.topic.dto.TopicCreatorDto;
 import springapp.jokefactory.topic.panel.TopicBlockDto;
 import springapp.jokefactory.topic.dto.TopicItemDto;
 import springapp.jokefactory.topic.view.TopicView;
@@ -75,24 +74,24 @@ public class TopicFacade {
         }
     }
 
-    public Optional<Topic> tryToGetTopicByTopicCreator(TopicCreatorDto topicCreatorDto) {
-        if (topicCreatorDto != null && topicCreatorDto.getId() != null) {
-            return topicRepository.findById(topicCreatorDto.getId());
-        }
-        return Optional.empty();
-    }
+//    public Optional<Topic> tryToGetTopicByTopicCreator(TopicCreatorDto topicCreatorDto) {
+//        if (topicCreatorDto != null && topicCreatorDto.getId() != null) {
+//            return topicRepository.findById(topicCreatorDto.getId());
+//        }
+//        return Optional.empty();
+//    }
 
-    public TopicBlockDto getTopicDto(Long id) {
-        return topicMapper.mapTopicToTopicDto(getTopicById(id), null);
-    }
+//    public TopicBlockDto getTopicDto(Long id) {
+//        return topicMapper.mapTopicToTopicDto(getTopicById(id), null);
+//    }
 
     public TopicItemDto mapTopicToTopicItemDto(Topic topic) {
         return topicMapper.mapTopicToTopicItemDto(topic);
     }
 
-    public TopicBlockDto mapTopicToTopicDto(Topic topic) {
-        return topicMapper.mapTopicToTopicDto(topic, null);
-    }
+//    public TopicBlockDto mapTopicToTopicDto(Topic topic) {
+//        return topicMapper.mapTopicToTopicDto(topic, null);
+//    }
 
     public void initializeTopicView() {
         topicView.setCategoryFilter(false);

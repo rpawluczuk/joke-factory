@@ -1,10 +1,13 @@
 package springapp.jokefactory.question;
 
 import org.mapstruct.Mapper;
-import springapp.jokefactory.question.dto.QuestionDto;
+import org.mapstruct.Mapping;
+import springapp.jokefactory.question.dto.QuestionItemDto;
 
 @Mapper(componentModel = "spring")
 abstract class QuestionMapper {
 
-    abstract QuestionDto mapQuestionToQuestionDto(Question question);
+    @Mapping(target = "label", source = "question")
+    @Mapping(target = "value", source = "id")
+    abstract QuestionItemDto mapQuestionToItemDto(Question question);
 }

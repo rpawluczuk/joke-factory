@@ -8,5 +8,5 @@ import java.util.List;
 public class QuestionListDto {
 
     private Long categoryId;
-    private List<QuestionDto> questions;
+    private List<QuestionItemDto> questions;
 }

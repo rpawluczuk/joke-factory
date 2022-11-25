@@ -6,5 +6,5 @@ import java.util.List;
 
 interface QuestionRepository extends JpaRepository<Question, Long> {
 
-    List<Question> findAllByCategory_Id(Long categoryId);
+    List<Question> findAllBySourceCategory_Id(Long categoryId);
 }

@@ -36,7 +36,7 @@ abstract class JokeMapper {
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE,
             nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
     @Mapping(target = "structurePresenterList", source = "structures")
-    @Mapping(target = "categorizationList", source = "topicGroups", qualifiedByName = "extractCategorizationList")
+//    @Mapping(target = "categorizationList", source = "topicGroups", qualifiedByName = "extractCategorizationList")
     @Mapping(target = "author", source = "author", qualifiedByName = "extractAuthor")
     @Mapping(target = "rate", source = "rate", qualifiedByName = "handleRate")
     abstract JokePresenterDto mapJokeToJokePresenterDto(Joke joke);

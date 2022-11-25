@@ -31,39 +31,39 @@ class TopicPersistanceService {
     private TopicPaginationDto topicPaginationDto;
 
 
-    TopicBlockDto getTopic(Long id) {
-        return topicFacade.getTopicDto(id);
-    }
+//    TopicBlockDto getTopic(Long id) {
+//        return topicFacade.getTopicDto(id);
+//    }
 
     TopicPaginationDto getTopicPagination() {
         return topicPaginationDto;
     }
 
-    TopicCreatorDto addTopic(TopicCreatorDto topicCreatorDto) {
-        Topic topic = topicRepository.save(topicMapper.mapTopicCreatorDtoToTopic(topicCreatorDto));
-        return topicMapper.mapTopicToTopicCreatorDto(topic, null);
-    }
-
-    TopicCreatorDto addTopicChild(TopicCreatorDto topicCreatorDto) {
-        Topic topicParent = topicRepository.findById(topicCreatorDto.getParentId())
-                .orElseThrow(() -> new IllegalArgumentException("No topic found with id: " + topicCreatorDto.getParentId()));
-        Topic topicChild = topicRepository.findTopicByName(topicCreatorDto.getName())
-                .orElseGet(() -> topicRepository.save(topicMapper.mapTopicCreatorDtoToTopic(topicCreatorDto)));
-        topicRelationRepository.save(new TopicRelation(topicParent, topicChild));
-        if (topicChild.isCategory()) {
-            topicCategoryRepository.save(new TopicCategory(topicParent, topicChild));
-        } else if (topicParent.isCategory()) {
-            topicCategoryRepository.save(new TopicCategory(topicChild, topicParent));
-        }
-        return topicMapper.mapTopicToTopicCreatorDto(topicChild, topicCreatorDto.getParentId());
-    }
-
-    void editTopicName(TopicCreatorDto topicCreatorDTO) {
-        Topic topicToEdit = topicRepository.findById(topicCreatorDTO.getId())
-                .orElseThrow(() -> new IllegalArgumentException("No topic found with id: " + topicCreatorDTO.getId()));
-        topicToEdit.setName(topicCreatorDTO.getName());
-        topicRepository.save(topicToEdit);
-    }
+//    TopicCreatorDto addTopic(TopicCreatorDto topicCreatorDto) {
+//        Topic topic = topicRepository.save(topicMapper.mapTopicCreatorDtoToTopic(topicCreatorDto));
+//        return topicMapper.mapTopicToTopicCreatorDto(topic, null);
+//    }
+//
+//    TopicCreatorDto addTopicChild(TopicCreatorDto topicCreatorDto) {
+//        Topic topicParent = topicRepository.findById(topicCreatorDto.getParentId())
+//                .orElseThrow(() -> new IllegalArgumentException("No topic found with id: " + topicCreatorDto.getParentId()));
+//        Topic topicChild = topicRepository.findTopicByName(topicCreatorDto.getName())
+//                .orElseGet(() -> topicRepository.save(topicMapper.mapTopicCreatorDtoToTopic(topicCreatorDto)));
+//        topicRelationRepository.save(new TopicRelation(topicParent, topicChild));
+//        if (topicChild.isCategory()) {
+//            topicCategoryRepository.save(new TopicCategory(topicParent, topicChild));
+//        } else if (topicParent.isCategory()) {
+//            topicCategoryRepository.save(new TopicCategory(topicChild, topicParent));
+//        }
+//        return topicMapper.mapTopicToTopicCreatorDto(topicChild, topicCreatorDto.getParentId());
+//    }
+//
+//    void editTopicName(TopicCreatorDto topicCreatorDTO) {
+//        Topic topicToEdit = topicRepository.findById(topicCreatorDTO.getId())
+//                .orElseThrow(() -> new IllegalArgumentException("No topic found with id: " + topicCreatorDTO.getId()));
+//        topicToEdit.setName(topicCreatorDTO.getName());
+//        topicRepository.save(topicToEdit);
+//    }
 
     void changeCategoryStatus(Long id) {
         Topic topicToEdit = topicRepository.findById(id)

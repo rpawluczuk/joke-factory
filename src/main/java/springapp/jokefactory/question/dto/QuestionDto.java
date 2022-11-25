@@ -5,6 +5,7 @@ import lombok.Data;
 @Data
 public class QuestionDto {
 
-    private Long id;
-    private String question;
+    private Long sourceCategoryId;
+    private String questionText;
+    private Long targetCategoryId;
 }
