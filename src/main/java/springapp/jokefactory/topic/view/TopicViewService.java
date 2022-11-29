@@ -22,6 +22,9 @@ class TopicViewService {
     @Autowired
     private TopicViewMapper topicViewMapper;
 
+    @Autowired
+    private TopicViewFacade topicViewFacade;
+
     TopicViewDto getTopicView() {
         return topicViewMapper.mapViewToDto(topicView);
     }
@@ -29,13 +32,13 @@ class TopicViewService {
     TopicViewDto changePage(int pageNumber) {
         PageRequest pageRequest = PageRequest.of(pageNumber, topicView.getTopicPage().getSize(),
                 Sort.Direction.ASC, "name");
-        return updateTopicViewPage(pageRequest);
+        return topicViewFacade.updateTopicViewPage(pageRequest);
     }
 
     TopicViewDto changeSize(int pageSize) {
         PageRequest pageRequest = PageRequest.of(0, pageSize,
                 Sort.Direction.ASC, "name");
-        return updateTopicViewPage(pageRequest);
+        return topicViewFacade.updateTopicViewPage(pageRequest);
     }
 
     TopicViewDto getTopicViewByName(String name) {
@@ -43,7 +46,7 @@ class TopicViewService {
         topicView.setCategoryFilter(false);
         PageRequest pageRequest = PageRequest.of(0, topicView.getTopicPage().getSize(),
                 Sort.Direction.DESC, "dateCreated");
-        return updateTopicViewPage(pageRequest);
+        return topicViewFacade.updateTopicViewPage(pageRequest);
     }
 
     TopicViewDto changeCategoryFilter() {
@@ -51,7 +54,7 @@ class TopicViewService {
         topicView.setNameFilter("");
         PageRequest pageRequest = PageRequest.of(0, topicView.getTopicPage().getSize(),
                 Sort.Direction.DESC, "dateCreated");
-        return updateTopicViewPage(pageRequest);
+        return topicViewFacade.updateTopicViewPage(pageRequest);
     }
 
     Iterable<TopicItemDto> getTopicItemList() {
@@ -60,18 +63,5 @@ class TopicViewService {
 
     Iterable<TopicItemDto> getCategoryItemList() {
         return topicFacade.getCategoryItemList();
-    }
-
-    private TopicViewDto updateTopicViewPage(PageRequest pageRequest) {
-        Page<Topic> topicPage;
-        if (topicView.isCategoryFilter()) {
-            topicPage = topicFacade.getAllCategoryTopicsPage(pageRequest);
-        } else if (!topicView.getNameFilter().isEmpty()) {
-            topicPage = topicFacade.getTopicPageByName(topicView.getNameFilter(), pageRequest);
-        } else {
-            topicPage = topicFacade.getTopicPage(pageRequest);
-        }
-        topicView.setTopicPage(topicPage);
-        return topicViewMapper.mapViewToDto(topicView);
     }
 }

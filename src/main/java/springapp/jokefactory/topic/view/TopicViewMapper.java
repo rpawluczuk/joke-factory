@@ -3,8 +3,8 @@ package springapp.jokefactory.topic.view;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.stereotype.Service;
-import springapp.jokefactory.question.Question;
 import springapp.jokefactory.question.QuestionFacade;
+import springapp.jokefactory.question.dto.QuestionDto;
 import springapp.jokefactory.question.dto.QuestionItemDto;
 import springapp.jokefactory.topic.Topic;
 import springapp.jokefactory.topic.TopicFacade;
@@ -45,7 +45,7 @@ class TopicViewMapper {
                 .map(Topic::getName)
                 .collect(Collectors.toList());
 
-        List<QuestionItemDto> questions = topic.getQuestionsBySource().stream()
+        List<QuestionDto> questions = topic.getQuestionsBySource().stream()
                 .map(q -> questionFacade.mapQuestionToDto(q))
                 .collect(Collectors.toList());
 

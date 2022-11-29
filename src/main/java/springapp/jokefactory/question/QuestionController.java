@@ -5,8 +5,6 @@ import org.springframework.web.bind.annotation.*;
 import springapp.jokefactory.question.dto.QuestionDto;
 import springapp.jokefactory.question.dto.QuestionItemDto;
 
-import java.util.Map;
-
 @RestController
 @RequestMapping("/api/questions")
 @CrossOrigin("http://localhost:3000")
@@ -15,29 +13,31 @@ class QuestionController {
     @Autowired
     private QuestionService questionService;
 
-    @GetMapping(value = "/{categoryId}")
-    Iterable<QuestionItemDto> getQuestionByCategoryId(@PathVariable("categoryId") Long categoryId) {
-        return questionService.getQuestionByCategoryId(categoryId);
+    @GetMapping(value = "source-category/{categoryId}")
+    Iterable<QuestionDto> getQuestionByCategoryId(@PathVariable("categoryId") Long categoryId) {
+        return questionService.getQuestionDtoByCategoryId(categoryId);
     }
 
-//    @PostMapping
-//    Iterable<QuestionItemDto> addQuestion(
-//            @RequestParam("sourceCategoryId") Long sourceCategoryId,
-//            @RequestParam("questionText") String questionText,
-//            @RequestParam("targetCategoryId") Long targetCategoryId) {
-//        return questionService.addQuestion(sourceCategoryId, questionText, targetCategoryId);
-//    }
+    @GetMapping(value = "/{id}")
+    QuestionDto getQuestionById(@PathVariable("id") Long id) {
+        return questionService.getQuestionById(id);
+    }
 
     @PostMapping
-    Iterable<QuestionItemDto> addQuestion(@RequestBody QuestionDto questionDto) {
+    Iterable<QuestionDto> addQuestion(@RequestBody QuestionDto questionDto) {
         return questionService.addQuestion(
-                questionDto.getSourceCategoryId(),
+                questionDto.getSourceCategory().getValue(),
                 questionDto.getQuestionText(),
-                questionDto.getTargetCategoryId());
+                questionDto.getTargetCategory().getValue());
+    }
+
+    @PutMapping
+    Iterable<QuestionDto> editQuestion(@RequestBody QuestionDto questionDto) {
+        return questionService.editQuestion(questionDto);
     }
 
     @DeleteMapping(value = "/{id}")
-    Iterable<QuestionItemDto> deleteQuestionById(@PathVariable("id") Long id) {
+    Iterable<QuestionDto> deleteQuestionById(@PathVariable("id") Long id) {
         return questionService.deleteQuestionById(id);
     }
 }
