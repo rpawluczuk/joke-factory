@@ -1,10 +1,11 @@
 package springapp.jokefactory.topic.panel;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import springapp.jokefactory.topic.Topic;
-import springapp.jokefactory.topic.TopicPack;
-import springapp.jokefactory.topic.TopicPanel;
+import springapp.jokefactory.topic.TopicFacade;
+import springapp.jokefactory.topic.dto.TopicItemDto;
 
 
 import java.util.List;
@@ -12,6 +13,9 @@ import java.util.stream.Collectors;
 
 @Service
 class TopicPanelMapper {
+
+    @Autowired
+    TopicFacade topicFacade;
 
     TopicPanelDto mapTopicPanelToDto(TopicPanel topicPanel) {
         TopicBlockDto initialTopic = mapTopicBlockToDto(topicPanel.getInitialTopic());
@@ -28,9 +32,11 @@ class TopicPanelMapper {
     TopicPackDto mapTopicPackToDto(TopicPack topicPack) {
         TopicBlockDto topicParent = mapTopicBlockToDto(topicPack.getTopicParent());
         TopicPageDto topicPage = mapPageToDto(topicPack.getTopicPage());
+        TopicItemDto categoryFilter = topicFacade.mapTopicToTopicItemDto(topicPack.getCategoryFilter());
         return TopicPackDto.builder()
                 .topicParent(topicParent)
                 .topicPage(topicPage)
+                .categoryFilter(categoryFilter)
                 .build();
     }
 
@@ -51,6 +57,7 @@ class TopicPanelMapper {
     TopicBlockDto mapTopicBlockToDto(Topic topic) {
         return TopicBlockDto.builder()
                 .id(topic.getId())
+                .isCategory(topic.isCategory())
                 .name(topic.getName())
                 .build();
     }

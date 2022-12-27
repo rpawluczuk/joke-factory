@@ -58,7 +58,7 @@ public class Topic {
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     @OneToMany(mappedBy = "topic", cascade = CascadeType.MERGE)
-    private List<TopicCategory> categories;
+    private Set<TopicCategory> categories;
 
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
@@ -89,7 +89,7 @@ public class Topic {
     @UpdateTimestamp
     private Timestamp lastUpdated;
 
-    static Topic getBasicTopic() {
+    public static Topic getBasicTopic() {
         return Topic.builder()
                 .id(0L)
                 .name("All")

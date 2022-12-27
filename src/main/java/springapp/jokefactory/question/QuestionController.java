@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import springapp.jokefactory.question.dto.QuestionDto;
 import springapp.jokefactory.question.dto.QuestionItemDto;
+import springapp.jokefactory.topic.dto.TopicItemDto;
 
 @RestController
 @RequestMapping("/api/questions")

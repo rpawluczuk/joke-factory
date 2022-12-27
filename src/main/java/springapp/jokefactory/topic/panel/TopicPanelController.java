@@ -2,6 +2,8 @@ package springapp.jokefactory.topic.panel;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import springapp.jokefactory.question.dto.QuestionItemDto;
+import springapp.jokefactory.topic.dto.TopicItemDto;
 
 import java.util.List;
 
@@ -39,5 +41,16 @@ class TopicPanelController {
     TopicPackDto getFilteredTopicPack(@RequestParam("categoryId") Long categoryId,
                                       @RequestParam("topicPackIndex") int topicPackIndex) {
         return topicPanelService.getFilteredTopicPack(categoryId, topicPackIndex);
+    }
+
+    @GetMapping(value = "/pack-filter/by-question")
+    TopicPackDto getFilterPackByQuestion(@RequestParam("questionId") Long questionId,
+                                         @RequestParam("topicPackIndex") int topicPackIndex) {
+        return topicPanelService.getFilterPackByQuestion(questionId, topicPackIndex);
+    }
+
+    @GetMapping(value = "/question-list")
+    Iterable<QuestionItemDto> getQuestionItemList(@RequestParam("topicPackIndex") int topicPackIndex) {
+        return topicPanelService.getQuestionItemList(topicPackIndex);
     }
 }
