@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.*;
 import springapp.jokefactory.question.dto.QuestionItemDto;
 import springapp.jokefactory.topic.dto.TopicItemDto;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -14,6 +15,9 @@ class TopicPanelController {
 
     @Autowired
     private TopicPanelService topicPanelService;
+
+    @Autowired
+    private TopicPanelPersistenceService topicPanelPersistenceService;
 
     @GetMapping(value = "/{initialId}")
     TopicPanelDto getTopicPanel(@PathVariable("initialId") Long initialId) {
@@ -30,6 +34,12 @@ class TopicPanelController {
     List<TopicPackDto> showChildren(@RequestParam("topicPackIndex") int topicPackIndex,
                                     @RequestParam("parentId") Long parentId) {
         return topicPanelService.showChildren(topicPackIndex, parentId);
+    }
+
+    @GetMapping(value = "/second-parent")
+    List<TopicPackDto> secondParent(@RequestParam("topicPackIndex") int topicPackIndex,
+                                    @RequestParam("secondParentId") Long secondParentId) {
+        return topicPanelService.secondParent(topicPackIndex, secondParentId);
     }
 
     @GetMapping(value = "/random")
@@ -52,5 +62,17 @@ class TopicPanelController {
     @GetMapping(value = "/question-list")
     Iterable<QuestionItemDto> getQuestionItemList(@RequestParam("topicPackIndex") int topicPackIndex) {
         return topicPanelService.getQuestionItemList(topicPackIndex);
+    }
+
+    @PostMapping
+    TopicPackDto addTopic(@Valid @RequestBody TopicBlockDto topicBlockDto) {
+        if (topicBlockDto.getParentId() == null) {
+            TopicBlock initialTopicBlock = topicPanelPersistenceService.addTopic(topicBlockDto);
+            topicPanelService.initializeTopicPanel(initialTopicBlock.getTopic().getId());
+            return topicPanelService.getTopicPack(0);
+        } else {
+            topicPanelPersistenceService.addTopicChild(topicBlockDto);
+            return topicPanelService.refreshTopicPack(topicBlockDto.getParentId());
+        }
     }
 }

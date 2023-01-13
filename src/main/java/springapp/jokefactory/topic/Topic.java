@@ -81,8 +81,6 @@ public class Topic {
 
     private boolean isCategory;
 
-    private boolean isSelected;
-
     @CreationTimestamp
     private Timestamp dateCreated;
 

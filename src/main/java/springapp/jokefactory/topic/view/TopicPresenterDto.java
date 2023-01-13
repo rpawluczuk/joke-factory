@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import springapp.jokefactory.question.dto.QuestionDto;
-import springapp.jokefactory.question.dto.QuestionItemDto;
 
 import java.util.List;
 

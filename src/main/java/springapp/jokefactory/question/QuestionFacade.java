@@ -25,8 +25,8 @@ public class QuestionFacade {
         return questionMapper.mapQuestionToItemDto(question);
     }
 
-    public List<Question> getQuestionListBySourceCategory(Topic sourceCategory) {
-        return questionRepository.findAllBySourceCategory_Id(sourceCategory.getId());
+    public List<Question> getQuestionListBySourceCategory(Long sourceCategoryId) {
+        return questionRepository.findAllBySourceCategory_Id(sourceCategoryId);
     }
 
     public Question getQuestionById(Long id) {

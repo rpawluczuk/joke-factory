@@ -21,6 +21,8 @@ public class TopicBlockDto {
     private Long parentId;
     private boolean isCategory;
     private boolean isSelected;
+    private boolean isSecondParent;
+    private Integer topicPackIndex;
 
     public static TopicBlockDto getBasicTopic() {
         return TopicBlockDto.builder()

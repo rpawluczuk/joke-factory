@@ -8,8 +8,10 @@ import springapp.jokefactory.topic.dto.TopicItemDto;
 @Data
 @Builder
 public class TopicPackDto {
-    private TopicPageDto topicPage;
-    private TopicBlockDto topicParent;
+    private TopicPageDto topicBlockPage;
+    private TopicBlockDto topicBlockParent;
     private TopicItemDto categoryFilter;
     private QuestionItemDto questionFilter;
+    private boolean isAnySelection;
+    private int topicPackIndex;
 }

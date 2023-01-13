@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 import springapp.jokefactory.question.Question;
-import springapp.jokefactory.topic.Topic;
+import springapp.jokefactory.topic.TopicDto;
 
 @Component
 @Data
@@ -14,8 +14,10 @@ import springapp.jokefactory.topic.Topic;
 @Scope("prototype")
 public class TopicPack {
 
-    private Topic topicParent;
-    private Page<Topic> topicPage;
-    private Topic categoryFilter;
+    private TopicBlock topicBlockParent;
+    private Page<TopicBlock> topicBlockPage;
+    private TopicDto categoryFilter;
     private Question questionFilter;
+    private boolean isAnySelection;
+    private int topicPackIndex;
 }

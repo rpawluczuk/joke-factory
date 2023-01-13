@@ -8,7 +8,7 @@ import javax.persistence.*;
 @Entity
 @Data
 @NoArgsConstructor
-class TopicRelation {
+public class TopicRelation {
 
     @EmbeddedId
     private TopicRelationKey id;
@@ -21,7 +21,7 @@ class TopicRelation {
     @MapsId("topicChildId")
     private Topic topicChild;
 
-    TopicRelation(Topic topicParent, Topic topicChild) {
+    public TopicRelation(Topic topicParent, Topic topicChild) {
         this.id = new TopicRelationKey(topicParent.getId(), topicChild.getId());
         this.topicParent = topicParent;
         this.topicChild = topicChild;

@@ -5,7 +5,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import springapp.jokefactory.topic.panel.TopicBlockDto;
 import springapp.jokefactory.topic.dto.TopicItemDto;
 import springapp.jokefactory.topic.view.TopicView;
 
@@ -27,15 +26,33 @@ public class TopicFacade {
     @Autowired
     private TopicView topicView;
 
+    @Autowired
+    private TopicRelationRepository topicRelationRepository;
+
+    @Autowired
+    private TopicCategoryRepository topicCategoryRepository;
+
     private static final PageRequest BASIC_TOPIC_VIEW_PAGE_REQUEST = PageRequest.of(0, 10, Sort.Direction.ASC, "name");
 
     public Topic getTopicById(Long topicId) {
         if (topicId == 0L) {
             return Topic.getBasicTopic();
         }
-        return topicRepository.findById(topicId)
-                .orElseThrow(() -> new IllegalArgumentException("No topic found with id: " + topicId));
+        return findByIdOrThrowException(topicId);
     }
+
+    public TopicDto getTopicDtoById(Long topicId) {
+        if (topicId == 0L) {
+            return topicMapper.mapTopicToDto(Topic.getBasicTopic());
+        }
+        Topic topic = findByIdOrThrowException(topicId);
+        return topicMapper.mapTopicToDto(topic);
+    }
+
+    public Optional<Topic> tryToFindTopicByName(String topicName) {
+        return topicRepository.findTopicByName(topicName);
+    }
+
 
     public Optional<Topic> tryToGetTopicByTopicItem(TopicItemDto topicItemDto) {
         if (topicItemDto != null && topicItemDto.getValue() != null) {
@@ -44,12 +61,22 @@ public class TopicFacade {
         return Optional.empty();
     }
 
-    public Page<Topic> getConnectedTopicsPage(Topic topicParent, PageRequest pageRequest) {
-        if (topicParent.getId() == 0L) {
-            return topicRepository.findAll(pageRequest);
+    public Page<TopicDto> getConnectedTopicsPage(Long parentId, PageRequest pageRequest) {
+        Page<Topic> topicPage;
+        if (parentId == 0L) {
+            topicPage = topicRepository.findAll(pageRequest);
         } else {
-            return topicRepository.findConnectedTopics(topicParent, pageRequest);
+            Topic topicParent = findByIdOrThrowException(parentId);
+            topicPage = topicRepository.findConnectedTopics(topicParent, pageRequest);
         }
+        return topicMapper.mapTopicPageToDto(topicPage, pageRequest);
+    }
+
+    public Page<TopicDto> getConnectedTopicsPage(Long parentId, Long secondParentId, PageRequest pageRequest) {
+        Topic topicParent = findByIdOrThrowException(parentId);
+        Topic topicSecondParent = findByIdOrThrowException(secondParentId);
+        Page<Topic> topicPage = topicRepository.findConnectedTopics(topicParent, topicSecondParent, pageRequest);
+        return topicMapper.mapTopicPageToDto(topicPage, pageRequest);
     }
 
     public Iterable<TopicItemDto> getTopicItemList() {
@@ -58,19 +85,46 @@ public class TopicFacade {
                 .collect(Collectors.toList());
     }
 
-    public List<Topic> getConnectedTopicsList(Topic topicParent) {
-        return topicRepository.findAllConnectedTopics(topicParent);
+    public List<TopicDto> getConnectedTopicsList(Long parentId) {
+        Topic topicParent = findByIdOrThrowException(parentId);
+        List<Topic> connectedTopicList = topicRepository.findAllConnectedTopics(topicParent);
+        return connectedTopicList.stream()
+                .map(topic -> topicMapper.mapTopicToDto(topic))
+                .collect(Collectors.toList());
     }
 
     public Page<Topic> getTopicPageByName(String name, PageRequest pageRequest) {
         return topicRepository.findTopicByNameContaining(name, pageRequest);
     }
 
-    public Page<Topic> getConnectedTopicsByCategory(Topic parentTopic, Topic categoryTopic, PageRequest pageRequest) {
+    public TopicDto addTopicWithoutParent(Topic topic) {
+        Topic savedTopic = topicRepository.save(topic);
+        return topicMapper.mapTopicToDto(savedTopic);
+    }
+
+    public TopicDto addTopicChild(TopicDto topicChildDto, Long parentId) {
+        Topic topicParent = findByIdOrThrowException(parentId);
+        Topic topicChild = topicMapper.dtoToTopic(topicChildDto);
+        Topic savedTopicChild = tryToFindTopicByName(topicChildDto.getName())
+                .orElseGet(() -> topicRepository.save(topicChild));
+        topicRelationRepository.save(new TopicRelation(topicParent, savedTopicChild));
+        if (savedTopicChild.isCategory()) {
+            topicCategoryRepository.save(new TopicCategory(topicParent, topicChild));
+        } else if (topicParent.isCategory()) {
+            topicCategoryRepository.save(new TopicCategory(topicChild, topicParent));
+        }
+        return topicMapper.mapTopicToDto(savedTopicChild);
+    }
+
+    public Page<TopicDto> getConnectedTopicsByCategory(Long parentId, Long categoryId, PageRequest pageRequest) {
+        Topic parentTopic = findByIdOrThrowException(parentId);
+        Topic categoryTopic = findByIdOrThrowException(categoryId);
         if (categoryTopic.getId() != 0) {
-            return topicRepository.findConnectedTopicsByCategory(parentTopic, categoryTopic, pageRequest);
+            Page<Topic> topicPage = topicRepository.findConnectedTopicsByCategory(parentTopic, categoryTopic, pageRequest);
+            return topicMapper.mapTopicPageToDto(topicPage, pageRequest);
         } else {
-            return topicRepository.findConnectedTopics(parentTopic, pageRequest);
+            Page<Topic> topicPage = topicRepository.findConnectedTopics(parentTopic, pageRequest);
+            return topicMapper.mapTopicPageToDto(topicPage, pageRequest);
         }
     }
 
@@ -87,6 +141,10 @@ public class TopicFacade {
 
     public TopicItemDto mapTopicToTopicItemDto(Topic topic) {
         return topicMapper.mapTopicToTopicItemDto(topic);
+    }
+
+    public TopicItemDto mapTopicDtoToTopicItemDto(TopicDto topicDto) {
+        return topicMapper.mapTopicDtoToTopicItemDto(topicDto);
     }
 
 //    public TopicBlockDto mapTopicToTopicDto(Topic topic) {
@@ -114,5 +172,10 @@ public class TopicFacade {
 
     public Page<Topic> getAllCategoryTopicsPage(PageRequest pageRequest) {
         return topicRepository.getAllCategoryTopicsPage(pageRequest);
+    }
+
+    private Topic findByIdOrThrowException(Long topicId) {
+        return topicRepository.findById(topicId)
+                .orElseThrow(() -> new IllegalArgumentException("No topic found with id: " + topicId));
     }
 }

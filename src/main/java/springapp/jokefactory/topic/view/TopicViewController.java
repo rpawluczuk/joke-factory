@@ -64,14 +64,7 @@ class TopicViewController {
 //
 //
 //
-//    @PostMapping
-//    TopicCreatorDto addTopic(@Valid @RequestBody TopicCreatorDto topicCreatorDto) {
-//        if (topicCreatorDto.getParentId() == null) {
-//            return topicService.addTopic(topicCreatorDto);
-//        } else {
-//            return topicService.addTopicChild(topicCreatorDto);
-//        }
-//    }
+
 //
 //    @PutMapping(value = "/pagination")
 //    void updateTopicPagination(@RequestBody TopicPaginationDto topicPaginationDto) {

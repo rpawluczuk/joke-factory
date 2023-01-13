@@ -1,51 +1,46 @@
 package springapp.jokefactory.topic;
 
-import org.mapstruct.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import springapp.jokefactory.question.Question;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Service;
 import springapp.jokefactory.topic.dto.*;
-import springapp.jokefactory.topic.panel.TopicBlockDto;
-import springapp.jokefactory.topic.view.TopicPresenterDto;
+import springapp.jokefactory.topic.panel.TopicBlock;
 
-import java.util.List;
 import java.util.stream.Collectors;
 
-@Mapper(componentModel = "spring")
-abstract class TopicMapper {
 
-    @Autowired
-    protected TopicRepository topicRepository;
+@Service
+class TopicMapper {
 
-
-
-//    @Mapping(target = "categories", ignore = true)
-//    @Mapping(target = "parentId", source = "parentId")
-//    @Mapping(target = "questions", source = "topic", qualifiedByName = "extractQuestionList")
-//    abstract TopicBlockDto mapTopicToTopicDto(Topic topic, Long parentId);
-
-    @Named("extractCategoryNameList")
-    List<String> extractCategoryNameList(Topic topic) {
-        return topic.getCategories().stream()
-                .map(TopicCategory::getCategory)
-                .map(Topic::getName)
-                .collect(Collectors.toList());
+    TopicItemDto mapTopicToTopicItemDto(Topic topic) {
+        return new TopicItemDto(topic.getName(), topic.getId());
     }
 
-    @Named("extractTopicNameList")
-    List<String> extractTopicNameList(List<Topic> connectedTopicList) {
-        return connectedTopicList.stream()
-                .map(Topic::getName)
-                .collect(Collectors.toList());
+    TopicDto mapTopicToDto (Topic topic){
+        return TopicDto.builder()
+                .id(topic.getId())
+                .name(topic.getName())
+                .build();
     }
 
-    @Named("extractQuestionList")
-    List<String> extractQuestionList(Topic topic) {
-        return topic.getQuestionsBySource().stream()
-                .map(Question::getQuestion)
-                .collect(Collectors.toList());
+    Page<TopicDto> mapTopicPageToDto(Page<Topic> topicPage, PageRequest pageRequest) {
+        return new PageImpl<>(
+                topicPage.getContent().stream()
+                        .map(this::mapTopicToDto)
+                        .collect(Collectors.toList()),
+                pageRequest, topicPage.getTotalElements()
+        );
     }
 
-    @Mapping(target = "label", source = "name")
-    @Mapping(target = "value", source = "id")
-    abstract TopicItemDto mapTopicToTopicItemDto(Topic topic);
+    Topic dtoToTopic(TopicDto topicDto) {
+        return Topic.builder()
+                .name(topicDto.getName())
+                .build();
+    }
+
+    public TopicItemDto mapTopicDtoToTopicItemDto(TopicDto topicDto) {
+        return new TopicItemDto(topicDto.getName(), topicDto.getId());
+    }
 }

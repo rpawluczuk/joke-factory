@@ -6,26 +6,30 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 import springapp.jokefactory.question.Question;
 import springapp.jokefactory.topic.Topic;
+import springapp.jokefactory.topic.TopicDto;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 @Data
 @Scope("singleton")
 public class TopicPanel {
 
-    private Topic initialTopic;
+    private TopicBlock initialTopicBlock;
     private List<TopicPack> topicPackList;
 
     public void clearPanel() {
-        this.initialTopic = Topic.getBasicTopic();
+        this.initialTopicBlock = TopicBlock.builder()
+                .topic(TopicDto.getBasicTopic())
+                .build();
         this.topicPackList = new LinkedList<>();
     }
 
     public void addTopicPack(TopicPack topicPack) {
         if (topicPackList.isEmpty()) {
-            setInitialTopic(topicPack.getTopicParent());
+            setInitialTopicBlock(topicPack.getTopicBlockParent());
         }
         topicPackList.add(topicPack);
     }
@@ -35,29 +39,24 @@ public class TopicPanel {
         topicPackList = topicPackList.subList(0, topicPackIndex + 2);
     }
 
-    public TopicPack changeTopicPage(int topicPackIndex, Page<Topic> topicPage) {
-        topicPackList.get(topicPackIndex).setTopicPage(topicPage);
+    public TopicPack changeTopicPage(int topicPackIndex, Page<TopicBlock> topicPage) {
+        topicPackList.get(topicPackIndex).setTopicBlockPage(topicPage);
         if (topicPackList.size() > topicPackIndex + 1) {
-            Long selectedTopicId = topicPackList.get(topicPackIndex + 1).getTopicParent().getId();
+            Long selectedTopicId = topicPackList.get(topicPackIndex + 1).getTopicBlockParent().getTopic().getId();
             selectTopic(topicPackIndex, selectedTopicId);
         }
         return topicPackList.get(topicPackIndex);
     }
 
-    public void changeSelectedTopic(int topicPackIndex, Long newlySelectedTopicId) {
-        deselectTopic(topicPackIndex);
-        selectTopic(topicPackIndex, newlySelectedTopicId);
+    public TopicBlock getTopicBlockParent(int topicPackIndex) {
+        return topicPackList.get(topicPackIndex).getTopicBlockParent();
     }
 
-    public Topic getTopicParent(int topicPackIndex) {
-        return topicPackList.get(topicPackIndex).getTopicParent();
+    public Page<TopicBlock> getTopicBlockPage(int topicPackIndex) {
+        return topicPackList.get(topicPackIndex).getTopicBlockPage();
     }
 
-    public Page<Topic> getTopicPage(int topicPackIndex) {
-        return topicPackList.get(topicPackIndex).getTopicPage();
-    }
-
-    public void setCategoryFilter(Topic categoryFilter, int topicPackIndex) {
+    public void setCategoryFilter(TopicDto categoryFilter, int topicPackIndex) {
         topicPackList.get(topicPackIndex).setCategoryFilter(categoryFilter);
     }
 
@@ -65,17 +64,49 @@ public class TopicPanel {
         topicPackList.get(topicPackIndex).setQuestionFilter(questionFilter);
     }
 
-    private void selectTopic(int topicPackIndex, Long topicIdToSelect) {
-        topicPackList.get(topicPackIndex).getTopicPage().getContent().stream()
-                .filter(topic -> topic.getId().equals(topicIdToSelect))
+    void selectTopic(int topicPackIndex, Long topicIdToSelect) {
+        topicPackList.get(topicPackIndex).getTopicBlockPage().getContent().stream()
+                .filter(topicBlock -> topicBlock.getTopic().getId().equals(topicIdToSelect))
                 .findAny()
-                .ifPresent(topic -> topic.setSelected(true));
+                .ifPresent(topic -> {
+                    topic.setSelected(true);
+                    topicPackList.get(topicPackIndex).setAnySelection(true);
+                });
     }
 
-    private void deselectTopic(int topicPackIndex) {
-        topicPackList.get(topicPackIndex).getTopicPage().getContent().stream()
-                .filter(Topic::isSelected)
+    void deselectTopic(int topicPackIndex) {
+        topicPackList.get(topicPackIndex).getTopicBlockPage().getContent().stream()
+                .filter(TopicBlock::isSelected)
                 .findAny()
-                .ifPresent(topic -> topic.setSelected(false));
+                .ifPresent(topic -> {
+                    topic.setSelected(false);
+                    topicPackList.get(topicPackIndex).setAnySelection(false);
+                });
+    }
+
+    Optional<TopicBlock> findSelectedTopicBlock(int topicPackIndex) {
+        return topicPackList.get(topicPackIndex).getTopicBlockPage().getContent().stream()
+                .filter(TopicBlock::isSelected)
+                .findAny();
+    }
+
+    void deselectPreviousSecondParentTopic(int topicPackIndex) {
+        topicPackList.get(topicPackIndex).getTopicBlockPage().getContent().stream()
+                .filter(TopicBlock::isSecondParent)
+                .findAny()
+                .ifPresent(topic -> topic.setSecondParent(false));
+    }
+
+    void selectSecondParentTopic(int topicPackIndex, Long secondParentTopicId) {
+        topicPackList.get(topicPackIndex).getTopicBlockPage().getContent().stream()
+                .filter(topicBlock -> topicBlock.getTopic().getId().equals(secondParentTopicId))
+                .findAny()
+                .ifPresent(topic -> topic.setSecondParent(true));
+    }
+
+    Optional<TopicBlock> findSecondParentTopicBlock(int topicPackIndex) {
+        return topicPackList.get(topicPackIndex).getTopicBlockPage().getContent().stream()
+                .filter(TopicBlock::isSecondParent)
+                .findAny();
     }
 }
