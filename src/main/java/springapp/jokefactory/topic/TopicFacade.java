@@ -174,6 +174,13 @@ public class TopicFacade {
         return topicRepository.getAllCategoryTopicsPage(pageRequest);
     }
 
+    public void deleteTopic(Long id) {
+        Topic topicToDelete = findByIdOrThrowException(id);
+        topicRelationRepository.deleteAll(topicRelationRepository.findAllTopicRelations(topicToDelete.getId()));
+        topicCategoryRepository.deleteTopicCategoriesByTopic_Id(topicToDelete.getId());
+        topicRepository.delete(topicToDelete);
+    }
+
     private Topic findByIdOrThrowException(Long topicId) {
         return topicRepository.findById(topicId)
                 .orElseThrow(() -> new IllegalArgumentException("No topic found with id: " + topicId));

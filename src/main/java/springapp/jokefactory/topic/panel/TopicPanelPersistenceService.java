@@ -10,9 +10,6 @@ import springapp.jokefactory.topic.TopicFacade;
 class TopicPanelPersistenceService {
 
     @Autowired
-    TopicPanelRepository topicPanelRepository;
-
-    @Autowired
     TopicPanelMapper topicPanelMapper;
 
     @Autowired

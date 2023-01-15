@@ -12,6 +12,9 @@ class TopicViewController {
     @Autowired
     private TopicViewService topicViewService;
 
+    @Autowired
+    private TopicViewPersistenceService topicViewPersistenceService;
+
     @GetMapping
     TopicViewDto getTopicView() {
         return topicViewService.getTopicView();
@@ -48,6 +51,12 @@ class TopicViewController {
         return topicViewService.getCategoryItemList();
     }
 
+    @DeleteMapping(value = "/{id}")
+    TopicViewDto deleteTopic(@PathVariable("id") Long id) {
+        topicViewPersistenceService.deleteTopic(id);
+        return topicViewService.refreshTopicView();
+    }
+
 //    @GetMapping(value = "/{id}")
 //    TopicBlockDto getTopic(@PathVariable("id") Long id) {
 //        if (id == 0L) {
@@ -60,11 +69,6 @@ class TopicViewController {
 //    TopicPaginationDto getTopicPagination() {
 //        return topicService.getTopicPagination();
 //    }
-//
-//
-//
-//
-
 //
 //    @PutMapping(value = "/pagination")
 //    void updateTopicPagination(@RequestBody TopicPaginationDto topicPaginationDto) {
@@ -81,10 +85,6 @@ class TopicViewController {
 //        topicService.changeCategoryStatus(id);
 //    }
 //
-//    @DeleteMapping(value = "/{id}")
-//    void deleteTopic(@PathVariable("id") Long id) {
-//        topicService.deleteTopic(id);
-//    }
 //
 //    @DeleteMapping(value = "/remove-relation")
 //    void deleteTopicRelation(@RequestParam("topic-parent-id") Long topicParentId,

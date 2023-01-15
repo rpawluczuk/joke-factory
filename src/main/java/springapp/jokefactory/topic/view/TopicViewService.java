@@ -5,6 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import springapp.jokefactory.topic.Topic;
 import springapp.jokefactory.topic.TopicFacade;
 import springapp.jokefactory.topic.dto.TopicItemDto;
@@ -63,5 +64,24 @@ class TopicViewService {
 
     Iterable<TopicItemDto> getCategoryItemList() {
         return topicFacade.getCategoryItemList();
+    }
+
+    @Transactional
+    TopicViewDto refreshTopicView() {
+        PageRequest pageRequest = PageRequest.of(
+                topicView.getTopicPage().getNumber(),
+                topicView.getTopicPage().getSize(),
+                Sort.Direction.DESC, "dateCreated"
+        );
+        Page<Topic> topicPage;
+        if (topicView.isCategoryFilter()) {
+            topicPage = topicFacade.getAllCategoryTopicsPage(pageRequest);
+        } else if (!topicView.getNameFilter().isEmpty()) {
+            topicPage = topicFacade.getTopicPageByName(topicView.getNameFilter(), pageRequest);
+        } else {
+            topicPage = topicFacade.getTopicPage(pageRequest);
+        }
+        topicView.setTopicPage(topicPage);
+        return topicViewMapper.mapViewToDto(topicView);
     }
 }

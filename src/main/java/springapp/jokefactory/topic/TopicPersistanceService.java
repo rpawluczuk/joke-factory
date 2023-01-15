@@ -85,14 +85,6 @@ class TopicPersistanceService {
         this.topicPaginationDto.setPageSize(topicPaginationDto.getPageSize());
     }
 
-    void deleteTopic(Long id) {
-        Topic topicToDelete = topicRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("No topic found with id: " + id));
-        topicRelationRepository.deleteAll(topicRelationRepository.findAllTopicRelations(topicToDelete.getId()));
-        topicCategoryRepository.deleteTopicCategoriesByTopic_Id(topicToDelete.getId());
-        topicRepository.delete(topicToDelete);
-    }
-
     void deleteTopicRelation(Long topicParentId, Long topicChildId) {
         TopicRelation topicRelation = topicRelationRepository
                 .findTopicRelationByParentIdAndChildId(topicParentId, topicChildId)
