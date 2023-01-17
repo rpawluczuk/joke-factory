@@ -3,7 +3,6 @@ package springapp.jokefactory.topic.panel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import springapp.jokefactory.question.dto.QuestionItemDto;
-import springapp.jokefactory.topic.dto.TopicItemDto;
 
 import javax.validation.Valid;
 import java.util.List;

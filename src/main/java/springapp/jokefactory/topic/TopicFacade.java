@@ -75,7 +75,9 @@ public class TopicFacade {
     public Page<TopicDto> getConnectedTopicsPage(Long parentId, Long secondParentId, PageRequest pageRequest) {
         Topic topicParent = findByIdOrThrowException(parentId);
         Topic topicSecondParent = findByIdOrThrowException(secondParentId);
-        Page<Topic> topicPage = topicRepository.findConnectedTopics(topicParent, topicSecondParent, pageRequest);
+        Page<Topic> topicPage = topicRepository.findConnectedTopicsByTwoParents(topicParent.getId(),
+                topicSecondParent.getId(),
+                pageRequest);
         return topicMapper.mapTopicPageToDto(topicPage, pageRequest);
     }
 
@@ -108,6 +110,7 @@ public class TopicFacade {
         Topic savedTopicChild = tryToFindTopicByName(topicChildDto.getName())
                 .orElseGet(() -> topicRepository.save(topicChild));
         topicRelationRepository.save(new TopicRelation(topicParent, savedTopicChild));
+        topicRelationRepository.save(new TopicRelation(savedTopicChild, topicParent));
         if (savedTopicChild.isCategory()) {
             topicCategoryRepository.save(new TopicCategory(topicParent, topicChild));
         } else if (topicParent.isCategory()) {
