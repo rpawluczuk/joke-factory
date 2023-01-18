@@ -184,6 +184,17 @@ public class TopicFacade {
         topicRepository.delete(topicToDelete);
     }
 
+    public void deleteTopicRelation(Long topicParentId, Long topicChildId){
+        TopicRelation topicRelation = topicRelationRepository
+                .findTopicRelationByParentIdAndChildId(topicParentId, topicChildId)
+                .orElseThrow(() -> new IllegalArgumentException("No topic relation found with parent id: "
+                        + topicParentId + " and child id: " + topicChildId));
+        topicRelationRepository.delete(topicRelation);
+        topicCategoryRepository
+                .findTopicCategoryByParentIdAndChildId(topicParentId, topicChildId)
+                .ifPresent(topicCategory -> topicCategoryRepository.delete(topicCategory));
+    }
+
     private Topic findByIdOrThrowException(Long topicId) {
         return topicRepository.findById(topicId)
                 .orElseThrow(() -> new IllegalArgumentException("No topic found with id: " + topicId));

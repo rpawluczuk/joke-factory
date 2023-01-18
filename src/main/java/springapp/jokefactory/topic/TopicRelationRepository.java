@@ -14,7 +14,6 @@ interface TopicRelationRepository extends JpaRepository<TopicRelation, TopicRela
     List<TopicRelation> findAllTopicRelations(@Param("topicId") Long topicId);
 
     @Query(value = "SELECT trel FROM TopicRelation trel " +
-            "WHERE (trel.topicParent.id = :topicParentId AND trel.topicChild.id = :topicChildId) " +
-            "OR (trel.topicParent.id = :topicChildId AND trel.topicChild.id = :topicParentId)")
+            "WHERE trel.topicParent.id = :topicParentId AND trel.topicChild.id = :topicChildId")
     Optional<TopicRelation> findTopicRelationByParentIdAndChildId(@Param("topicParentId") Long topicParentId, @Param("topicChildId") Long topicChildId);
 }

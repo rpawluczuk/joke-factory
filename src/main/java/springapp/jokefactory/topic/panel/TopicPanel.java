@@ -35,6 +35,7 @@ public class TopicPanel {
     }
 
     public void addTopicPack(TopicPack topicPack, int topicPackIndex) {
+        topicPack.setTopicPackIndex(topicPackIndex + 1);
         topicPackList.add(topicPackIndex + 1, topicPack);
         topicPackList = topicPackList.subList(0, topicPackIndex + 2);
     }

@@ -16,4 +16,5 @@ public class TopicBlock {
     private boolean isSecondParent;
     private boolean isSelected;
     private Integer topicPackIndex;
+    private Long parentId;
 }

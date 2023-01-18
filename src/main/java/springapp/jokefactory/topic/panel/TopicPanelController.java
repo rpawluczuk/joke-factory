@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.*;
 import springapp.jokefactory.question.dto.QuestionItemDto;
 
 import javax.validation.Valid;
+import java.util.LinkedList;
 import java.util.List;
 
 @RestController
@@ -64,14 +65,23 @@ class TopicPanelController {
     }
 
     @PostMapping
-    TopicPackDto addTopic(@Valid @RequestBody TopicBlockDto topicBlockDto) {
+    List<TopicPackDto> addTopic(@Valid @RequestBody TopicBlockDto topicBlockDto) {
         if (topicBlockDto.getParentId() == null) {
             TopicBlock initialTopicBlock = topicPanelPersistenceService.addTopic(topicBlockDto);
             topicPanelService.initializeTopicPanel(initialTopicBlock.getTopic().getId());
-            return topicPanelService.getTopicPack(0);
+            List<TopicPackDto> list = new LinkedList<>();
+            list.add(topicPanelService.getTopicPack(0));
+            return list;
         } else {
             topicPanelPersistenceService.addTopicChild(topicBlockDto);
             return topicPanelService.refreshTopicPack(topicBlockDto.getParentId());
         }
+    }
+
+    @DeleteMapping(value = "/remove-relation")
+    List<TopicPackDto> deleteTopicRelation(@RequestParam("topic-parent-id") Long topicParentId,
+                             @RequestParam("topic-child-id") Long topicChildId) {
+        topicPanelPersistenceService.deleteTopicRelation(topicParentId, topicChildId);
+        return topicPanelService.refreshTopicPack(topicParentId);
     }
 }

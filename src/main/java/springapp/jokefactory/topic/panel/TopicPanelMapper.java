@@ -39,12 +39,12 @@ class TopicPanelMapper {
         if (topicPack.getCategoryFilter() != null) {
             categoryFilter = topicFacade.mapTopicDtoToTopicItemDto(topicPack.getCategoryFilter());
         }
-
         return TopicPackDto.builder()
                 .topicBlockParent(topicParent)
                 .topicBlockPage(topicPage)
                 .categoryFilter(categoryFilter)
                 .isAnySelection(topicPack.isAnySelection())
+                .topicPackIndex(topicPack.getTopicPackIndex())
                 .build();
     }
 
@@ -70,6 +70,7 @@ class TopicPanelMapper {
                 .isSelected(topicBlock.isSelected())
                 .isSecondParent(topicBlock.isSecondParent())
                 .topicPackIndex(topicBlock.getTopicPackIndex())
+                .parentId(topicBlock.getParentId())
                 .build();
     }
 
@@ -91,10 +92,15 @@ class TopicPanelMapper {
                 .build();
     }
 
-    Page<TopicBlock> mapTopicDtoPageToTopicBlockPage(Page<TopicDto> topicPage, PageRequest pageRequest) {
+    Page<TopicBlock> mapTopicDtoPageToTopicBlockPage(Page<TopicDto> topicPage, Long parentId, PageRequest pageRequest) {
         return new PageImpl<>(
                 topicPage.getContent().stream()
-                        .map(topicDto -> TopicBlock.builder().topic(topicDto).build())
+                        .map(topicDto ->
+                                TopicBlock.builder()
+                                        .topic(topicDto)
+                                        .parentId(parentId)
+                                        .build()
+                        )
                         .collect(Collectors.toList()),
                 pageRequest, topicPage.getTotalElements()
         );

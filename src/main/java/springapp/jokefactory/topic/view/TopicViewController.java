@@ -86,9 +86,5 @@ class TopicViewController {
 //    }
 //
 //
-//    @DeleteMapping(value = "/remove-relation")
-//    void deleteTopicRelation(@RequestParam("topic-parent-id") Long topicParentId,
-//                             @RequestParam("topic-child-id") Long topicChildId) {
-//        topicService.deleteTopicRelation(topicParentId, topicChildId);
-//    }
+
 }

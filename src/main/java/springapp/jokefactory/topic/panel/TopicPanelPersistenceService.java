@@ -25,4 +25,9 @@ class TopicPanelPersistenceService {
         TopicDto topicChild = topicPanelMapper.mapTopicBlockDtoToTopicDto(topicBlockDto);
         topicFacade.addTopicChild(topicChild, topicBlockDto.getParentId());
     }
+
+    void deleteTopicRelation(Long topicParentId, Long topicChildId) {
+        topicFacade.deleteTopicRelation(topicParentId, topicChildId);
+        topicFacade.deleteTopicRelation(topicChildId, topicParentId);
+    }
 }
