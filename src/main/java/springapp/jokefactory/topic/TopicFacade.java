@@ -112,17 +112,24 @@ public class TopicFacade {
         topicRelationRepository.save(new TopicRelation(topicParent, savedTopicChild));
         topicRelationRepository.save(new TopicRelation(savedTopicChild, topicParent));
         if (savedTopicChild.isCategory()) {
-            topicCategoryRepository.save(new TopicCategory(topicParent, topicChild));
+            topicCategoryRepository.save(new TopicCategory(topicParent, savedTopicChild));
         } else if (topicParent.isCategory()) {
-            topicCategoryRepository.save(new TopicCategory(topicChild, topicParent));
+            topicCategoryRepository.save(new TopicCategory(savedTopicChild, topicParent));
+        }
+        Optional<TopicDto> connectedCategoryDto = topicChildDto.getCategories().stream().findFirst();
+        if (connectedCategoryDto.isPresent()){
+            Topic connectedCategory = findByIdOrThrowException(connectedCategoryDto.get().getId());
+            topicCategoryRepository.save(new TopicCategory(savedTopicChild, connectedCategory));
+            topicRelationRepository.save(new TopicRelation(savedTopicChild, connectedCategory));
+            topicRelationRepository.save(new TopicRelation(connectedCategory, savedTopicChild));
         }
         return topicMapper.mapTopicToDto(savedTopicChild);
     }
 
     public Page<TopicDto> getConnectedTopicsByCategory(Long parentId, Long categoryId, PageRequest pageRequest) {
         Topic parentTopic = findByIdOrThrowException(parentId);
-        Topic categoryTopic = findByIdOrThrowException(categoryId);
-        if (categoryTopic.getId() != 0) {
+        if (categoryId != 0) {
+            Topic categoryTopic = findByIdOrThrowException(categoryId);
             Page<Topic> topicPage = topicRepository.findConnectedTopicsByCategory(parentTopic, categoryTopic, pageRequest);
             return topicMapper.mapTopicPageToDto(topicPage, pageRequest);
         } else {

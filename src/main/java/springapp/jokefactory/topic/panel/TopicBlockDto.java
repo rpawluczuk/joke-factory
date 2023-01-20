@@ -3,6 +3,7 @@ package springapp.jokefactory.topic.panel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import springapp.jokefactory.topic.dto.TopicItemDto;
 
 import javax.validation.constraints.NotBlank;
 import java.util.List;
@@ -15,7 +16,7 @@ public class TopicBlockDto {
     private Long id;
     @NotBlank(message = "Name of topic is mandatory")
     private String name;
-    private List<String> categories;
+    private List<TopicItemDto> categories;
     private List<String> questions;
     private Long parentId;
     private Long secondParentId;

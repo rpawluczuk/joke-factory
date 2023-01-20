@@ -123,6 +123,7 @@ class TopicPanelService {
         topicPanel.setCategoryFilter(categoryTopic, topicPackIndex);
         Page<TopicDto> topicPage = topicFacade.getConnectedTopicsByCategory(topicBlockParent.getTopic().getId(), categoryId, BASIC_PAGE_REQUEST);
         Page<TopicBlock> topicBlockPage = topicPanelMapper.mapTopicDtoPageToTopicBlockPage(topicPage, topicBlockParent.getParentId(), BASIC_PAGE_REQUEST);
+        topicBlockPage.getContent().forEach(topicBlock -> topicBlock.setTopicPackIndex(topicPackIndex));
         return topicPanelMapper.mapTopicPackToDto(topicPanel.changeTopicPage(topicPackIndex, topicBlockPage));
     }
 

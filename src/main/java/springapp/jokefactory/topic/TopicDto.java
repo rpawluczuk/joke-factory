@@ -15,6 +15,7 @@ public class TopicDto {
     private String name;
     private boolean isCategory;
     private List<TopicDto> children;
+    private List<TopicDto> categories;
     private List<Question> questionsBySource;
     private List<Question> questionsByTarget;
 

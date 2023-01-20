@@ -84,8 +84,12 @@ class TopicPanelMapper {
     }
 
     TopicDto mapTopicBlockDtoToTopicDto(TopicBlockDto topicBlockDto) {
+        List<TopicDto> categories = topicBlockDto.getCategories().stream()
+                .map(this::mapTopicItemDtoToTopicDto)
+                .collect(Collectors.toList());
         return TopicDto.builder()
                 .name(topicBlockDto.getName())
+                .categories(categories)
                 .build();
     }
 
@@ -107,5 +111,12 @@ class TopicPanelMapper {
                         .collect(Collectors.toList()),
                 pageRequest, topicPage.getTotalElements()
         );
+    }
+
+    TopicDto mapTopicItemDtoToTopicDto(TopicItemDto topicItemDto) {
+        return TopicDto.builder()
+                .id(topicItemDto.getValue())
+                .name(topicItemDto.getLabel())
+                .build();
     }
 }

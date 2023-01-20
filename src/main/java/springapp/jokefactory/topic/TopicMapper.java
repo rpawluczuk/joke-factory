@@ -3,11 +3,10 @@ package springapp.jokefactory.topic;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import springapp.jokefactory.topic.dto.*;
-import springapp.jokefactory.topic.panel.TopicBlock;
 
+import java.util.List;
 import java.util.stream.Collectors;
 
 
@@ -19,9 +18,18 @@ class TopicMapper {
     }
 
     TopicDto mapTopicToDto (Topic topic){
+        List<TopicDto> categoriesDto = null;
+        if (topic.getCategories() != null) {
+            categoriesDto = topic.getCategories().stream()
+                    .map(TopicCategory::getCategory)
+                    .map(this::mapTopicToDto)
+                    .collect(Collectors.toList());
+        }
         return TopicDto.builder()
                 .id(topic.getId())
                 .name(topic.getName())
+                .categories(categoriesDto)
+                .isCategory(topic.isCategory())
                 .build();
     }
 
