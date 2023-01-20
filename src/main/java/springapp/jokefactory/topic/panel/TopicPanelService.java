@@ -15,7 +15,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 class TopicPanelService {
@@ -154,13 +153,13 @@ class TopicPanelService {
                         Page<TopicDto> newTopicPage = topicFacade.getConnectedTopicsPage(parentId, topicPack.getPageRequest());
                         Page<TopicBlock> newTopicBlockPage = topicPanelMapper.mapTopicDtoPageToTopicBlockPage(newTopicPage, parentId, topicPack.getPageRequest());
                         Optional<Long> selectedAsFirstParentId = topicPack.getSelectedAsFirstParentId();
-                        Optional<Long> selectedAsSecondParentId = topicPack.getSelectedAsSecondParentId();
+                        Optional<TopicBlock> selectedAsSecondParent = topicPack.getSelectedAsSecondParent();
                         newTopicBlockPage.getContent().forEach(topicBlock -> {
                             topicBlock.setTopicPackIndex(topicPack.getTopicPackIndex());
                             if (selectedAsFirstParentId.isPresent() && selectedAsFirstParentId.get().equals(topicBlock.getTopic().getId())) {
                                 topicBlock.setSelected(true);
                             }
-                            if (selectedAsSecondParentId.isPresent() && selectedAsSecondParentId.get().equals(topicBlock.getTopic().getId())) {
+                            if (selectedAsSecondParent.isPresent() && selectedAsSecondParent.get().getTopic().getId().equals(topicBlock.getTopic().getId())) {
                                 topicBlock.setSecondParent(true);
                             }
                         });

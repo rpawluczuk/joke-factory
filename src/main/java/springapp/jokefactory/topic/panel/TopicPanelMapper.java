@@ -34,6 +34,7 @@ class TopicPanelMapper {
 
     TopicPackDto mapTopicPackToDto(TopicPack topicPack) {
         TopicBlockDto topicParent = mapTopicBlockToDto(topicPack.getTopicBlockParent());
+        TopicBlockDto topicSecondParent = mapTopicBlockToDto(topicPack.getTopicBlockSecondParent());
         TopicPageDto topicPage = mapPageToDto(topicPack.getTopicBlockPage());
         TopicItemDto categoryFilter = null;
         if (topicPack.getCategoryFilter() != null) {
@@ -41,6 +42,7 @@ class TopicPanelMapper {
         }
         return TopicPackDto.builder()
                 .topicBlockParent(topicParent)
+                .topicBlockSecondParent(topicSecondParent)
                 .topicBlockPage(topicPage)
                 .categoryFilter(categoryFilter)
                 .isAnySelection(topicPack.isAnySelection())
@@ -63,6 +65,7 @@ class TopicPanelMapper {
     }
 
     TopicBlockDto mapTopicBlockToDto(TopicBlock topicBlock) {
+        if (topicBlock == null) return null;
         return TopicBlockDto.builder()
                 .id(topicBlock.getTopic().getId())
                 .name(topicBlock.getTopic().getName())

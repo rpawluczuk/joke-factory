@@ -10,6 +10,7 @@ import springapp.jokefactory.topic.dto.TopicItemDto;
 public class TopicPackDto {
     private TopicPageDto topicBlockPage;
     private TopicBlockDto topicBlockParent;
+    private TopicBlockDto topicBlockSecondParent;
     private TopicItemDto categoryFilter;
     private QuestionItemDto questionFilter;
     private boolean isAnySelection;

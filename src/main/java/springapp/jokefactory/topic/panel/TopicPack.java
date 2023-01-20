@@ -18,6 +18,7 @@ import java.util.Optional;
 public class TopicPack {
 
     private TopicBlock topicBlockParent;
+    private TopicBlock topicBlockSecondParent;
     private Page<TopicBlock> topicBlockPage;
     private TopicDto categoryFilter;
     private Question questionFilter;
@@ -44,11 +45,9 @@ public class TopicPack {
                 .findAny();
     }
 
-    Optional<Long> getSelectedAsSecondParentId() {
+    Optional<TopicBlock> getSelectedAsSecondParent() {
         return topicBlockPage.getContent().stream()
                 .filter(TopicBlock::isSecondParent)
-                .map(TopicBlock::getTopic)
-                .map(TopicDto::getId)
                 .findAny();
     }
 }

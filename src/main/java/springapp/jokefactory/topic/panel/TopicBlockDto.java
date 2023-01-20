@@ -3,7 +3,6 @@ package springapp.jokefactory.topic.panel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
 import java.util.List;
@@ -19,6 +18,7 @@ public class TopicBlockDto {
     private List<String> categories;
     private List<String> questions;
     private Long parentId;
+    private Long secondParentId;
     private boolean isCategory;
     private boolean isSelected;
     private boolean isSecondParent;
