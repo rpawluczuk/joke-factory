@@ -1,12 +1,15 @@
 package springapp.jokefactory.topic.panel;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 import springapp.jokefactory.question.dto.QuestionItemDto;
 
 import javax.validation.Valid;
 import java.util.LinkedList;
 import java.util.List;
+
 
 @RestController
 @RequestMapping("/api/topics/panel")
@@ -18,6 +21,11 @@ class TopicPanelController {
 
     @Autowired
     private TopicPanelPersistenceService topicPanelPersistenceService;
+
+    @Autowired
+    private TopicPanelMapper topicPanelMapper;
+
+    private static final PageRequest BASIC_PAGE_REQUEST = PageRequest.of(0, 20, Sort.Direction.ASC, "name");
 
     @GetMapping(value = "/{initialId}")
     TopicPanelDto getTopicPanel(@PathVariable("initialId") Long initialId) {
@@ -50,13 +58,15 @@ class TopicPanelController {
     @GetMapping(value = "/pack-filter")
     TopicPackDto getFilteredTopicPack(@RequestParam("categoryId") Long categoryId,
                                       @RequestParam("topicPackIndex") int topicPackIndex) {
-        return topicPanelService.getFilteredTopicPack(categoryId, topicPackIndex);
+        TopicPack topicPack = topicPanelService.changeCategoryFilter(categoryId, topicPackIndex);
+        return topicPanelMapper.mapTopicPackToDto(topicPack);
     }
 
     @GetMapping(value = "/pack-filter/by-question")
     TopicPackDto getFilterPackByQuestion(@RequestParam("questionId") Long questionId,
                                          @RequestParam("topicPackIndex") int topicPackIndex) {
-        return topicPanelService.getFilterPackByQuestion(questionId, topicPackIndex);
+        TopicPack topicPack = topicPanelService.getFilterPackByQuestion(questionId, topicPackIndex);
+        return topicPanelMapper.mapTopicPackToDto(topicPack);
     }
 
     @GetMapping(value = "/question-list")

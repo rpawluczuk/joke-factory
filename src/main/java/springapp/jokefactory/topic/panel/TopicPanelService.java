@@ -34,6 +34,12 @@ class TopicPanelService {
     private static final Random RANDOM = new Random();
     private static final PageRequest BASIC_PAGE_REQUEST = PageRequest.of(0, 20, Sort.Direction.ASC, "name");
 
+    TopicPack changeCategoryFilter(Long categoryId, int topicPackIndex) {
+        TopicDto categoryTopic = topicFacade.getTopicDtoById(categoryId);
+        topicPanel.setCategoryFilter(categoryTopic, topicPackIndex);
+        return getFilteredPackByCategory(categoryId, topicPackIndex, BASIC_PAGE_REQUEST);
+    }
+
     TopicPanelDto initializeTopicPanel(Long initialId) {
         topicPanel.clearPanel();
         TopicPack topicPack = getTopicPack(initialId, BASIC_PAGE_REQUEST);
@@ -77,9 +83,6 @@ class TopicPanelService {
     }
 
     List<TopicPackDto> showChildren(int topicPackIndex, Long newlySelectedTopicId) {
-        topicPanel.deselectTopic(topicPackIndex);
-        topicPanel.deselectPreviousSecondParentTopic(topicPackIndex);
-        topicPanel.selectTopic(topicPackIndex, newlySelectedTopicId);
         TopicPack topicPackChildren = getTopicPack(newlySelectedTopicId, BASIC_PAGE_REQUEST);
         topicPanel.addTopicPack(topicPackChildren, topicPackIndex);
         topicPanelMapper.mapTopicPackToDto(topicPanel.getTopicPackList().get(topicPackIndex + 1));
@@ -103,34 +106,40 @@ class TopicPanelService {
     }
 
     List<TopicPackDto> getRandomTopicPack(int topicPackIndex) {
-        Page<TopicBlock> topicPage = topicPanel.getTopicBlockPage(topicPackIndex);
-        int randomPageNumber = RANDOM.nextInt(topicPage.getTotalPages());
-        PageRequest pageRequest = PageRequest.of(randomPageNumber, topicPage.getSize(), Sort.Direction.ASC, "name");
-        TopicPack topicPack = getTopicPack(topicPanel.getTopicBlockParent(topicPackIndex).getTopic().getId(), pageRequest);
-        int randomIndex = RANDOM.nextInt(topicPack.getTopicBlockPage().getContent().size());
-        Long randomTopicId = topicPack.getTopicBlockPage().getContent().get(randomIndex).getTopic().getId();
+        TopicPack oldTopicPack = topicPanel.getTopicPackList().get(topicPackIndex);
+        Page<TopicBlock> oldTopicPage = topicPanel.getTopicBlockPage(topicPackIndex);
+        Long parentId = topicPanel.getTopicBlockParent(topicPackIndex).getTopic().getId();
+        int randomPageNumber = RANDOM.nextInt(oldTopicPage.getTotalPages());
+        PageRequest pageRequest = PageRequest.of(randomPageNumber, oldTopicPage.getSize(), Sort.Direction.ASC, "name");
+        TopicPack randomTopicPack ;
+        if (oldTopicPack.getCategoryFilter() != null){
+            Long categoryId = oldTopicPack.getCategoryFilter().getId();
+            randomTopicPack = getFilteredPackByCategory(categoryId, topicPackIndex, pageRequest);
+        } else {
+           randomTopicPack = getTopicPack(parentId, pageRequest);
+        }
+        int randomIndex = RANDOM.nextInt(randomTopicPack.getTopicBlockPage().getContent().size());
+        Long randomTopicId = randomTopicPack.getTopicBlockPage().getContent().get(randomIndex).getTopic().getId();
         TopicPack topicPackChildren = getTopicPack(randomTopicId, BASIC_PAGE_REQUEST);
         topicPanel.addTopicPack(topicPackChildren, topicPackIndex);
-        topicPanel.changeTopicPage(topicPackIndex, topicPack.getTopicBlockPage());
+        topicPanel.changeTopicPage(topicPackIndex, randomTopicPack.getTopicBlockPage());
         return List.of(
                 topicPanelMapper.mapTopicPackToDto(topicPanel.getTopicPackList().get(topicPackIndex)),
                 topicPanelMapper.mapTopicPackToDto(topicPackChildren));
     }
 
-    TopicPackDto getFilteredTopicPack(Long categoryId, int topicPackIndex) {
+    TopicPack getFilteredPackByCategory(Long categoryId, int topicPackIndex, PageRequest pageRequest) {
         TopicBlock topicBlockParent = topicPanel.getTopicBlockParent(topicPackIndex);
-        TopicDto categoryTopic = topicFacade.getTopicDtoById(categoryId);
-        topicPanel.setCategoryFilter(categoryTopic, topicPackIndex);
-        Page<TopicDto> topicPage = topicFacade.getConnectedTopicsByCategory(topicBlockParent.getTopic().getId(), categoryId, BASIC_PAGE_REQUEST);
-        Page<TopicBlock> topicBlockPage = topicPanelMapper.mapTopicDtoPageToTopicBlockPage(topicPage, topicBlockParent.getParentId(), BASIC_PAGE_REQUEST);
+        Page<TopicDto> topicPage = topicFacade.getConnectedTopicsByCategory(topicBlockParent.getTopic().getId(), categoryId, pageRequest);
+        Page<TopicBlock> topicBlockPage = topicPanelMapper.mapTopicDtoPageToTopicBlockPage(topicPage, topicBlockParent.getParentId(), pageRequest);
         topicBlockPage.getContent().forEach(topicBlock -> topicBlock.setTopicPackIndex(topicPackIndex));
-        return topicPanelMapper.mapTopicPackToDto(topicPanel.changeTopicPage(topicPackIndex, topicBlockPage));
+        return topicPanel.changeTopicPage(topicPackIndex, topicBlockPage);
     }
 
-    TopicPackDto getFilterPackByQuestion(Long questionId, int topicPackIndex) {
+    TopicPack getFilterPackByQuestion(Long questionId, int topicPackIndex) {
         Question question = questionFacade.getQuestionById(questionId);
         topicPanel.setQuestionFilter(question, topicPackIndex);
-        return getFilteredTopicPack(question.getTargetCategory().getId(), topicPackIndex);
+        return getFilteredPackByCategory(question.getTargetCategory().getId(), topicPackIndex, BASIC_PAGE_REQUEST);
     }
 
     Iterable<QuestionItemDto> getQuestionItemList(int topicPackIndex) {

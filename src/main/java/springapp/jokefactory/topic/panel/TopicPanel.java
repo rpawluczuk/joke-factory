@@ -35,6 +35,9 @@ public class TopicPanel {
     }
 
     public void addTopicPack(TopicPack topicPack, int topicPackIndex) {
+        deselectTopic(topicPackIndex);
+        deselectPreviousSecondParentTopic(topicPackIndex);
+        selectTopic(topicPackIndex, topicPack.getParentId());
         topicPack.setTopicPackIndex(topicPackIndex + 1);
         topicPackList.get(topicPackIndex).getSelectedAsSecondParent()
                 .ifPresent(topicPack::setTopicBlockSecondParent);
