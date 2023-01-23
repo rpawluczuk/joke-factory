@@ -117,7 +117,7 @@ public class TopicFacade {
             topicCategoryRepository.save(new TopicCategory(savedTopicChild, topicParent));
         }
         Optional<TopicDto> connectedCategoryDto = topicChildDto.getCategories().stream().findFirst();
-        if (connectedCategoryDto.isPresent()){
+        if (connectedCategoryDto.isPresent() && connectedCategoryDto.get().getId() != 0){
             Topic connectedCategory = findByIdOrThrowException(connectedCategoryDto.get().getId());
             topicCategoryRepository.save(new TopicCategory(savedTopicChild, connectedCategory));
             topicRelationRepository.save(new TopicRelation(savedTopicChild, connectedCategory));

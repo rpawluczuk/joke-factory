@@ -83,6 +83,8 @@ class TopicPanelService {
     }
 
     List<TopicPackDto> showChildren(int topicPackIndex, Long newlySelectedTopicId) {
+        topicPanel.deselectPreviousSecondParentTopic(topicPackIndex);
+        topicPanel.selectTopic(topicPackIndex, newlySelectedTopicId);
         TopicPack topicPackChildren = getTopicPack(newlySelectedTopicId, BASIC_PAGE_REQUEST);
         topicPanel.addTopicPack(topicPackChildren, topicPackIndex);
         topicPanelMapper.mapTopicPackToDto(topicPanel.getTopicPackList().get(topicPackIndex + 1));
@@ -92,7 +94,6 @@ class TopicPanelService {
     }
 
     List<TopicPackDto> secondParent(int topicPackIndex, Long secondParentId) {
-        topicPanel.deselectPreviousSecondParentTopic(topicPackIndex);
         topicPanel.selectSecondParentTopic(topicPackIndex, secondParentId);
         TopicBlock selectedTopicBlock = topicPanel.findSelectedTopicBlock(topicPackIndex)
                 .orElseThrow(() -> new IllegalArgumentException("no selection found"));
@@ -112,7 +113,9 @@ class TopicPanelService {
         int randomPageNumber = RANDOM.nextInt(oldTopicPage.getTotalPages());
         PageRequest pageRequest = PageRequest.of(randomPageNumber, oldTopicPage.getSize(), Sort.Direction.ASC, "name");
         TopicPack randomTopicPack ;
-        if (oldTopicPack.getCategoryFilter() != null){
+        if (oldTopicPack.getTopicBlockSecondParent() != null) {
+            randomTopicPack = getTopicPack(parentId, oldTopicPack.getSecondParentId(), BASIC_PAGE_REQUEST);
+        } else if (oldTopicPack.getCategoryFilter() != null){
             Long categoryId = oldTopicPack.getCategoryFilter().getId();
             randomTopicPack = getFilteredPackByCategory(categoryId, topicPackIndex, pageRequest);
         } else {
@@ -121,6 +124,7 @@ class TopicPanelService {
         int randomIndex = RANDOM.nextInt(randomTopicPack.getTopicBlockPage().getContent().size());
         Long randomTopicId = randomTopicPack.getTopicBlockPage().getContent().get(randomIndex).getTopic().getId();
         TopicPack topicPackChildren = getTopicPack(randomTopicId, BASIC_PAGE_REQUEST);
+        topicPanel.selectTopic(topicPackIndex, topicPackChildren.getParentId());
         topicPanel.addTopicPack(topicPackChildren, topicPackIndex);
         topicPanel.changeTopicPage(topicPackIndex, randomTopicPack.getTopicBlockPage());
         return List.of(

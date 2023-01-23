@@ -35,9 +35,6 @@ public class TopicPanel {
     }
 
     public void addTopicPack(TopicPack topicPack, int topicPackIndex) {
-        deselectTopic(topicPackIndex);
-        deselectPreviousSecondParentTopic(topicPackIndex);
-        selectTopic(topicPackIndex, topicPack.getParentId());
         topicPack.setTopicPackIndex(topicPackIndex + 1);
         topicPackList.get(topicPackIndex).getSelectedAsSecondParent()
                 .ifPresent(topicPack::setTopicBlockSecondParent);
@@ -71,6 +68,7 @@ public class TopicPanel {
     }
 
     void selectTopic(int topicPackIndex, Long topicIdToSelect) {
+        deselectTopic(topicPackIndex);
         topicPackList.get(topicPackIndex).getTopicBlockPage().getContent().stream()
                 .filter(topicBlock -> topicBlock.getTopic().getId().equals(topicIdToSelect))
                 .findAny()
@@ -104,6 +102,7 @@ public class TopicPanel {
     }
 
     void selectSecondParentTopic(int topicPackIndex, Long secondParentTopicId) {
+        deselectPreviousSecondParentTopic(topicPackIndex);
         topicPackList.get(topicPackIndex).getTopicBlockPage().getContent().stream()
                 .filter(topicBlock -> topicBlock.getTopic().getId().equals(secondParentTopicId))
                 .findAny()

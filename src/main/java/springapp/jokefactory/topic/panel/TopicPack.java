@@ -29,6 +29,14 @@ public class TopicPack {
         return getTopicBlockParent().getTopic().getId();
     }
 
+    Long getSecondParentId() {
+        if (getTopicBlockSecondParent() != null) {
+            return getTopicBlockSecondParent().getTopic().getId();
+        } else {
+            throw new IllegalArgumentException("The pack does not contain second parent");
+        }
+    }
+
     PageRequest getPageRequest() {
         return PageRequest.of(
                 getTopicBlockPage().getNumber(),
