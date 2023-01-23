@@ -51,20 +51,9 @@ interface TopicRepository extends JpaRepository<Topic, Long> {
             "ORDER BY t.name")
     Page<Topic> findConnectedTopics(@Param("topic") Topic topic, Pageable pageable);
 
-
-    public final static String TWO_PARENTS_QUERY =
-            "SELECT DISTINCT t FROM Topic t " +
-            "WHERE t.id IN " +
-                    "(" +
-                    "SELECT child.id FROM Topic child " +
-                    "LEFT JOIN t.children children " +
-                    "WHERE children.topicParent = :firstparent" +
-                    ")";
-
-
     @Query(value =
             "SELECT * FROM topic t " +
-            "WHERE id IN " +
+                    "WHERE id IN " +
                     "(" +
                     "SELECT id FROM topic " +
                     "LEFT JOIN topic_relation on id = topic_relation.topic_child_id " +
@@ -80,4 +69,25 @@ interface TopicRepository extends JpaRepository<Topic, Long> {
     Page<Topic> findConnectedTopicsByTwoParents(@Param("firstparentid") Long firstParentId,
                                                 @Param("secondparentid") Long secondParentId,
                                                 Pageable pageable);
+
+    @Query(value =
+            "SELECT * FROM topic t " +
+                    "LEFT JOIN topic_category on id = topic_category.topic_id " +
+                    "WHERE id IN " +
+                    "(" +
+                    "SELECT id FROM topic " +
+                    "LEFT JOIN topic_relation on id = topic_relation.topic_child_id " +
+                    "WHERE topic_relation.topic_parent_id = :firstparentid" +
+                    ") " +
+                    "AND id IN " +
+                    "(" +
+                    "SELECT id FROM topic " +
+                    "LEFT JOIN topic_relation on id = topic_relation.topic_child_id " +
+                    "WHERE topic_relation.topic_parent_id = :secondparentid" +
+                    ") AND topic_category.category_id = :categoryid"
+            , nativeQuery = true)
+    Page<Topic> findConnectedTopicsByTwoParentsAndCategory(@Param("firstparentid") Long firstParentId,
+                                                           @Param("secondparentid") Long secondParentId,
+                                                           @Param("categoryid") Long categoryId,
+                                                           Pageable pageable);
 }

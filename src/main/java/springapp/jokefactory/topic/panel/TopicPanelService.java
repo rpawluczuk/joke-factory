@@ -61,6 +61,30 @@ class TopicPanelService {
                 .build();
     }
 
+    TopicPack getNewTopicPack(int topicPackIndex, PageRequest pageRequest) {
+        TopicPack topicPack = topicPanel.getTopicPackList().get(topicPackIndex);
+        TopicBlock topicBlockParent = topicPack.getTopicBlockParent();
+        Long parentId = topicBlockParent.getTopic().getId();
+        Page<TopicDto> topicPage;
+        if (topicPack.getTopicBlockSecondParent() != null && topicPack.getCategoryFilter() != null) {
+            Long categoryId = topicPack.getCategoryFilter().getId();
+            topicPage = topicFacade.getConnectedTopicsPage(parentId, topicPack.getSecondParentId(), categoryId, pageRequest);
+        } else if (topicPack.getTopicBlockSecondParent() != null) {
+            topicPage =  topicFacade.getConnectedTopicsPage(parentId, topicPack.getSecondParentId(), pageRequest);
+        } else if (topicPack.getCategoryFilter() != null) {
+            Long categoryId = topicPack.getCategoryFilter().getId();
+            topicPage = topicFacade.getConnectedTopicsByCategory(parentId, categoryId, pageRequest);
+        } else {
+            topicPage = topicFacade.getConnectedTopicsPage(parentId, pageRequest);
+        }
+        Page<TopicBlock> topicBlockPage = topicPanelMapper.mapTopicDtoPageToTopicBlockPage(topicPage, parentId, pageRequest);
+        topicBlockPage.getContent().forEach(topicBlock -> topicBlock.setTopicPackIndex(topicPackIndex));
+        return TopicPack.builder()
+                .topicBlockParent(topicBlockParent)
+                .topicBlockPage(topicBlockPage)
+                .build();
+    }
+
     TopicPack getTopicPack(Long parentId, Long secondParentId, PageRequest pageRequest) {
         Page<TopicDto> topicPage = topicFacade.getConnectedTopicsPage(parentId, secondParentId, pageRequest);
         Page<TopicBlock> topicBlockPage = topicPanelMapper.mapTopicDtoPageToTopicBlockPage(topicPage, parentId, pageRequest);
@@ -107,20 +131,10 @@ class TopicPanelService {
     }
 
     List<TopicPackDto> getRandomTopicPack(int topicPackIndex) {
-        TopicPack oldTopicPack = topicPanel.getTopicPackList().get(topicPackIndex);
         Page<TopicBlock> oldTopicPage = topicPanel.getTopicBlockPage(topicPackIndex);
-        Long parentId = topicPanel.getTopicBlockParent(topicPackIndex).getTopic().getId();
         int randomPageNumber = RANDOM.nextInt(oldTopicPage.getTotalPages());
         PageRequest pageRequest = PageRequest.of(randomPageNumber, oldTopicPage.getSize(), Sort.Direction.ASC, "name");
-        TopicPack randomTopicPack ;
-        if (oldTopicPack.getTopicBlockSecondParent() != null) {
-            randomTopicPack = getTopicPack(parentId, oldTopicPack.getSecondParentId(), BASIC_PAGE_REQUEST);
-        } else if (oldTopicPack.getCategoryFilter() != null){
-            Long categoryId = oldTopicPack.getCategoryFilter().getId();
-            randomTopicPack = getFilteredPackByCategory(categoryId, topicPackIndex, pageRequest);
-        } else {
-           randomTopicPack = getTopicPack(parentId, pageRequest);
-        }
+        TopicPack randomTopicPack = getNewTopicPack(topicPackIndex, pageRequest);
         int randomIndex = RANDOM.nextInt(randomTopicPack.getTopicBlockPage().getContent().size());
         Long randomTopicId = randomTopicPack.getTopicBlockPage().getContent().get(randomIndex).getTopic().getId();
         TopicPack topicPackChildren = getTopicPack(randomTopicId, BASIC_PAGE_REQUEST);
@@ -166,11 +180,11 @@ class TopicPanelService {
                     if (topicPack.getParentId() == (parentId)) {
                         Page<TopicDto> newTopicPage = topicFacade.getConnectedTopicsPage(parentId, topicPack.getPageRequest());
                         Page<TopicBlock> newTopicBlockPage = topicPanelMapper.mapTopicDtoPageToTopicBlockPage(newTopicPage, parentId, topicPack.getPageRequest());
-                        Optional<Long> selectedAsFirstParentId = topicPack.getSelectedAsFirstParentId();
+                        Optional<TopicBlock> selectedAsFirstParentId = topicPack.getSelectedAsFirstParent();
                         Optional<TopicBlock> selectedAsSecondParent = topicPack.getSelectedAsSecondParent();
                         newTopicBlockPage.getContent().forEach(topicBlock -> {
                             topicBlock.setTopicPackIndex(topicPack.getTopicPackIndex());
-                            if (selectedAsFirstParentId.isPresent() && selectedAsFirstParentId.get().equals(topicBlock.getTopic().getId())) {
+                            if (selectedAsFirstParentId.isPresent() && selectedAsFirstParentId.get().getTopic().getId().equals(topicBlock.getTopic().getId())) {
                                 topicBlock.setSelected(true);
                             }
                             if (selectedAsSecondParent.isPresent() && selectedAsSecondParent.get().getTopic().getId().equals(topicBlock.getTopic().getId())) {

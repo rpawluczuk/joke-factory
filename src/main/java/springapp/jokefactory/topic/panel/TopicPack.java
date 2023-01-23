@@ -45,11 +45,9 @@ public class TopicPack {
         );
     }
 
-    Optional<Long> getSelectedAsFirstParentId() {
+    Optional<TopicBlock> getSelectedAsFirstParent() {
         return topicBlockPage.getContent().stream()
                 .filter(TopicBlock::isSelected)
-                .map(TopicBlock::getTopic)
-                .map(TopicDto::getId)
                 .findAny();
     }
 

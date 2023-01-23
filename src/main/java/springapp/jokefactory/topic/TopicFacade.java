@@ -81,6 +81,16 @@ public class TopicFacade {
         return topicMapper.mapTopicPageToDto(topicPage, pageRequest);
     }
 
+    public Page<TopicDto> getConnectedTopicsPage(Long parentId, Long secondParentId, Long categoryId, PageRequest pageRequest) {
+        Page<Topic> topicPage;
+        if (categoryId != 0) {
+            topicPage = topicRepository.findConnectedTopicsByTwoParentsAndCategory(parentId, secondParentId, categoryId, pageRequest);
+        } else {
+            topicPage = topicRepository.findConnectedTopicsByTwoParents(parentId, secondParentId, pageRequest);
+        }
+        return topicMapper.mapTopicPageToDto(topicPage, pageRequest);
+    }
+
     public Iterable<TopicItemDto> getTopicItemList() {
         return topicRepository.findAll().stream()
                 .map(topicMapper::mapTopicToTopicItemDto)
