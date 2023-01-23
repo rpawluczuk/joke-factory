@@ -1,11 +1,13 @@
 package springapp.jokefactory.joke.dto;
 
+import lombok.Builder;
 import lombok.Data;
 import springapp.jokefactory.structure.dto.StructurePresenterDto;
 import java.sql.Timestamp;
 import java.util.List;
 
 @Data
+@Builder
 public class JokePresenterDto {
 
     private Long id;
@@ -18,6 +20,6 @@ public class JokePresenterDto {
     private String connectingTopic;
     private String comedyTopic;
     private String ostensibleTopic;
-    private Timestamp dateCreated;
+    private String dateCreated;
     private Timestamp lastUpdated;
 }

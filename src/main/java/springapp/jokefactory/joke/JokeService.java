@@ -14,7 +14,6 @@ import springapp.jokefactory.jokeblock.JokeBlockFacade;
 import springapp.jokefactory.topic.TopicFacade;
 import springapp.jokefactory.structure.Structure;
 import springapp.jokefactory.structure.StructureFacade;
-import springapp.jokefactory.topicgroup.TopicGroup;
 //import springapp.jokefactory.topicgroup.TopicGroupFacade;
 
 import java.util.Collections;
@@ -43,6 +42,9 @@ class JokeService {
 
     @Autowired
     private JokePagination jokePagination;
+
+    @Autowired
+    private OldJokeMapper oldJokeMapper;
 
     @Autowired
     private JokeMapper jokeMapper;
@@ -74,7 +76,7 @@ class JokeService {
 
     JokeCreatorDto getJokeCreatorById(Long id) {
         Joke joke = jokeFacade.getJokeById(id);
-        JokeCreatorDto jokeCreatorDto = jokeMapper.mapJokeToJokeCreatorDto(joke);
+        JokeCreatorDto jokeCreatorDto = oldJokeMapper.mapJokeToJokeCreatorDto(joke);
 //     jokeCreatorDto.setTopicGroupCreatorList(topicGroupFacade.mapTopicGroupListToTopicGroupCreatorList(joke.getTopicGroups()));
         return jokeCreatorDto;
     }
@@ -84,7 +86,7 @@ class JokeService {
     }
 
     void addJoke(JokeCreatorDto jokeCreatorDto) {
-        Joke joke = jokeMapper.mapJokeCreatorDtoToJoke(jokeCreatorDto);
+        Joke joke = oldJokeMapper.mapJokeCreatorDtoToJoke(jokeCreatorDto);
         if (jokeCreatorDto.getStructureItemList() != null) {
             Set<Structure> structures = jokeCreatorDto.getStructureItemList().stream()
                     .map(structureItemDto -> structureFacade.tryToGetStructureById(structureItemDto.getValue()))
@@ -104,7 +106,7 @@ class JokeService {
 
     void editJoke(JokeCreatorDto jokeCreatorDto) {
         Joke joke = jokeFacade.getJokeById(jokeCreatorDto.getId());
-        jokeMapper.updateJokeFromJokeCreatorDto(jokeCreatorDto, joke);
+        oldJokeMapper.updateJokeFromJokeCreatorDto(jokeCreatorDto, joke);
         Set<Structure> structures = Optional.ofNullable(jokeCreatorDto.getStructureItemList())
                 .orElse(Collections.emptyList()).stream()
                 .map(structureItemDto -> structureFacade.tryToGetStructureById(structureItemDto.getValue()))
