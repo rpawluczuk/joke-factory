@@ -5,7 +5,6 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 import springapp.jokefactory.question.Question;
-import springapp.jokefactory.topic.Topic;
 import springapp.jokefactory.topic.TopicDto;
 
 import java.util.LinkedList;

@@ -5,6 +5,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 import springapp.jokefactory.question.dto.QuestionItemDto;
+import springapp.jokefactory.topic.view.TopicViewDto;
 
 import javax.validation.Valid;
 import java.util.LinkedList;
@@ -74,6 +75,12 @@ class TopicPanelController {
         return topicPanelService.getQuestionItemList(topicPackIndex);
     }
 
+    @GetMapping(value = "/change-size")
+    TopicPackDto changePageSize(@RequestParam("pageSize") int pageSize,
+                                @RequestParam("topicPackIndex") int topicPackIndex) {
+        return topicPanelService.changeSize(pageSize, topicPackIndex);
+    }
+
     @PostMapping
     List<TopicPackDto> addTopic(@Valid @RequestBody TopicBlockDto topicBlockDto) {
         if (topicBlockDto.getParentId() == null) {
@@ -90,7 +97,7 @@ class TopicPanelController {
 
     @DeleteMapping(value = "/remove-relation")
     List<TopicPackDto> deleteTopicRelation(@RequestParam("topic-parent-id") Long topicParentId,
-                             @RequestParam("topic-child-id") Long topicChildId) {
+                                           @RequestParam("topic-child-id") Long topicChildId) {
         topicPanelPersistenceService.deleteTopicRelation(topicParentId, topicChildId);
         return topicPanelService.refreshTopicPack(topicParentId);
     }

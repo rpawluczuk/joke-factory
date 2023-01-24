@@ -9,6 +9,7 @@ import springapp.jokefactory.question.Question;
 import springapp.jokefactory.question.QuestionFacade;
 import springapp.jokefactory.question.dto.QuestionItemDto;
 import springapp.jokefactory.topic.*;
+import springapp.jokefactory.topic.view.TopicViewDto;
 
 import java.util.Collection;
 import java.util.List;
@@ -32,7 +33,7 @@ class TopicPanelService {
     private QuestionFacade questionFacade;
 
     private static final Random RANDOM = new Random();
-    private static final PageRequest BASIC_PAGE_REQUEST = PageRequest.of(0, 20, Sort.Direction.ASC, "name");
+    private static final PageRequest BASIC_PAGE_REQUEST = PageRequest.of(0, 23, Sort.Direction.ASC, "name");
 
     TopicPack changeCategoryFilter(Long categoryId, int topicPackIndex) {
         TopicDto categoryTopic = topicFacade.getTopicDtoById(categoryId);
@@ -99,9 +100,10 @@ class TopicPanelService {
     }
 
     TopicPackDto getPackByPage(int topicPackIndex, int pageNumber) {
-        Long parentId = topicPanel.getTopicPackList().get(topicPackIndex).getTopicBlockParent().getTopic().getId();
-        PageRequest pageRequest = PageRequest.of(pageNumber, 20, Sort.Direction.ASC, "name");
-        TopicPack topicPack = getTopicPack(parentId, pageRequest);
+        TopicPack consideredTopicPack = topicPanel.getTopicPackList().get(topicPackIndex);
+        int pageSize = consideredTopicPack.getPageRequest().getPageSize();
+        PageRequest pageRequest = PageRequest.of(pageNumber, pageSize, Sort.Direction.ASC, "name");
+        TopicPack topicPack = getTopicPack(consideredTopicPack.getParentId(), pageRequest);
         topicPanel.changeTopicPage(topicPackIndex, topicPack.getTopicBlockPage());
         return topicPanelMapper.mapTopicPackToDto(topicPack);
     }
@@ -206,5 +208,12 @@ class TopicPanelService {
     TopicPackDto getTopicPack(int topicPackIndex) {
         TopicPack topicPack = topicPanel.getTopicPackList().get(topicPackIndex);
         return topicPanelMapper.mapTopicPackToDto(topicPack);
+    }
+
+    TopicPackDto changeSize(int pageSize, int topicPackIndex) {
+        PageRequest oldPageRequest = topicPanel.getTopicPackList().get(topicPackIndex).getPageRequest();
+        TopicPack topicPack = getNewTopicPack(topicPackIndex, PageRequest.of(0, pageSize, oldPageRequest.getSort()));
+        topicPanel.changeTopicPage(topicPackIndex, topicPack.getTopicBlockPage());
+        return topicPanelMapper.mapTopicPackToDto(topicPanel.getTopicPackList().get(topicPackIndex));
     }
 }
