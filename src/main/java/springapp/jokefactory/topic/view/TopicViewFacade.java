@@ -26,7 +26,7 @@ public class TopicViewFacade {
         Page<Topic> topicPage;
         if (topicView.isCategoryFilter()) {
             topicPage = topicFacade.getAllCategoryTopicsPage(pageRequest);
-        } else if (!topicView.getNameFilter().isEmpty()) {
+        } else if (topicView.getNameFilter() != null) {
             topicPage = topicFacade.getTopicPageByName(topicView.getNameFilter(), pageRequest);
         } else {
             topicPage = topicFacade.getTopicPage(pageRequest);
