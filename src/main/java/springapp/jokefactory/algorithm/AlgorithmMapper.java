@@ -6,9 +6,10 @@ import springapp.jokefactory.algorithm.dto.AlgorithmPresenterDto;
 @Service
 class AlgorithmMapper {
 
-    AlgorithmPresenterDto mapAlgorithmToAlgorithmPresenterDto(Algorithm structure) {
+    AlgorithmPresenterDto mapAlgorithmToAlgorithmPresenterDto(Algorithm algorithm) {
         return AlgorithmPresenterDto.builder()
-                .name(structure.getName())
+                .name(algorithm.getName())
+                .description(algorithm.getDescription())
                 .build();
     }
 
