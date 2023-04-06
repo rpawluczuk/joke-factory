@@ -4,7 +4,7 @@ import com.google.common.collect.Sets;
 import springapp.jokefactory.author.AuthorFactory;
 import springapp.jokefactory.jokeblock.JokeBlockFactory;
 import springapp.jokefactory.topic.TopicFactory;
-import springapp.jokefactory.structure.StructureFactory;
+import springapp.jokefactory.algorithm.StructureFactory;
 
 public class JokeFactory {
 

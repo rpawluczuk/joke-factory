@@ -1,7 +1,5 @@
 package springapp.jokefactory.author;
 
-import springapp.jokefactory.structure.Structure;
-
 public class AuthorFactory {
 
     public Author createAuthor() {

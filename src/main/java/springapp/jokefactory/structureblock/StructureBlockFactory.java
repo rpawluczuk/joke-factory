@@ -1,6 +1,6 @@
 package springapp.jokefactory.structureblock;
 
-import springapp.jokefactory.structure.StructureFactory;
+import springapp.jokefactory.algorithm.StructureFactory;
 
 public class StructureBlockFactory {
 

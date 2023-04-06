@@ -1,4 +1,4 @@
-package springapp.jokefactory.structure;
+package springapp.jokefactory.algorithm;
 
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -16,7 +16,8 @@ import java.util.Set;
 @Builder
 @AllArgsConstructor
 @Data
-public class Structure {
+@Table(name = "structure")
+public class Algorithm {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,7 +40,7 @@ public class Structure {
     @UpdateTimestamp
     private Timestamp lastUpdated;
 
-    public Structure(String name, String description) {
+    public Algorithm(String name, String description) {
         this.name = name;
         this.description = description;
     }

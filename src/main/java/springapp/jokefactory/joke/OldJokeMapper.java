@@ -7,9 +7,8 @@ import springapp.jokefactory.author.AuthorFacade;
 import springapp.jokefactory.author.dto.AuthorItemDto;
 import springapp.jokefactory.categorization.Categorization;
 import springapp.jokefactory.joke.dto.JokeCreatorDto;
-import springapp.jokefactory.joke.dto.JokePresenterDto;
-import springapp.jokefactory.structure.Structure;
-import springapp.jokefactory.structure.dto.StructureItemDto;
+import springapp.jokefactory.algorithm.Algorithm;
+import springapp.jokefactory.algorithm.dto.StructureItemDto;
 import springapp.jokefactory.topicgroup.TopicGroup;
 
 import java.util.List;
@@ -65,7 +64,7 @@ abstract class OldJokeMapper {
     }
 
     @Named("extractStructureItem")
-    List<StructureItemDto> extractStructureItem(Set<Structure> structures) {
+    List<StructureItemDto> extractStructureItem(Set<Algorithm> structures) {
         return structures.stream()
                 .map(structure -> new StructureItemDto(structure.getId(), structure.getName()))
                 .collect(Collectors.toList());

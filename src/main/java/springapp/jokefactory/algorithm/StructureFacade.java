@@ -1,4 +1,4 @@
-package springapp.jokefactory.structure;
+package springapp.jokefactory.algorithm;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -7,9 +7,9 @@ import org.springframework.stereotype.Service;
 public class StructureFacade {
 
     @Autowired
-    private StructureRepository structureRepository;
+    private AlgorithmRepository structureRepository;
 
-    public Structure tryToGetStructureById(Long id) {
+    public Algorithm tryToGetStructureById(Long id) {
         return structureRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("No structure found with id: " + id));
     }

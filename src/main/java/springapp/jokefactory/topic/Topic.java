@@ -1,13 +1,9 @@
 package springapp.jokefactory.topic;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-import springapp.jokefactory.joke.Joke;
-import springapp.jokefactory.jokeblock.JokeBlock;
 import springapp.jokefactory.question.Question;
-import springapp.jokefactory.structure.Structure;
 import springapp.jokefactory.topicgroup.TopicGroup;
 
 import javax.persistence.*;

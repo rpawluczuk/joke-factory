@@ -10,9 +10,9 @@ import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import springapp.jokefactory.algorithm.Algorithm;
 import springapp.jokefactory.author.Author;
 import springapp.jokefactory.jokeblock.JokeBlock;
-import springapp.jokefactory.structure.Structure;
 import springapp.jokefactory.topicgroup.TopicGroup;
 
 @Entity
@@ -31,7 +31,7 @@ public class Joke {
             joinColumns = {@JoinColumn(name = "joke_id")},
             inverseJoinColumns = {@JoinColumn(name = "structure_id")}
     )
-    private Set<Structure> structures;
+    private Set<Algorithm> structures;
 
     @ManyToOne
     private Author author;

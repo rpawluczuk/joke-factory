@@ -6,14 +6,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import springapp.jokefactory.algorithm.Algorithm;
 import springapp.jokefactory.joke.dto.JokeCreatorDto;
 import springapp.jokefactory.joke.dto.JokePresenterDto;
 import springapp.jokefactory.joke.dto.JokeRateDto;
 import springapp.jokefactory.jokeblock.JokeBlock;
 import springapp.jokefactory.jokeblock.JokeBlockFacade;
 import springapp.jokefactory.topic.TopicFacade;
-import springapp.jokefactory.structure.Structure;
-import springapp.jokefactory.structure.StructureFacade;
+import springapp.jokefactory.algorithm.StructureFacade;
 //import springapp.jokefactory.topicgroup.TopicGroupFacade;
 
 import java.util.Collections;
@@ -88,7 +88,7 @@ class JokeService {
     void addJoke(JokeCreatorDto jokeCreatorDto) {
         Joke joke = oldJokeMapper.mapJokeCreatorDtoToJoke(jokeCreatorDto);
         if (jokeCreatorDto.getStructureItemList() != null) {
-            Set<Structure> structures = jokeCreatorDto.getStructureItemList().stream()
+            Set<Algorithm> structures = jokeCreatorDto.getStructureItemList().stream()
                     .map(structureItemDto -> structureFacade.tryToGetStructureById(structureItemDto.getValue()))
                     .collect(Collectors.toSet());
             joke.setStructures(structures);
@@ -107,7 +107,7 @@ class JokeService {
     void editJoke(JokeCreatorDto jokeCreatorDto) {
         Joke joke = jokeFacade.getJokeById(jokeCreatorDto.getId());
         oldJokeMapper.updateJokeFromJokeCreatorDto(jokeCreatorDto, joke);
-        Set<Structure> structures = Optional.ofNullable(jokeCreatorDto.getStructureItemList())
+        Set<Algorithm> structures = Optional.ofNullable(jokeCreatorDto.getStructureItemList())
                 .orElse(Collections.emptyList()).stream()
                 .map(structureItemDto -> structureFacade.tryToGetStructureById(structureItemDto.getValue()))
                 .collect(Collectors.toSet());

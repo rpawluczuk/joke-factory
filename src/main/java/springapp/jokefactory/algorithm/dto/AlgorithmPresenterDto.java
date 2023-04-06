@@ -1,11 +1,13 @@
-package springapp.jokefactory.structure.dto;
+package springapp.jokefactory.algorithm.dto;
 
+import lombok.Builder;
 import lombok.Data;
 
 import java.sql.Timestamp;
 
 @Data
-public class StructurePresenterDto {
+@Builder
+public class AlgorithmPresenterDto {
 
     private Long id;
     private String name;

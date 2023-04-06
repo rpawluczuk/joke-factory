@@ -9,8 +9,8 @@ import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import springapp.jokefactory.algorithm.Algorithm;
 import springapp.jokefactory.jokeblock.JokeBlock;
-import springapp.jokefactory.structure.Structure;
 
 @Entity(name = "structure_block")
 @Builder
@@ -24,7 +24,7 @@ public class StructureBlock {
     private Long id;
 
     @ManyToOne
-    private Structure structure;
+    private Algorithm structure;
 
     @EqualsAndHashCode.Exclude @ToString.Exclude
     @JsonIgnore
@@ -73,11 +73,11 @@ public class StructureBlock {
         this.position = position;
     }
 
-    public Structure getStructure() {
+    public Algorithm getStructure() {
         return structure;
     }
 
-    public void setStructure(Structure structure) {
+    public void setStructure(Algorithm structure) {
         this.structure = structure;
     }
 

@@ -4,7 +4,7 @@ import lombok.Data;
 import springapp.jokefactory.author.dto.AuthorItemDto;
 import springapp.jokefactory.jokeblock.dto.JokeBlockCreatorDto;
 import springapp.jokefactory.topic.dto.TopicItemDto;
-import springapp.jokefactory.structure.dto.StructureItemDto;
+import springapp.jokefactory.algorithm.dto.StructureItemDto;
 import springapp.jokefactory.topicgroup.dto.TopicGroupCreatorDto;
 
 import java.sql.Timestamp;

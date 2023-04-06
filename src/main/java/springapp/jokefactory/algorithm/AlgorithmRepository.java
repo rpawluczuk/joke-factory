@@ -1,4 +1,4 @@
-package springapp.jokefactory.structure;
+package springapp.jokefactory.algorithm;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -8,15 +8,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
-interface StructureRepository extends JpaRepository<Structure, Long> {
+interface AlgorithmRepository extends JpaRepository<Algorithm, Long> {
 
-    @Query(value = "SELECT max(id) FROM Structure")
+    @Query(value = "SELECT max(id) FROM Algorithm")
     long findHighestID();
 
     @Query(value = "SELECT j.structures FROM Joke j where j.id = ?1")
-    List<Structure> findStructuresByJokeID(long jokeId);
+    List<Algorithm> findStructuresByJokeID(long jokeId);
 
-    Structure findFirstByName(String name);
+    Algorithm findFirstByName(String name);
 
-    Page<Structure> findStructureByNameContaining(@RequestParam("name") String name, Pageable pageable);
+    Page<Algorithm> findStructureByNameContaining(@RequestParam("name") String name, Pageable pageable);
 }

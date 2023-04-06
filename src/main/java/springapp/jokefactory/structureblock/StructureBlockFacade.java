@@ -2,7 +2,7 @@ package springapp.jokefactory.structureblock;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import springapp.jokefactory.structure.Structure;
+import springapp.jokefactory.algorithm.Algorithm;
 import springapp.jokefactory.structureblock.dto.StructureBlockCreatorDto;
 import springapp.jokefactory.structureblock.dto.StructureBlockPresenterDto;
 
@@ -33,7 +33,7 @@ public class StructureBlockFacade {
     }
 
     public List<StructureBlock> extractStructureBlockList(List<StructureBlockCreatorDto> structureBlockCreatorList,
-                                                          Structure structure) {
+                                                          Algorithm structure) {
         return structureBlockCreatorList.stream()
                 .map(structureBlockCreatorDto ->
                         structureBlockMapper.mapStructureBlockCreatorDtoToStructureBlock(structureBlockCreatorDto, structure))
@@ -42,7 +42,7 @@ public class StructureBlockFacade {
 
     public List<StructureBlock> extractUpdatedStructureBlockList(List<StructureBlockCreatorDto> structureBlockCreatorDtoList,
                                                                  List<StructureBlock> structureBlockList,
-                                                                 Structure structure) {
+                                                                 Algorithm structure) {
         return IntStream.range(0, structureBlockCreatorDtoList.size())
                 .mapToObj(index -> {
                     if (index < structureBlockList.size()){

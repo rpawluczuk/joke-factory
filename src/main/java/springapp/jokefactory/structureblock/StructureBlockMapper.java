@@ -2,7 +2,7 @@ package springapp.jokefactory.structureblock;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import springapp.jokefactory.structure.Structure;
+import springapp.jokefactory.algorithm.Algorithm;
 import springapp.jokefactory.structureblock.dto.StructureBlockCreatorDto;
 import springapp.jokefactory.structureblock.dto.StructureBlockPresenterDto;
 
@@ -12,7 +12,7 @@ abstract class StructureBlockMapper {
     @Mapping(target = "id", source = "structureBlockCreatorDto.id")
     @Mapping(target = "description", source = "structureBlockCreatorDto.description")
     @Mapping(target = "structure", source = "structure")
-    abstract StructureBlock mapStructureBlockCreatorDtoToStructureBlock(StructureBlockCreatorDto structureBlockCreatorDto, Structure structure);
+    abstract StructureBlock mapStructureBlockCreatorDtoToStructureBlock(StructureBlockCreatorDto structureBlockCreatorDto, Algorithm structure);
 
     abstract StructureBlockCreatorDto mapStructureBlockToStructureBlockCreatorDto(StructureBlock structureBlock);
 
