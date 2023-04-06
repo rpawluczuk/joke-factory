@@ -29,8 +29,9 @@ public class QuestionFacade {
         return questionRepository.findAllBySourceCategory_Id(sourceCategoryId);
     }
 
-    public Question getQuestionById(Long id) {
-        return questionRepository.findById(id)
+    public QuestionDto getQuestionById(Long id) {
+        Question question = questionRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("No question found with id: " + id));
+        return questionMapper.mapQuestionToDto(question);
     }
 }

@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 import springapp.jokefactory.question.Question;
+import springapp.jokefactory.question.dto.QuestionDto;
 import springapp.jokefactory.topic.TopicDto;
 
 import java.util.LinkedList;
@@ -62,7 +63,7 @@ public class TopicPanel {
         topicPackList.get(topicPackIndex).setCategoryFilter(categoryFilter);
     }
 
-    public void setQuestionFilter(Question questionFilter, int topicPackIndex) {
+    public void setQuestionFilter(QuestionDto questionFilter, int topicPackIndex) {
         topicPackList.get(topicPackIndex).setQuestionFilter(questionFilter);
     }
 

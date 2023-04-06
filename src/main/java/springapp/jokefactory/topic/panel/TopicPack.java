@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
 import springapp.jokefactory.question.Question;
+import springapp.jokefactory.question.dto.QuestionDto;
 import springapp.jokefactory.topic.TopicDto;
 
 import java.util.Optional;
@@ -21,7 +22,7 @@ public class TopicPack {
     private TopicBlock topicBlockSecondParent;
     private Page<TopicBlock> topicBlockPage;
     private TopicDto categoryFilter;
-    private Question questionFilter;
+    private QuestionDto questionFilter;
     private boolean isAnySelection;
     private int topicPackIndex;
 

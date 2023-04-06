@@ -7,6 +7,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import springapp.jokefactory.question.Question;
 import springapp.jokefactory.question.QuestionFacade;
+import springapp.jokefactory.question.dto.QuestionDto;
 import springapp.jokefactory.question.dto.QuestionItemDto;
 import springapp.jokefactory.topic.*;
 import springapp.jokefactory.topic.view.TopicViewDto;
@@ -157,9 +158,11 @@ class TopicPanelService {
     }
 
     TopicPack getFilterPackByQuestion(Long questionId, int topicPackIndex) {
-        Question question = questionFacade.getQuestionById(questionId);
+        QuestionDto question = questionFacade.getQuestionById(questionId);
         topicPanel.setQuestionFilter(question, topicPackIndex);
-        return getFilteredPackByCategory(question.getTargetCategory().getId(), topicPackIndex, BASIC_PAGE_REQUEST);
+        TopicDto category = topicFacade.getTopicDtoById(question.getTargetCategory().getValue());
+        topicPanel.setCategoryFilter(category, topicPackIndex);
+        return getFilteredPackByCategory(category.getId(), topicPackIndex, BASIC_PAGE_REQUEST);
     }
 
     Iterable<QuestionItemDto> getQuestionItemList(int topicPackIndex) {
@@ -180,8 +183,7 @@ class TopicPanelService {
         topicPanel.getTopicPackList()
                 .forEach(topicPack -> {
                     if (topicPack.getParentId() == (parentId)) {
-                        Page<TopicDto> newTopicPage = topicFacade.getConnectedTopicsPage(parentId, topicPack.getPageRequest());
-                        Page<TopicBlock> newTopicBlockPage = topicPanelMapper.mapTopicDtoPageToTopicBlockPage(newTopicPage, parentId, topicPack.getPageRequest());
+                        Page<TopicBlock> newTopicBlockPage = getNewTopicPack(topicPack.getTopicPackIndex(), topicPack.getPageRequest()).getTopicBlockPage();
                         Optional<TopicBlock> selectedAsFirstParentId = topicPack.getSelectedAsFirstParent();
                         Optional<TopicBlock> selectedAsSecondParent = topicPack.getSelectedAsSecondParent();
                         newTopicBlockPage.getContent().forEach(topicBlock -> {
