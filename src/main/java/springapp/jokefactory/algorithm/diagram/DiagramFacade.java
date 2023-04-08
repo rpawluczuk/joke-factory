@@ -2,6 +2,7 @@ package springapp.jokefactory.algorithm.diagram;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import springapp.jokefactory.algorithm.diagram.dto.DiagramBlockPresenterDto;
 
 import java.util.List;
 import java.util.stream.Collectors;

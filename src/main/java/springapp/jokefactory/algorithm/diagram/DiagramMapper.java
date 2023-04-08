@@ -1,10 +1,7 @@
 package springapp.jokefactory.algorithm.diagram;
 
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 import org.springframework.stereotype.Service;
-import springapp.jokefactory.algorithm.Algorithm;
-import springapp.jokefactory.structureblock.dto.StructureBlockCreatorDto;
+import springapp.jokefactory.algorithm.diagram.dto.DiagramBlockPresenterDto;
 
 @Service
 class DiagramMapper {

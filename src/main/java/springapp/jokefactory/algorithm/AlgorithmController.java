@@ -3,7 +3,7 @@ package springapp.jokefactory.algorithm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import springapp.jokefactory.algorithm.dto.AlgorithmPresenterDto;
-import springapp.jokefactory.algorithm.diagram.DiagramBlockPresenterDto;
+import springapp.jokefactory.algorithm.diagram.dto.DiagramBlockPresenterDto;
 
 @RestController
 @RequestMapping("/api/algorithms")
@@ -42,12 +42,12 @@ class AlgorithmController {
 //    Iterable<StructureItemDto> getStructuresByJokeID(@PathVariable("joke_id") Long jokeID){
 //        return structureService.getStructureItemListByJokeID(jokeID);
 //    }
-//
-//    @GetMapping(value = "/pagination")
-//    StructurePagination getTopicPagination(){
-//        return structureService.getStructurePagination();
-//    }
-//
+
+    @GetMapping(value = "/pagination")
+    AlgorithmPagination getTopicPagination(){
+        return algorithmService.getAlgorithmPagination();
+    }
+
 //    @PostMapping(consumes={"application/json"})
 //    @ResponseStatus(HttpStatus.CREATED)
 //    void addStructure(@RequestBody StructureCreatorDto structureCreatorDto){
@@ -58,12 +58,12 @@ class AlgorithmController {
 //    void editStructure(@RequestBody StructureCreatorDto structureCreatorDto){
 //        structureService.editStructure(structureCreatorDto);
 //    }
-//
-//    @PutMapping(value = "/pagination")
-//    void updateStructurePagination(@RequestBody StructurePagination structurePagination){
-//        structureService.updateStructurePagination(structurePagination);
-//    }
-//
+
+    @PutMapping(value = "/pagination")
+    void updateStructurePagination(@RequestBody AlgorithmPagination algorithmPagination){
+        algorithmService.updateAlgorithmPagination(algorithmPagination);
+    }
+
 //    @DeleteMapping(value = "/{id}")
 //    void deleteStructure(@PathVariable("id") Long id){
 //        structureService.deleteStructure(id);

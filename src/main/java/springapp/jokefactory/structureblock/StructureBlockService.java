@@ -4,7 +4,7 @@
 //import org.springframework.stereotype.Service;
 //import springapp.jokefactory.algorithm.diagram.DiagramBlock;
 //import springapp.jokefactory.algorithm.StructureBlockRepository;
-//import springapp.jokefactory.algorithm.diagram.DiagramBlockPresenterDto;
+//import springapp.jokefactory.algorithm.diagram.dto.DiagramBlockPresenterDto;
 //import springapp.jokefactory.structureblock.dto.StructureBlockCreatorDto;
 //
 //import java.util.List;

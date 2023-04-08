@@ -5,13 +5,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import springapp.jokefactory.algorithm.diagram.DiagramBlock;
 import springapp.jokefactory.algorithm.diagram.DiagramFacade;
-import springapp.jokefactory.algorithm.diagram.DiagramBlockPresenterDto;
+import springapp.jokefactory.algorithm.diagram.dto.DiagramBlockPresenterDto;
 import springapp.jokefactory.joke.JokeFacade;
 import springapp.jokefactory.algorithm.dto.AlgorithmPresenterDto;
 
-import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
@@ -77,11 +75,11 @@ class AlgorithmService {
 //                .map(structureMapper::mapStructureToStructureItemDto)
 //                .collect(Collectors.toList());
 //    }
-//
-//    StructurePagination getStructurePagination() {
-//        return structurePagination;
-//    }
-//
+
+    AlgorithmPagination getAlgorithmPagination() {
+        return algorithmPagination;
+    }
+
 //    void addStructure(StructureCreatorDto structureCreatorDto) {
 //        Structure structure = structureMapper.mapStructureCreatorDtoToStructure(structureCreatorDto);
 //        List<StructureBlock> structureBlockList =
@@ -99,14 +97,14 @@ class AlgorithmService {
 //        updatedStructure.setStructureBlockScheme(updatedStructureBlockList);
 //        structureRepository.save(updatedStructure);
 //    }
-//
-//    void updateStructurePagination(StructurePagination structurePagination) {
-//        this.structurePagination.setCurrentPage(structurePagination.getCurrentPage());
-//        this.structurePagination.setTotalItems(structurePagination.getTotalItems());
-//        this.structurePagination.setTotalPages(structurePagination.getTotalPages());
-//        this.structurePagination.setPageSize(structurePagination.getPageSize());
-//    }
-//
+
+    void updateAlgorithmPagination(AlgorithmPagination algorithmPagination) {
+        this.algorithmPagination.setCurrentPage(algorithmPagination.getCurrentPage());
+        this.algorithmPagination.setTotalItems(algorithmPagination.getTotalItems());
+        this.algorithmPagination.setTotalPages(algorithmPagination.getTotalPages());
+        this.algorithmPagination.setPageSize(algorithmPagination.getPageSize());
+    }
+
 //    void deleteStructure(Long id) {
 //        Structure structureToDelete = structureFacade.tryToGetStructureById(id);
 //        jokeFacade.removeStructureFromJokes(structureToDelete);

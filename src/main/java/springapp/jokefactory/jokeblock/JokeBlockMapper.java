@@ -1,16 +1,5 @@
 package springapp.jokefactory.jokeblock;
 
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.Named;
-import org.springframework.beans.factory.annotation.Autowired;
-import springapp.jokefactory.algorithm.diagram.DiagramBlock;
-import springapp.jokefactory.algorithm.diagram.DiagramBlockPresenterDto;
-import springapp.jokefactory.joke.Joke;
-import springapp.jokefactory.jokeblock.dto.JokeBlockCreatorDto;
-import springapp.jokefactory.jokeblock.dto.JokeBlockPresenterDto;
-import springapp.jokefactory.algorithm.diagram.DiagramFacade;
-
 //@Mapper(componentModel = "spring")
 //abstract class JokeBlockMapper {
 //

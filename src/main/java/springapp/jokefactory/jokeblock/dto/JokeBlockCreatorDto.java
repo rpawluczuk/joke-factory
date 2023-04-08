@@ -3,7 +3,7 @@ package springapp.jokefactory.jokeblock.dto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import springapp.jokefactory.algorithm.diagram.DiagramBlockPresenterDto;
+import springapp.jokefactory.algorithm.diagram.dto.DiagramBlockPresenterDto;
 
 @Data
 @Builder

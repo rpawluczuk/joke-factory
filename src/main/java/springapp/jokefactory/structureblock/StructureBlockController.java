@@ -1,10 +1,5 @@
 package springapp.jokefactory.structureblock;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-import springapp.jokefactory.structureblock.dto.StructureBlockCreatorDto;
-import springapp.jokefactory.algorithm.diagram.DiagramBlockPresenterDto;
-
 //@RestController
 //@RequestMapping("/api/structure-blocks")
 //@CrossOrigin("http://localhost:4200")

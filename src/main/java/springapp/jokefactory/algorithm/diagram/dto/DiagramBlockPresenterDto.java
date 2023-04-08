@@ -1,4 +1,4 @@
-package springapp.jokefactory.algorithm.diagram;
+package springapp.jokefactory.algorithm.diagram.dto;
 
 import lombok.Builder;
 import lombok.Data;
