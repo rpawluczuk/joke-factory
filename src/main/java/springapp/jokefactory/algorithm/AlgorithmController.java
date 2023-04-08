@@ -3,6 +3,7 @@ package springapp.jokefactory.algorithm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import springapp.jokefactory.algorithm.dto.AlgorithmPresenterDto;
+import springapp.jokefactory.algorithm.diagram.DiagramBlockPresenterDto;
 
 @RestController
 @RequestMapping("/api/algorithms")
@@ -10,11 +11,16 @@ import springapp.jokefactory.algorithm.dto.AlgorithmPresenterDto;
 class AlgorithmController {
 
     @Autowired
-    AlgorithmService structureService;
+    AlgorithmService algorithmService;
 
     @GetMapping
-    Iterable<AlgorithmPresenterDto> getStructurePresenterList(){
-        return structureService.getAlgorithmPresenterList();
+    Iterable<AlgorithmPresenterDto> getAlgorithmPresenterList(){
+        return algorithmService.getAlgorithmPresenterList();
+    }
+
+    @GetMapping(value = "/diagram/{algorithm_id}")
+    Iterable<DiagramBlockPresenterDto> getAlgorithmDiagram(@PathVariable("algorithm_id") Long algorithmId){
+        return algorithmService.getAlgorithmDiagram(algorithmId);
     }
 //
 //    @GetMapping(value = "/by-name", params = "name")

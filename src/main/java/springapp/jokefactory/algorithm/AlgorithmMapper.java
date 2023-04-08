@@ -8,6 +8,7 @@ class AlgorithmMapper {
 
     AlgorithmPresenterDto mapAlgorithmToAlgorithmPresenterDto(Algorithm algorithm) {
         return AlgorithmPresenterDto.builder()
+                .id(algorithm.getId())
                 .name(algorithm.getName())
                 .description(algorithm.getDescription())
                 .build();

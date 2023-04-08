@@ -5,10 +5,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import springapp.jokefactory.algorithm.diagram.DiagramBlock;
+import springapp.jokefactory.algorithm.diagram.DiagramFacade;
+import springapp.jokefactory.algorithm.diagram.DiagramBlockPresenterDto;
 import springapp.jokefactory.joke.JokeFacade;
 import springapp.jokefactory.algorithm.dto.AlgorithmPresenterDto;
-import springapp.jokefactory.structureblock.StructureBlockFacade;
 
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
@@ -24,7 +27,7 @@ class AlgorithmService {
     private StructureFacade structureFacade;
 
     @Autowired
-    private StructureBlockFacade structureBlockFacade;
+    private DiagramFacade diagramFacade;
 
     @Autowired
     private JokeFacade jokeFacade;
@@ -46,6 +49,10 @@ class AlgorithmService {
         return algorithmPage.getContent().stream()
                 .map(algorithmMapper::mapAlgorithmToAlgorithmPresenterDto)
                 .collect(Collectors.toList());
+    }
+
+    Iterable<DiagramBlockPresenterDto> getAlgorithmDiagram(Long algorithmId){
+        return diagramFacade.getAlgorithmDiagram(algorithmId);
     }
 
 //    Iterable<StructurePresenterDto> getStructurePresenterListByName(String name) {

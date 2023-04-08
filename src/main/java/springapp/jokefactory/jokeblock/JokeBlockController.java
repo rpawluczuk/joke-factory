@@ -15,18 +15,18 @@ class JokeBlockController {
     @Autowired
     JokeBlockService jokeBlockService;
 
-    @GetMapping(value = "creator-list/{joke_id}")
-    Iterable<JokeBlockCreatorDto> getBlocksOfTheJoke(@PathVariable("joke_id") Long jokeId) {
-        return jokeBlockService.getJokeBlockCreatorList(jokeId);
-    }
-
-    @GetMapping(value = "presenter-list/{joke_id}")
-    Iterable<JokeBlockPresenterDto> getJokeBlockPresenterList(@PathVariable("joke_id") Long jokeId) {
-        return jokeBlockService.getJokeBlockPresenterList(jokeId);
-    }
-
-    @GetMapping(params = "structureId")
-    List<JokeBlockCreatorDto> getJokeBlockCreatorListOfStructure(@RequestParam("structureId") Long structureId) {
-        return jokeBlockService.getJokeBlockCreatorListOfStructure(structureId);
-    }
+//    @GetMapping(value = "creator-list/{joke_id}")
+//    Iterable<JokeBlockCreatorDto> getBlocksOfTheJoke(@PathVariable("joke_id") Long jokeId) {
+//        return jokeBlockService.getJokeBlockCreatorList(jokeId);
+//    }
+//
+//    @GetMapping(value = "presenter-list/{joke_id}")
+//    Iterable<JokeBlockPresenterDto> getJokeBlockPresenterList(@PathVariable("joke_id") Long jokeId) {
+//        return jokeBlockService.getJokeBlockPresenterList(jokeId);
+//    }
+//
+//    @GetMapping(params = "structureId")
+//    List<JokeBlockCreatorDto> getJokeBlockCreatorListOfStructure(@RequestParam("structureId") Long structureId) {
+//        return jokeBlockService.getJokeBlockCreatorListOfStructure(structureId);
+//    }
 }

@@ -3,8 +3,8 @@ package springapp.jokefactory.algorithm;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import springapp.jokefactory.algorithm.diagram.DiagramBlock;
 import springapp.jokefactory.joke.Joke;
-import springapp.jokefactory.structureblock.StructureBlock;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -31,8 +31,8 @@ public class Algorithm {
     private String description;
 
     @EqualsAndHashCode.Exclude @ToString.Exclude
-    @OneToMany(mappedBy = "structure", cascade = CascadeType.ALL)
-    private List<StructureBlock> structureBlockScheme;
+    @OneToMany(mappedBy = "algorithm", cascade = CascadeType.ALL)
+    private List<DiagramBlock> structureBlockScheme;
 
     @CreationTimestamp
     private Timestamp dateCreated;
@@ -85,11 +85,11 @@ public class Algorithm {
         this.description = description;
     }
 
-    public List<StructureBlock> getStructureBlockScheme() {
+    public List<DiagramBlock> getStructureBlockScheme() {
         return structureBlockScheme;
     }
 
-    public void setStructureBlockScheme(List<StructureBlock> structureBlockScheme) {
+    public void setStructureBlockScheme(List<DiagramBlock> structureBlockScheme) {
         this.structureBlockScheme = structureBlockScheme;
     }
 

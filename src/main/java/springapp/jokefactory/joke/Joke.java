@@ -12,7 +12,6 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import springapp.jokefactory.algorithm.Algorithm;
 import springapp.jokefactory.author.Author;
-import springapp.jokefactory.jokeblock.JokeBlock;
 import springapp.jokefactory.topicgroup.TopicGroup;
 
 @Entity
@@ -36,10 +35,10 @@ public class Joke {
     @ManyToOne
     private Author author;
 
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    @OneToMany(mappedBy = "joke", cascade = CascadeType.ALL)
-    private List<JokeBlock> jokeBlocks;
+//    @EqualsAndHashCode.Exclude
+//    @ToString.Exclude
+//    @OneToMany(mappedBy = "joke", cascade = CascadeType.ALL)
+//    private List<JokeBlock> jokeBlocks;
 
     @ToString.Exclude
     @OneToMany(mappedBy = "joke", cascade = CascadeType.ALL)

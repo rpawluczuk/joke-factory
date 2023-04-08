@@ -13,19 +13,19 @@ import java.util.stream.Collectors;
 @Service
 public class JokeBlockFacade {
 
-    @Autowired
-    private JokeBlockRepository jokeBlockRepository;
+//    @Autowired
+//    private JokeBlockRepository jokeBlockRepository;
 
-    @Autowired
-    private JokeBlockMapper jokeBlockMapper;
-
-    public List<JokeBlock> extractJokeBlockList(List<JokeBlockCreatorDto> jokeBlockCreatorDtoList, Joke joke) {
-        return Optional.ofNullable(jokeBlockCreatorDtoList).orElse(Collections.emptyList()).stream()
-                .map(jokeBlockCreatorDto -> jokeBlockMapper.jokeBlockCreatorDtoToJokeBlock(jokeBlockCreatorDto, joke))
-                .collect(Collectors.toList());
-    }
-
-    public void saveJokeBlockList(List<JokeBlock> jokeBlockList) {
-        jokeBlockList.forEach(jokeBlockRepository::save);
-    }
+//    @Autowired
+//    private JokeBlockMapper jokeBlockMapper;
+//
+//    public List<JokeBlock> extractJokeBlockList(List<JokeBlockCreatorDto> jokeBlockCreatorDtoList, Joke joke) {
+//        return Optional.ofNullable(jokeBlockCreatorDtoList).orElse(Collections.emptyList()).stream()
+//                .map(jokeBlockCreatorDto -> jokeBlockMapper.jokeBlockCreatorDtoToJokeBlock(jokeBlockCreatorDto, joke))
+//                .collect(Collectors.toList());
+//    }
+//
+//    public void saveJokeBlockList(List<JokeBlock> jokeBlockList) {
+//        jokeBlockList.forEach(jokeBlockRepository::save);
+//    }
 }

@@ -8,7 +8,7 @@
 //import springapp.jokefactory.jokeblock.dto.JokeBlockCreatorDto;
 //import springapp.jokefactory.jokeblock.JokeBlockFactory;
 //import springapp.jokefactory.jokeblock.JokeBlockMapper;
-//import springapp.jokefactory.structureblock.StructureBlock;
+//import springapp.jokefactory.algorithm.StructureBlock;
 //import springapp.jokefactory.structureblock.StructureBlockFactory;
 //
 //import static org.junit.jupiter.api.Assertions.assertEquals;

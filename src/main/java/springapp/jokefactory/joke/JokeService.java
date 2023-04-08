@@ -10,7 +10,6 @@ import springapp.jokefactory.algorithm.Algorithm;
 import springapp.jokefactory.joke.dto.JokeCreatorDto;
 import springapp.jokefactory.joke.dto.JokePresenterDto;
 import springapp.jokefactory.joke.dto.JokeRateDto;
-import springapp.jokefactory.jokeblock.JokeBlock;
 import springapp.jokefactory.jokeblock.JokeBlockFacade;
 import springapp.jokefactory.topic.TopicFacade;
 import springapp.jokefactory.algorithm.StructureFacade;
@@ -98,10 +97,10 @@ class JokeService {
 //            List<TopicGroup> topicGroupList = topicGroupFacade.mapTopicGroupCreatorListToTopicGroupList(jokeCreatorDto.getTopicGroupCreatorList(), joke);
 //            topicGroupFacade.saveTopicGroupList(topicGroupList);
 //        }
-        if (jokeCreatorDto.getJokeBlockCreatorDtoList() != null) {
-            List<JokeBlock> jokeBlockList = jokeBlockFacade.extractJokeBlockList(jokeCreatorDto.getJokeBlockCreatorDtoList(), joke);
-            jokeBlockFacade.saveJokeBlockList(jokeBlockList);
-        }
+//        if (jokeCreatorDto.getJokeBlockCreatorDtoList() != null) {
+//            List<JokeBlock> jokeBlockList = jokeBlockFacade.extractJokeBlockList(jokeCreatorDto.getJokeBlockCreatorDtoList(), joke);
+//            jokeBlockFacade.saveJokeBlockList(jokeBlockList);
+//        }
     }
 
     void editJoke(JokeCreatorDto jokeCreatorDto) {
@@ -112,8 +111,8 @@ class JokeService {
                 .map(structureItemDto -> structureFacade.tryToGetStructureById(structureItemDto.getValue()))
                 .collect(Collectors.toSet());
         joke.setStructures(structures);
-        List<JokeBlock> jokeBlocks = jokeBlockFacade.extractJokeBlockList(jokeCreatorDto.getJokeBlockCreatorDtoList(), joke);
-        joke.setJokeBlocks(jokeBlocks);
+//        List<JokeBlock> jokeBlocks = jokeBlockFacade.extractJokeBlockList(jokeCreatorDto.getJokeBlockCreatorDtoList(), joke);
+//        joke.setJokeBlocks(jokeBlocks);
 //        List<TopicGroup> topicGroupList = topicGroupFacade.extractTopicGroupList(jokeCreatorDto.getTopicGroupCreatorList(), joke);
 //        joke.setTopicGroups(topicGroupList);
         jokeRepository.save(joke);
