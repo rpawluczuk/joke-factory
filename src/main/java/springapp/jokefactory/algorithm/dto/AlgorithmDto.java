@@ -7,7 +7,7 @@ import java.sql.Timestamp;
 
 @Data
 @Builder
-public class AlgorithmPresenterDto {
+public class AlgorithmDto {
 
     private Long id;
     private String name;

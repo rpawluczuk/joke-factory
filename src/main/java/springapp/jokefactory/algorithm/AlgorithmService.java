@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import springapp.jokefactory.algorithm.diagram.DiagramFacade;
 import springapp.jokefactory.algorithm.diagram.dto.DiagramBlockPresenterDto;
 import springapp.jokefactory.joke.JokeFacade;
-import springapp.jokefactory.algorithm.dto.AlgorithmPresenterDto;
+import springapp.jokefactory.algorithm.dto.AlgorithmDto;
 
 import java.util.stream.Collectors;
 
@@ -38,14 +38,14 @@ class AlgorithmService {
 //        return structureMapper.mapStructureToStructureCreatorDto(structure);
 //    }
 
-    Iterable<AlgorithmPresenterDto> getAlgorithmPresenterList() {
+    Iterable<AlgorithmDto> getAlgorithmPresenterList() {
         PageRequest pageRequest = PageRequest.of(algorithmPagination.getCurrentPage(), algorithmPagination.getPageSize(),
                 Sort.Direction.DESC, "dateCreated");
         Page<Algorithm> algorithmPage = algorithmRepository.findAll(pageRequest);
         algorithmPagination.setTotalPages(algorithmPage.getTotalPages());
         algorithmPagination.setTotalItems(algorithmPage.getTotalElements());
         return algorithmPage.getContent().stream()
-                .map(algorithmMapper::mapAlgorithmToAlgorithmPresenterDto)
+                .map(algorithmMapper::mapAlgorithmToDto)
                 .collect(Collectors.toList());
     }
 
@@ -80,14 +80,11 @@ class AlgorithmService {
         return algorithmPagination;
     }
 
-//    void addStructure(StructureCreatorDto structureCreatorDto) {
-//        Structure structure = structureMapper.mapStructureCreatorDtoToStructure(structureCreatorDto);
-//        List<StructureBlock> structureBlockList =
-//                structureBlockFacade.extractStructureBlockList(structureCreatorDto.getStructureBlockCreatorDtoList(), structure);
-//        structure.setStructureBlockScheme(structureBlockList);
-//        structureRepository.save(structure);
-//    }
-//
+    void addAlgorithm(AlgorithmDto algorithmDto) {
+        Algorithm algorithm = algorithmMapper.mapDtoToAlgorithm(algorithmDto);
+        algorithmRepository.save(algorithm);
+    }
+
 //    void editStructure(StructureCreatorDto structureCreatorDto) {
 //        Structure structure = structureFacade.tryToGetStructureById(structureCreatorDto.getId());
 //        Structure updatedStructure = structureMapper.updateStructure(structure, structureCreatorDto);

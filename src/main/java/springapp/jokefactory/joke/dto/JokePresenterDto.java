@@ -2,7 +2,7 @@ package springapp.jokefactory.joke.dto;
 
 import lombok.Builder;
 import lombok.Data;
-import springapp.jokefactory.algorithm.dto.AlgorithmPresenterDto;
+import springapp.jokefactory.algorithm.dto.AlgorithmDto;
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -14,7 +14,7 @@ public class JokePresenterDto {
     private String title;
     private String content;
     private Byte rate;
-    private List<AlgorithmPresenterDto> structurePresenterList;
+    private List<AlgorithmDto> structurePresenterList;
     private List<String> CategorizationList;
     private String author;
     private String connectingTopic;

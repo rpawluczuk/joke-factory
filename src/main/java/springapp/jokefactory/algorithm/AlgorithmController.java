@@ -1,8 +1,10 @@
 package springapp.jokefactory.algorithm;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import springapp.jokefactory.algorithm.dto.AlgorithmPresenterDto;
+import springapp.jokefactory.algorithm.dto.AlgorithmCreatorDto;
+import springapp.jokefactory.algorithm.dto.AlgorithmDto;
 import springapp.jokefactory.algorithm.diagram.dto.DiagramBlockPresenterDto;
 
 @RestController
@@ -14,7 +16,7 @@ class AlgorithmController {
     AlgorithmService algorithmService;
 
     @GetMapping
-    Iterable<AlgorithmPresenterDto> getAlgorithmPresenterList(){
+    Iterable<AlgorithmDto> getAlgorithmPresenterList(){
         return algorithmService.getAlgorithmPresenterList();
     }
 
@@ -48,12 +50,12 @@ class AlgorithmController {
         return algorithmService.getAlgorithmPagination();
     }
 
-//    @PostMapping(consumes={"application/json"})
-//    @ResponseStatus(HttpStatus.CREATED)
-//    void addStructure(@RequestBody StructureCreatorDto structureCreatorDto){
-//        structureService.addStructure(structureCreatorDto);
-//    }
-//
+    @PostMapping(consumes={"application/json"})
+    @ResponseStatus(HttpStatus.CREATED)
+    void addStructure(@RequestBody AlgorithmDto algorithmDto){
+        algorithmService.addAlgorithm(algorithmDto);
+    }
+
 //    @PutMapping
 //    void editStructure(@RequestBody StructureCreatorDto structureCreatorDto){
 //        structureService.editStructure(structureCreatorDto);

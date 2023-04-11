@@ -6,7 +6,7 @@ import springapp.jokefactory.structureblock.dto.StructureBlockCreatorDto;
 import java.util.List;
 
 @Data
-public class StructureCreatorDto {
+public class AlgorithmCreatorDto {
 
     private Long id;
     private String name;

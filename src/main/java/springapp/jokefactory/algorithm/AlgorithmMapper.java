@@ -1,16 +1,23 @@
 package springapp.jokefactory.algorithm;
 
 import org.springframework.stereotype.Service;
-import springapp.jokefactory.algorithm.dto.AlgorithmPresenterDto;
+import springapp.jokefactory.algorithm.dto.AlgorithmDto;
 
 @Service
 class AlgorithmMapper {
 
-    AlgorithmPresenterDto mapAlgorithmToAlgorithmPresenterDto(Algorithm algorithm) {
-        return AlgorithmPresenterDto.builder()
+    AlgorithmDto mapAlgorithmToDto(Algorithm algorithm) {
+        return AlgorithmDto.builder()
                 .id(algorithm.getId())
                 .name(algorithm.getName())
                 .description(algorithm.getDescription())
+                .build();
+    }
+
+    Algorithm mapDtoToAlgorithm(AlgorithmDto algorithmDto) {
+        return Algorithm.builder()
+                .name(algorithmDto.getName())
+                .description(algorithmDto.getDescription())
                 .build();
     }
 
