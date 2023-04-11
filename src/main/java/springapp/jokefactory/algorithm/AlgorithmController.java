@@ -3,7 +3,6 @@ package springapp.jokefactory.algorithm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import springapp.jokefactory.algorithm.dto.AlgorithmCreatorDto;
 import springapp.jokefactory.algorithm.dto.AlgorithmDto;
 import springapp.jokefactory.algorithm.diagram.dto.DiagramBlockPresenterDto;
 
@@ -52,7 +51,7 @@ class AlgorithmController {
 
     @PostMapping(consumes={"application/json"})
     @ResponseStatus(HttpStatus.CREATED)
-    void addStructure(@RequestBody AlgorithmDto algorithmDto){
+    void addAlgorithm(@RequestBody AlgorithmDto algorithmDto){
         algorithmService.addAlgorithm(algorithmDto);
     }
 
@@ -62,12 +61,12 @@ class AlgorithmController {
 //    }
 
     @PutMapping(value = "/pagination")
-    void updateStructurePagination(@RequestBody AlgorithmPagination algorithmPagination){
+    void updateAlgorithmPagination(@RequestBody AlgorithmPagination algorithmPagination){
         algorithmService.updateAlgorithmPagination(algorithmPagination);
     }
 
-//    @DeleteMapping(value = "/{id}")
-//    void deleteStructure(@PathVariable("id") Long id){
-//        structureService.deleteStructure(id);
-//    }
+    @DeleteMapping(value = "/{id}")
+    void deleteAlgorithm(@PathVariable("id") Long id){
+        algorithmService.deleteAlgorithm(id);
+    }
 }

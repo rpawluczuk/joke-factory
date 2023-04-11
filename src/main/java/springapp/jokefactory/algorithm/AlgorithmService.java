@@ -22,7 +22,7 @@ class AlgorithmService {
     private AlgorithmPagination algorithmPagination;
 
     @Autowired
-    private StructureFacade structureFacade;
+    private AlgorithmFacade algorithmFacade;
 
     @Autowired
     private DiagramFacade diagramFacade;
@@ -102,9 +102,9 @@ class AlgorithmService {
         this.algorithmPagination.setPageSize(algorithmPagination.getPageSize());
     }
 
-//    void deleteStructure(Long id) {
-//        Structure structureToDelete = structureFacade.tryToGetStructureById(id);
+    void deleteAlgorithm(Long id) {
+        Algorithm algorithmToDelete = algorithmFacade.getAlgorithmById(id);
 //        jokeFacade.removeStructureFromJokes(structureToDelete);
-//        structureRepository.delete(structureToDelete);
-//    }
+        algorithmRepository.delete(algorithmToDelete);
+    }
 }

@@ -12,11 +12,10 @@ import springapp.jokefactory.joke.dto.JokePresenterDto;
 import springapp.jokefactory.joke.dto.JokeRateDto;
 import springapp.jokefactory.jokeblock.JokeBlockFacade;
 import springapp.jokefactory.topic.TopicFacade;
-import springapp.jokefactory.algorithm.StructureFacade;
+import springapp.jokefactory.algorithm.AlgorithmFacade;
 //import springapp.jokefactory.topicgroup.TopicGroupFacade;
 
 import java.util.Collections;
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -28,7 +27,7 @@ class JokeService {
     private JokeRepository jokeRepository;
 
     @Autowired
-    private StructureFacade structureFacade;
+    private AlgorithmFacade structureFacade;
 
     @Autowired
     private JokeBlockFacade jokeBlockFacade;
@@ -88,7 +87,7 @@ class JokeService {
         Joke joke = oldJokeMapper.mapJokeCreatorDtoToJoke(jokeCreatorDto);
         if (jokeCreatorDto.getStructureItemList() != null) {
             Set<Algorithm> structures = jokeCreatorDto.getStructureItemList().stream()
-                    .map(structureItemDto -> structureFacade.tryToGetStructureById(structureItemDto.getValue()))
+                    .map(structureItemDto -> structureFacade.getAlgorithmById(structureItemDto.getValue()))
                     .collect(Collectors.toSet());
             joke.setStructures(structures);
         }
@@ -108,7 +107,7 @@ class JokeService {
         oldJokeMapper.updateJokeFromJokeCreatorDto(jokeCreatorDto, joke);
         Set<Algorithm> structures = Optional.ofNullable(jokeCreatorDto.getStructureItemList())
                 .orElse(Collections.emptyList()).stream()
-                .map(structureItemDto -> structureFacade.tryToGetStructureById(structureItemDto.getValue()))
+                .map(structureItemDto -> structureFacade.getAlgorithmById(structureItemDto.getValue()))
                 .collect(Collectors.toSet());
         joke.setStructures(structures);
 //        List<JokeBlock> jokeBlocks = jokeBlockFacade.extractJokeBlockList(jokeCreatorDto.getJokeBlockCreatorDtoList(), joke);
