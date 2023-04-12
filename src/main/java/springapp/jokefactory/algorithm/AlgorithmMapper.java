@@ -21,6 +21,12 @@ class AlgorithmMapper {
                 .build();
     }
 
+    public Algorithm updateAlgorithm(Algorithm algorithm, AlgorithmDto algorithmDto) {
+        algorithm.setName(algorithmDto.getName());
+        algorithm.setDescription(algorithmDto.getDescription());
+        return algorithm;
+    }
+
 //    @Mapping(target = "value", source = "structure.name")
 //    abstract StructureItemDto mapStructureToStructureItemDto(Structure structure);
 //

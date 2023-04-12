@@ -33,12 +33,12 @@ class AlgorithmController {
 //    Iterable<StructureItemDto> getStructureItemList() {
 //        return structureService.getStructureItemList();
 //    }
-//
-//    @GetMapping(value = "/{id}")
-//    StructureCreatorDto getStructureCreatorDto(@PathVariable("id") Long id){
-//        return structureService.getStructureCreatorDto(id);
-//    }
-//
+
+    @GetMapping(value = "/{id}")
+    AlgorithmDto getAlgorithmDto(@PathVariable("id") Long id){
+        return algorithmService.getAlgorithmDto(id);
+    }
+
 //    @GetMapping(value = "by-joke-id/{joke_id}")
 //    Iterable<StructureItemDto> getStructuresByJokeID(@PathVariable("joke_id") Long jokeID){
 //        return structureService.getStructureItemListByJokeID(jokeID);
@@ -55,10 +55,10 @@ class AlgorithmController {
         algorithmService.addAlgorithm(algorithmDto);
     }
 
-//    @PutMapping
-//    void editStructure(@RequestBody StructureCreatorDto structureCreatorDto){
-//        structureService.editStructure(structureCreatorDto);
-//    }
+    @PutMapping
+    void editStructure(@RequestBody AlgorithmDto algorithmDto){
+        algorithmService.editAlgorithm(algorithmDto);
+    }
 
     @PutMapping(value = "/pagination")
     void updateAlgorithmPagination(@RequestBody AlgorithmPagination algorithmPagination){

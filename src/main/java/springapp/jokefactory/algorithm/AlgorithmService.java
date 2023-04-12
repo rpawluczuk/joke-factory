@@ -33,10 +33,10 @@ class AlgorithmService {
     @Autowired
     private AlgorithmMapper algorithmMapper;
 
-//    StructureCreatorDto getStructureCreatorDto(Long id) {
-//        Structure structure = structureFacade.tryToGetStructureById(id);
-//        return structureMapper.mapStructureToStructureCreatorDto(structure);
-//    }
+    AlgorithmDto getAlgorithmDto(Long id) {
+        Algorithm algorithm = algorithmFacade.getAlgorithmById(id);
+        return algorithmMapper.mapAlgorithmToDto(algorithm);
+    }
 
     Iterable<AlgorithmDto> getAlgorithmPresenterList() {
         PageRequest pageRequest = PageRequest.of(algorithmPagination.getCurrentPage(), algorithmPagination.getPageSize(),
@@ -85,15 +85,15 @@ class AlgorithmService {
         algorithmRepository.save(algorithm);
     }
 
-//    void editStructure(StructureCreatorDto structureCreatorDto) {
-//        Structure structure = structureFacade.tryToGetStructureById(structureCreatorDto.getId());
-//        Structure updatedStructure = structureMapper.updateStructure(structure, structureCreatorDto);
+    void editAlgorithm(AlgorithmDto algorithmDto) {
+        Algorithm algorithm = algorithmFacade.getAlgorithmById(algorithmDto.getId());
+        Algorithm updatedAlgorithm = algorithmMapper.updateAlgorithm(algorithm, algorithmDto);
 //        List<StructureBlock> structureBlockList = structureBlockFacade.getStructureBlocksByStructure(structure.getId());
 //        List<StructureBlock> updatedStructureBlockList = structureBlockFacade.extractUpdatedStructureBlockList(
 //                structureCreatorDto.getStructureBlockCreatorDtoList(), structureBlockList, structure);
 //        updatedStructure.setStructureBlockScheme(updatedStructureBlockList);
-//        structureRepository.save(updatedStructure);
-//    }
+        algorithmRepository.save(updatedAlgorithm);
+    }
 
     void updateAlgorithmPagination(AlgorithmPagination algorithmPagination) {
         this.algorithmPagination.setCurrentPage(algorithmPagination.getCurrentPage());
