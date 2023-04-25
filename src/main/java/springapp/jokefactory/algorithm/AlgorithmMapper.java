@@ -1,10 +1,18 @@
 package springapp.jokefactory.algorithm;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import springapp.jokefactory.algorithm.diagram.DiagramBlock;
+import springapp.jokefactory.algorithm.diagram.DiagramFacade;
 import springapp.jokefactory.algorithm.dto.AlgorithmDto;
+
+import java.util.List;
 
 @Service
 class AlgorithmMapper {
+
+    @Autowired
+    DiagramFacade diagramFacade;
 
     AlgorithmDto mapAlgorithmToDto(Algorithm algorithm) {
         return AlgorithmDto.builder()

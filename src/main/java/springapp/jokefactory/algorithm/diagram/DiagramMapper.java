@@ -22,6 +22,15 @@ class DiagramMapper {
                 .build();
     }
 
+    DiagramBlock mapDtoToDiagramBlock(DiagramBlockPresenterDto diagramBlockPresenterDto) {
+        return DiagramBlock.builder()
+                .id(diagramBlockPresenterDto.getId())
+                .title(diagramBlockPresenterDto.getTitle())
+                .description(diagramBlockPresenterDto.getDescription())
+                .position(diagramBlockPresenterDto.getPosition())
+                .build();
+    }
+
 //    @Mapping(target = "id", source = "structureBlockCreatorDto.id")
 //    @Mapping(target = "description", source = "structureBlockCreatorDto.description")
 //    @Mapping(target = "title", source = "structureBlockCreatorDto.title")

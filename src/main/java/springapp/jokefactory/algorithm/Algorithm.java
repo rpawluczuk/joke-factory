@@ -32,7 +32,7 @@ public class Algorithm {
 
     @EqualsAndHashCode.Exclude @ToString.Exclude
     @OneToMany(mappedBy = "algorithm", cascade = CascadeType.ALL)
-    private List<DiagramBlock> structureBlockScheme;
+    private List<DiagramBlock> diagramBlockList;
 
     @CreationTimestamp
     private Timestamp dateCreated;
@@ -85,12 +85,12 @@ public class Algorithm {
         this.description = description;
     }
 
-    public List<DiagramBlock> getStructureBlockScheme() {
-        return structureBlockScheme;
+    public List<DiagramBlock> getDiagramBlockList() {
+        return diagramBlockList;
     }
 
-    public void setStructureBlockScheme(List<DiagramBlock> structureBlockScheme) {
-        this.structureBlockScheme = structureBlockScheme;
+    public void setDiagramBlockList(List<DiagramBlock> structureBlockScheme) {
+        this.diagramBlockList = structureBlockScheme;
     }
 
     public Timestamp getDateCreated() {

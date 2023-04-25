@@ -5,11 +5,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import springapp.jokefactory.algorithm.diagram.DiagramBlock;
 import springapp.jokefactory.algorithm.diagram.DiagramFacade;
 import springapp.jokefactory.algorithm.diagram.dto.DiagramBlockPresenterDto;
 import springapp.jokefactory.joke.JokeFacade;
 import springapp.jokefactory.algorithm.dto.AlgorithmDto;
 
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
@@ -82,7 +84,8 @@ class AlgorithmService {
 
     void addAlgorithm(AlgorithmDto algorithmDto) {
         Algorithm algorithm = algorithmMapper.mapDtoToAlgorithm(algorithmDto);
-        algorithmRepository.save(algorithm);
+        algorithm = algorithmRepository.save(algorithm);
+        diagramFacade.saveDiagramBlockList(algorithmDto.getDiagramBlockList(), algorithm);
     }
 
     void editAlgorithm(AlgorithmDto algorithmDto) {

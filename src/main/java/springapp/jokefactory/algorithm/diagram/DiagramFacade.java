@@ -2,6 +2,7 @@ package springapp.jokefactory.algorithm.diagram;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import springapp.jokefactory.algorithm.Algorithm;
 import springapp.jokefactory.algorithm.diagram.dto.DiagramBlockPresenterDto;
 
 import java.util.List;
@@ -25,6 +26,16 @@ public class DiagramFacade {
         return diagramRepository.findDiagramBlocksByAlgorithm_IdOrderByPosition(algorithmId).stream()
                 .map(diagramMapper::mapDiagramBlockToPresenterDto)
                 .collect(Collectors.toList());
+    }
+
+    public void saveDiagramBlockList(List<DiagramBlockPresenterDto> diagramBlockDtoList, Algorithm algorithm) {
+        diagramBlockDtoList.stream()
+                .map(diagramBlockDto ->
+                        diagramMapper.mapDtoToDiagramBlock(diagramBlockDto))
+                .forEach(diagramBlock -> {
+                    diagramBlock.setAlgorithm(algorithm);
+                    diagramRepository.save(diagramBlock);
+                });
     }
 
 //    public List<DiagramBlock> getStructureBlocksByJoke(long jokeId) {
