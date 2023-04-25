@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 @Builder
-public class DiagramBlockPresenterDto {
+public class DiagramBlockDto {
 
     private Long id;
     private String title;

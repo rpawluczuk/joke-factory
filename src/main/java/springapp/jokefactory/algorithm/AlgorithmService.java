@@ -5,13 +5,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import springapp.jokefactory.algorithm.diagram.DiagramBlock;
 import springapp.jokefactory.algorithm.diagram.DiagramFacade;
-import springapp.jokefactory.algorithm.diagram.dto.DiagramBlockPresenterDto;
+import springapp.jokefactory.algorithm.diagram.dto.DiagramBlockDto;
 import springapp.jokefactory.joke.JokeFacade;
 import springapp.jokefactory.algorithm.dto.AlgorithmDto;
 
-import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
@@ -51,7 +49,7 @@ class AlgorithmService {
                 .collect(Collectors.toList());
     }
 
-    Iterable<DiagramBlockPresenterDto> getAlgorithmDiagram(Long algorithmId){
+    Iterable<DiagramBlockDto> getAlgorithmDiagram(Long algorithmId){
         return diagramFacade.getAlgorithmDiagram(algorithmId);
     }
 
@@ -85,17 +83,14 @@ class AlgorithmService {
     void addAlgorithm(AlgorithmDto algorithmDto) {
         Algorithm algorithm = algorithmMapper.mapDtoToAlgorithm(algorithmDto);
         algorithm = algorithmRepository.save(algorithm);
-        diagramFacade.saveDiagramBlockList(algorithmDto.getDiagramBlockList(), algorithm);
+        diagramFacade.saveDiagram(algorithmDto.getDiagramBlockList(), algorithm);
     }
 
     void editAlgorithm(AlgorithmDto algorithmDto) {
         Algorithm algorithm = algorithmFacade.getAlgorithmById(algorithmDto.getId());
         Algorithm updatedAlgorithm = algorithmMapper.updateAlgorithm(algorithm, algorithmDto);
-//        List<StructureBlock> structureBlockList = structureBlockFacade.getStructureBlocksByStructure(structure.getId());
-//        List<StructureBlock> updatedStructureBlockList = structureBlockFacade.extractUpdatedStructureBlockList(
-//                structureCreatorDto.getStructureBlockCreatorDtoList(), structureBlockList, structure);
-//        updatedStructure.setStructureBlockScheme(updatedStructureBlockList);
-        algorithmRepository.save(updatedAlgorithm);
+        algorithm = algorithmRepository.save(updatedAlgorithm);
+        diagramFacade.updateDiagram(algorithmDto.getDiagramBlockList(), algorithm);
     }
 
     void updateAlgorithmPagination(AlgorithmPagination algorithmPagination) {

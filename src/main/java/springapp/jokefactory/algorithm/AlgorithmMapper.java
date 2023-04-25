@@ -2,8 +2,8 @@ package springapp.jokefactory.algorithm;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import springapp.jokefactory.algorithm.diagram.DiagramBlock;
 import springapp.jokefactory.algorithm.diagram.DiagramFacade;
+import springapp.jokefactory.algorithm.diagram.dto.DiagramBlockDto;
 import springapp.jokefactory.algorithm.dto.AlgorithmDto;
 
 import java.util.List;
@@ -15,10 +15,12 @@ class AlgorithmMapper {
     DiagramFacade diagramFacade;
 
     AlgorithmDto mapAlgorithmToDto(Algorithm algorithm) {
+        List<DiagramBlockDto> diagramBlockList = diagramFacade.getAlgorithmDiagram(algorithm.getId());
         return AlgorithmDto.builder()
                 .id(algorithm.getId())
                 .name(algorithm.getName())
                 .description(algorithm.getDescription())
+                .diagramBlockList(diagramBlockList)
                 .build();
     }
 

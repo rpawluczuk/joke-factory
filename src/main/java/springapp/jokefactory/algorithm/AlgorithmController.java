@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import springapp.jokefactory.algorithm.dto.AlgorithmDto;
-import springapp.jokefactory.algorithm.diagram.dto.DiagramBlockPresenterDto;
+import springapp.jokefactory.algorithm.diagram.dto.DiagramBlockDto;
 
 @RestController
 @RequestMapping("/api/algorithms")
@@ -20,7 +20,7 @@ class AlgorithmController {
     }
 
     @GetMapping(value = "/diagram/{algorithm_id}")
-    Iterable<DiagramBlockPresenterDto> getAlgorithmDiagram(@PathVariable("algorithm_id") Long algorithmId){
+    Iterable<DiagramBlockDto> getAlgorithmDiagram(@PathVariable("algorithm_id") Long algorithmId){
         return algorithmService.getAlgorithmDiagram(algorithmId);
     }
 //
@@ -56,7 +56,7 @@ class AlgorithmController {
     }
 
     @PutMapping
-    void editStructure(@RequestBody AlgorithmDto algorithmDto){
+    void editAlgorithm(@RequestBody AlgorithmDto algorithmDto){
         algorithmService.editAlgorithm(algorithmDto);
     }
 

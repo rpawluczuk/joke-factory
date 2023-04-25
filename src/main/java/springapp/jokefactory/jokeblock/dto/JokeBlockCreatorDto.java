@@ -3,7 +3,7 @@ package springapp.jokefactory.jokeblock.dto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import springapp.jokefactory.algorithm.diagram.dto.DiagramBlockPresenterDto;
+import springapp.jokefactory.algorithm.diagram.dto.DiagramBlockDto;
 
 @Data
 @Builder
@@ -12,7 +12,7 @@ public class JokeBlockCreatorDto {
 
     private long id;
     private String jokeSnippet;
-    private DiagramBlockPresenterDto structureBlockPresenterDto;
+    private DiagramBlockDto structureBlockPresenterDto;
     private int position;
     private long structureId;
 }

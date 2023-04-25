@@ -1,7 +1,7 @@
 package springapp.jokefactory.algorithm.diagram;
 
 import org.springframework.stereotype.Service;
-import springapp.jokefactory.algorithm.diagram.dto.DiagramBlockPresenterDto;
+import springapp.jokefactory.algorithm.diagram.dto.DiagramBlockDto;
 
 @Service
 class DiagramMapper {
@@ -13,8 +13,8 @@ class DiagramMapper {
 //
 //    abstract StructureBlockCreatorDto mapStructureBlockToStructureBlockCreatorDto(DiagramBlock structureBlock);
 
-    DiagramBlockPresenterDto mapDiagramBlockToPresenterDto(DiagramBlock diagramBlock) {
-        return DiagramBlockPresenterDto.builder()
+    DiagramBlockDto mapDiagramBlockToPresenterDto(DiagramBlock diagramBlock) {
+        return DiagramBlockDto.builder()
                 .id(diagramBlock.getId())
                 .title(diagramBlock.getTitle())
                 .description(diagramBlock.getDescription())
@@ -22,13 +22,20 @@ class DiagramMapper {
                 .build();
     }
 
-    DiagramBlock mapDtoToDiagramBlock(DiagramBlockPresenterDto diagramBlockPresenterDto) {
+    DiagramBlock mapDtoToDiagramBlock(DiagramBlockDto diagramBlockPresenterDto) {
         return DiagramBlock.builder()
                 .id(diagramBlockPresenterDto.getId())
                 .title(diagramBlockPresenterDto.getTitle())
                 .description(diagramBlockPresenterDto.getDescription())
                 .position(diagramBlockPresenterDto.getPosition())
                 .build();
+    }
+
+    public DiagramBlock updateDiagramBlock(DiagramBlock diagramBlock, DiagramBlockDto diagramBlockDto) {
+        diagramBlock.setTitle(diagramBlockDto.getTitle());
+        diagramBlock.setDescription(diagramBlockDto.getDescription());
+        diagramBlock.setPosition(diagramBlockDto.getPosition());
+        return diagramBlock;
     }
 
 //    @Mapping(target = "id", source = "structureBlockCreatorDto.id")

@@ -3,7 +3,7 @@ package springapp.jokefactory.algorithm.diagram;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import springapp.jokefactory.algorithm.Algorithm;
-import springapp.jokefactory.algorithm.diagram.dto.DiagramBlockPresenterDto;
+import springapp.jokefactory.algorithm.diagram.dto.DiagramBlockDto;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -22,13 +22,13 @@ public class DiagramFacade {
 //                .orElseThrow(() -> new IllegalArgumentException("No structure block found with id: " + id));
 //    }
 
-    public List<DiagramBlockPresenterDto> getAlgorithmDiagram(long algorithmId) {
+    public List<DiagramBlockDto> getAlgorithmDiagram(long algorithmId) {
         return diagramRepository.findDiagramBlocksByAlgorithm_IdOrderByPosition(algorithmId).stream()
                 .map(diagramMapper::mapDiagramBlockToPresenterDto)
                 .collect(Collectors.toList());
     }
 
-    public void saveDiagramBlockList(List<DiagramBlockPresenterDto> diagramBlockDtoList, Algorithm algorithm) {
+    public void saveDiagram(List<DiagramBlockDto> diagramBlockDtoList, Algorithm algorithm) {
         diagramBlockDtoList.stream()
                 .map(diagramBlockDto ->
                         diagramMapper.mapDtoToDiagramBlock(diagramBlockDto))
@@ -36,6 +36,26 @@ public class DiagramFacade {
                     diagramBlock.setAlgorithm(algorithm);
                     diagramRepository.save(diagramBlock);
                 });
+    }
+
+    public void updateDiagram(List<DiagramBlockDto> diagramBlockDtoList, Algorithm algorithm) {
+        diagramBlockDtoList.stream()
+                .map(diagramBlockDto -> {
+                    if (diagramBlockDto.getId() != null){
+                        DiagramBlock diagramBlock = getDiagramBlockById(diagramBlockDto.getId());
+                        return diagramMapper.updateDiagramBlock(diagramBlock, diagramBlockDto);
+                    }
+                    return diagramMapper.mapDtoToDiagramBlock(diagramBlockDto);
+                })
+                .forEach(diagramBlock -> {
+                    diagramBlock.setAlgorithm(algorithm);
+                    diagramRepository.save(diagramBlock);
+                });
+    }
+
+    DiagramBlock getDiagramBlockById(Long id) {
+        return diagramRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("No diagram block found with id: " + id));
     }
 
 //    public List<DiagramBlock> getStructureBlocksByJoke(long jokeId) {
