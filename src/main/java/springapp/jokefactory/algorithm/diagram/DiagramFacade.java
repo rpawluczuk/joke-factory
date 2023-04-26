@@ -17,11 +17,6 @@ public class DiagramFacade {
     @Autowired
     private DiagramMapper diagramMapper;
 
-//    public DiagramBlock tryToGetStructureBlockByID(Long id) {
-//        return structureBlockRepository.findById(id)
-//                .orElseThrow(() -> new IllegalArgumentException("No structure block found with id: " + id));
-//    }
-
     public List<DiagramBlockDto> getAlgorithmDiagram(long algorithmId) {
         return diagramRepository.findDiagramBlocksByAlgorithm_IdOrderByPosition(algorithmId).stream()
                 .map(diagramMapper::mapDiagramBlockToPresenterDto)
@@ -39,6 +34,14 @@ public class DiagramFacade {
     }
 
     public void updateDiagram(List<DiagramBlockDto> diagramBlockDtoList, Algorithm algorithm) {
+        List<DiagramBlock> diagramBlockList = diagramRepository.findDiagramBlocksByAlgorithm_IdOrderByPosition(algorithm.getId());
+        diagramBlockList.forEach(diagramBlock -> {
+            boolean exists = diagramBlockDtoList.stream()
+                    .anyMatch(diagramBlockDto -> diagramBlockDto.getId().equals(diagramBlock.getId()));
+            if (!exists) {
+                diagramRepository.delete(diagramBlock);
+            }
+        });
         diagramBlockDtoList.stream()
                 .map(diagramBlockDto -> {
                     if (diagramBlockDto.getId() != null){
