@@ -1,11 +1,22 @@
-package springapp.jokefactory.jokeblock;
+package springapp.jokefactory.algorithm.jokediagram;
 
-//@Mapper(componentModel = "spring")
-//abstract class JokeBlockMapper {
-//
-//    @Autowired
-//    protected DiagramFacade structureBlockFacade;
-//
+import org.springframework.stereotype.Service;
+import springapp.jokefactory.algorithm.jokediagram.dto.JokeBlockDto;
+
+@Service
+class JokeDiagramMapper {
+    JokeBlockDto mapJokeBlockToDto(JokeBlock jokeBlock) {
+        return JokeBlockDto.builder()
+                .id(jokeBlock.getId())
+                .jokeSnippet(jokeBlock.getJokeSnippet())
+                .title(jokeBlock.getDiagramBlock().getTitle())
+                .description(jokeBlock.getDiagramBlock().getDescription())
+                .position(jokeBlock.getDiagramBlock().getPosition())
+                .algorithmId(jokeBlock.getDiagramBlock().getId())
+                .build();
+    }
+
+
 //    @Mapping(target = "structureBlockPresenterDto", source = "jokeBlock.structureBlock")
 //    @Mapping(target = "structureId", source = "jokeBlock.structureBlock.structure.id")
 //    abstract JokeBlockCreatorDto jokeBlockToJokeBlockCreatorDto(JokeBlock jokeBlock);
@@ -32,13 +43,8 @@ package springapp.jokefactory.jokeblock;
 //    @Mapping(target = "structureId", source = "structureBlock.structure.id")
 //    abstract JokeBlockPresenterDto jokeBlockToJokeBlockPresenterDto(JokeBlock jokeBlock);
 
-//    @Named("extractStructureBlockPresenterDto")
-//    DiagramBlockPresenterDto extractStructureBlockPresenterDto(DiagramBlock structureBlock) {
-//        return structureBlockFacade.extractStructureBlockPresenterDto(structureBlock);
-//    }
-//
 //    @Named("extractStructureBlock")
 //    DiagramBlock extractStructureBlock(DiagramBlockPresenterDto structureBlockPresenterDto) {
 //        return structureBlockFacade.tryToGetStructureBlockByID(structureBlockPresenterDto.getId());
 //    }
-//}
+}

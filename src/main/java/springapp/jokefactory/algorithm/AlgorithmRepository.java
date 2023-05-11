@@ -13,8 +13,8 @@ interface AlgorithmRepository extends JpaRepository<Algorithm, Long> {
     @Query(value = "SELECT max(id) FROM Algorithm")
     long findHighestID();
 
-    @Query(value = "SELECT j.structures FROM Joke j where j.id = ?1")
-    List<Algorithm> findStructuresByJokeID(long jokeId);
+    @Query(value = "SELECT j.algorithms FROM Joke j where j.id = ?1")
+    List<Algorithm> findAlgorithmsByJokeID(long jokeId);
 
     Algorithm findFirstByName(String name);
 

@@ -24,7 +24,7 @@ public class Algorithm {
     private Long id;
 
     @EqualsAndHashCode.Exclude @ToString.Exclude
-    @ManyToMany(mappedBy = "structures")
+    @ManyToMany(mappedBy = "algorithms")
     private Set<Joke> jokes;
 
     private String name;

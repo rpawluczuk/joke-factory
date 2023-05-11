@@ -3,7 +3,10 @@ package springapp.jokefactory.joke;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import springapp.jokefactory.algorithm.Algorithm;
+import springapp.jokefactory.algorithm.dto.AlgorithmItemDto;
 import springapp.jokefactory.author.Author;
+
+import java.util.stream.Collectors;
 
 @Service
 public class JokeFacade {
@@ -20,7 +23,7 @@ public class JokeFacade {
 
     public void removeStructureFromJokes(Algorithm structure) {
         structure.getJokes().forEach(joke -> {
-            joke.getStructures().remove(structure);
+            joke.getAlgorithms().remove(structure);
             jokeRepository.save(joke);
         });
     }

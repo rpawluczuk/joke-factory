@@ -17,11 +17,11 @@ public class JokeFactory {
                 .id(1L)
                 .title("joke title")
                 .content("joke content")
-                .structures(structureFactory.createStructureSet(1, 3))
+                .algorithms(structureFactory.createStructureSet(1, 3))
                 .author(authorFactory.createAuthor())
 //                .jokeBlocks(jokeBlockFactory.createJokeBlockSet(1, 5))
                 .build();
-        joke.getStructures().forEach(structure -> structure.setJokes(Sets.newHashSet(joke)));
+        joke.getAlgorithms().forEach(structure -> structure.setJokes(Sets.newHashSet(joke)));
         joke.getAuthor().setJokes(Sets.newHashSet(joke));
         return joke;
     }

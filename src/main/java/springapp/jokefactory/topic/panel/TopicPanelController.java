@@ -5,7 +5,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 import springapp.jokefactory.question.dto.QuestionItemDto;
-import springapp.jokefactory.topic.view.TopicViewDto;
 
 import javax.validation.Valid;
 import java.util.LinkedList;

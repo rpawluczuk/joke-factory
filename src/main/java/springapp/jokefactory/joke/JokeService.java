@@ -10,7 +10,7 @@ import springapp.jokefactory.algorithm.Algorithm;
 import springapp.jokefactory.joke.dto.JokeCreatorDto;
 import springapp.jokefactory.joke.dto.JokePresenterDto;
 import springapp.jokefactory.joke.dto.JokeRateDto;
-import springapp.jokefactory.jokeblock.JokeBlockFacade;
+import springapp.jokefactory.algorithm.jokediagram.JokeDiagramFacade;
 import springapp.jokefactory.topic.TopicFacade;
 import springapp.jokefactory.algorithm.AlgorithmFacade;
 //import springapp.jokefactory.topicgroup.TopicGroupFacade;
@@ -30,7 +30,7 @@ class JokeService {
     private AlgorithmFacade structureFacade;
 
     @Autowired
-    private JokeBlockFacade jokeBlockFacade;
+    private JokeDiagramFacade jokeBlockFacade;
 
 //    @Autowired
 //    private TopicGroupFacade topicGroupFacade;
@@ -74,7 +74,7 @@ class JokeService {
 
     JokeCreatorDto getJokeCreatorById(Long id) {
         Joke joke = jokeFacade.getJokeById(id);
-        JokeCreatorDto jokeCreatorDto = oldJokeMapper.mapJokeToJokeCreatorDto(joke);
+        JokeCreatorDto jokeCreatorDto = jokeMapper.mapJokeToJokeCreatorDto(joke);
 //     jokeCreatorDto.setTopicGroupCreatorList(topicGroupFacade.mapTopicGroupListToTopicGroupCreatorList(joke.getTopicGroups()));
         return jokeCreatorDto;
     }
@@ -85,11 +85,11 @@ class JokeService {
 
     void addJoke(JokeCreatorDto jokeCreatorDto) {
         Joke joke = oldJokeMapper.mapJokeCreatorDtoToJoke(jokeCreatorDto);
-        if (jokeCreatorDto.getStructureItemList() != null) {
-            Set<Algorithm> structures = jokeCreatorDto.getStructureItemList().stream()
+        if (jokeCreatorDto.getAlgorithmItemList() != null) {
+            Set<Algorithm> structures = jokeCreatorDto.getAlgorithmItemList().stream()
                     .map(structureItemDto -> structureFacade.getAlgorithmById(structureItemDto.getValue()))
                     .collect(Collectors.toSet());
-            joke.setStructures(structures);
+            joke.setAlgorithms(structures);
         }
         jokeRepository.save(joke);
 //        if (jokeCreatorDto.getTopicGroupCreatorList() != null) {
@@ -105,11 +105,11 @@ class JokeService {
     void editJoke(JokeCreatorDto jokeCreatorDto) {
         Joke joke = jokeFacade.getJokeById(jokeCreatorDto.getId());
         oldJokeMapper.updateJokeFromJokeCreatorDto(jokeCreatorDto, joke);
-        Set<Algorithm> structures = Optional.ofNullable(jokeCreatorDto.getStructureItemList())
+        Set<Algorithm> structures = Optional.ofNullable(jokeCreatorDto.getAlgorithmItemList())
                 .orElse(Collections.emptyList()).stream()
                 .map(structureItemDto -> structureFacade.getAlgorithmById(structureItemDto.getValue()))
                 .collect(Collectors.toSet());
-        joke.setStructures(structures);
+        joke.setAlgorithms(structures);
 //        List<JokeBlock> jokeBlocks = jokeBlockFacade.extractJokeBlockList(jokeCreatorDto.getJokeBlockCreatorDtoList(), joke);
 //        joke.setJokeBlocks(jokeBlocks);
 //        List<TopicGroup> topicGroupList = topicGroupFacade.extractTopicGroupList(jokeCreatorDto.getTopicGroupCreatorList(), joke);

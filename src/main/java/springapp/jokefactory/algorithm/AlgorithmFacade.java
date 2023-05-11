@@ -9,6 +9,9 @@ public class AlgorithmFacade {
     @Autowired
     private AlgorithmRepository algorithmRepository;
 
+    @Autowired
+    private AlgorithmMapper algorithmMapper;
+
     public Algorithm getAlgorithmById(Long id) {
         return algorithmRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("No algorithm found with id: " + id));

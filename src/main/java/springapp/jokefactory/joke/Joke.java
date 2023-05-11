@@ -30,7 +30,7 @@ public class Joke {
             joinColumns = {@JoinColumn(name = "joke_id")},
             inverseJoinColumns = {@JoinColumn(name = "structure_id")}
     )
-    private Set<Algorithm> structures;
+    private Set<Algorithm> algorithms;
 
     @ManyToOne
     private Author author;

@@ -7,9 +7,14 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import springapp.jokefactory.algorithm.diagram.DiagramFacade;
 import springapp.jokefactory.algorithm.diagram.dto.DiagramBlockDto;
+import springapp.jokefactory.algorithm.dto.AlgorithmItemDto;
+import springapp.jokefactory.algorithm.jokediagram.JokeBlock;
+import springapp.jokefactory.algorithm.jokediagram.JokeDiagramFacade;
+import springapp.jokefactory.algorithm.jokediagram.dto.JokeBlockDto;
 import springapp.jokefactory.joke.JokeFacade;
 import springapp.jokefactory.algorithm.dto.AlgorithmDto;
 
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
@@ -26,6 +31,9 @@ class AlgorithmService {
 
     @Autowired
     private DiagramFacade diagramFacade;
+
+    @Autowired
+    private JokeDiagramFacade jokeDiagramFacade;
 
     @Autowired
     private JokeFacade jokeFacade;
@@ -49,7 +57,7 @@ class AlgorithmService {
                 .collect(Collectors.toList());
     }
 
-    Iterable<DiagramBlockDto> getAlgorithmDiagram(Long algorithmId){
+    Iterable<DiagramBlockDto> getAlgorithmDiagram(Long algorithmId) {
         return diagramFacade.getAlgorithmDiagram(algorithmId);
     }
 
@@ -63,18 +71,12 @@ class AlgorithmService {
 //                .map(structureMapper::mapStructureToStructurePresenterDto)
 //                .collect(Collectors.toList());
 //    }
-//
-//    Iterable<StructureItemDto> getStructureItemList() {
-//        return structureRepository.findAll().stream()
-//                .map(structureMapper::mapStructureToStructureItemDto)
-//                .collect(Collectors.toList());
-//    }
-//
-//    Iterable<StructureItemDto> getStructureItemListByJokeID(Long jokeID) {
-//        return structureRepository.findStructuresByJokeID(jokeID).stream()
-//                .map(structureMapper::mapStructureToStructureItemDto)
-//                .collect(Collectors.toList());
-//    }
+
+    public Iterable<AlgorithmItemDto> getAlgorithmItemListByJokeID(Long jokeID) {
+        return algorithmRepository.findAlgorithmsByJokeID(jokeID).stream()
+                .map(algorithmMapper::mapToAlgorithmItemDto)
+                .collect(Collectors.toList());
+    }
 
     AlgorithmPagination getAlgorithmPagination() {
         return algorithmPagination;

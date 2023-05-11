@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import springapp.jokefactory.algorithm.dto.AlgorithmDto;
 import springapp.jokefactory.algorithm.diagram.dto.DiagramBlockDto;
+import springapp.jokefactory.algorithm.dto.AlgorithmItemDto;
 
 @RestController
 @RequestMapping("/api/algorithms")
@@ -23,6 +24,7 @@ class AlgorithmController {
     Iterable<DiagramBlockDto> getAlgorithmDiagram(@PathVariable("algorithm_id") Long algorithmId){
         return algorithmService.getAlgorithmDiagram(algorithmId);
     }
+
 //
 //    @GetMapping(value = "/by-name", params = "name")
 //    Iterable<StructurePresenterDto> getStructurePresenterListByName(@RequestParam("name") String name) {
@@ -39,14 +41,14 @@ class AlgorithmController {
         return algorithmService.getAlgorithmDto(id);
     }
 
-//    @GetMapping(value = "by-joke-id/{joke_id}")
-//    Iterable<StructureItemDto> getStructuresByJokeID(@PathVariable("joke_id") Long jokeID){
-//        return structureService.getStructureItemListByJokeID(jokeID);
-//    }
-
     @GetMapping(value = "/pagination")
     AlgorithmPagination getTopicPagination(){
         return algorithmService.getAlgorithmPagination();
+    }
+
+    @GetMapping(value = "/item-list/{joke_id}")
+    Iterable<AlgorithmItemDto> handleDetails(@PathVariable("joke_id") Long jokeID){
+        return algorithmService.getAlgorithmItemListByJokeID(jokeID);
     }
 
     @PostMapping(consumes={"application/json"})

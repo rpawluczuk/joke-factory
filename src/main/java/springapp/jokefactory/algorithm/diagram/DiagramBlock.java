@@ -1,10 +1,8 @@
 package springapp.jokefactory.algorithm.diagram;
 
 import java.sql.Timestamp;
-import java.util.List;
 import javax.persistence.*;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;

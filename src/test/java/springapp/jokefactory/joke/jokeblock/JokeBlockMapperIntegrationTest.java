@@ -4,7 +4,7 @@
 //import org.mapstruct.factory.Mappers;
 //import org.springframework.beans.factory.annotation.Autowired;
 //import springapp.jokefactory.jokeblock.JokeBlock;
-//import springapp.jokefactory.jokeblock.JokeBlockFacade;
+//import springapp.jokefactory.algorithm.jokediagram.JokeBlockFacade;
 //import springapp.jokefactory.jokeblock.dto.JokeBlockCreatorDto;
 //import springapp.jokefactory.jokeblock.JokeBlockFactory;
 //import springapp.jokefactory.jokeblock.JokeBlockMapper;

@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import springapp.jokefactory.algorithm.diagram.DiagramFacade;
 import springapp.jokefactory.algorithm.diagram.dto.DiagramBlockDto;
 import springapp.jokefactory.algorithm.dto.AlgorithmDto;
+import springapp.jokefactory.algorithm.dto.AlgorithmItemDto;
 
 import java.util.List;
 
@@ -36,9 +37,9 @@ class AlgorithmMapper {
         algorithm.setDescription(algorithmDto.getDescription());
         return algorithm;
     }
-
-//    @Mapping(target = "value", source = "structure.name")
-//    abstract StructureItemDto mapStructureToStructureItemDto(Structure structure);
+    public AlgorithmItemDto mapToAlgorithmItemDto(Algorithm algorithm) {
+        return new AlgorithmItemDto(algorithm.getName(), algorithm.getId());
+    }
 //
 //    abstract Structure mapStructureCreatorDtoToStructure(StructureCreatorDto structureCreatorDto);
 //

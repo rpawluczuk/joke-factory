@@ -8,7 +8,7 @@ import springapp.jokefactory.author.dto.AuthorItemDto;
 import springapp.jokefactory.categorization.Categorization;
 import springapp.jokefactory.joke.dto.JokeCreatorDto;
 import springapp.jokefactory.algorithm.Algorithm;
-import springapp.jokefactory.algorithm.dto.StructureItemDto;
+import springapp.jokefactory.algorithm.dto.AlgorithmItemDto;
 import springapp.jokefactory.topicgroup.TopicGroup;
 
 import java.util.List;
@@ -54,19 +54,15 @@ abstract class OldJokeMapper {
         return rate.getValue();
     }
 
-    @Mapping(target = "structureItemList", source = "joke.structures", qualifiedByName = "extractStructureItem")
-    @Mapping(target = "authorItem", source = "author", qualifiedByName = "transformAuthorToAuthorItem")
-    abstract JokeCreatorDto mapJokeToJokeCreatorDto(Joke joke);
-
     @Named("transformAuthorToAuthorItem")
     AuthorItemDto transformAuthorToAuthorItem(Author author) {
         return new AuthorItemDto(author.getId(), extractAuthor(author));
     }
 
     @Named("extractStructureItem")
-    List<StructureItemDto> extractStructureItem(Set<Algorithm> structures) {
+    List<AlgorithmItemDto> extractStructureItem(Set<Algorithm> structures) {
         return structures.stream()
-                .map(structure -> new StructureItemDto(structure.getId(), structure.getName()))
+                .map(structure -> new AlgorithmItemDto(structure.getName(), structure.getId()))
                 .collect(Collectors.toList());
     }
 
