@@ -13,9 +13,14 @@ class JokeDiagramController {
     private JokeDiagramService jokeDiagramService;
 
 
-    @GetMapping(value = "/{joke_id}/{algorithm_number}")
+    @GetMapping(value = "/{joke_id}/{algorithm_id}")
     Iterable<JokeBlockDto> getJokeDiagram(@PathVariable("joke_id") Long jokeId,
-                                          @PathVariable("algorithm_number") int algorithmNumber){
-        return jokeDiagramService.getJokeDiagram(jokeId, algorithmNumber);
+                                          @PathVariable("algorithm_id") int algorithmId){
+        return jokeDiagramService.getJokeDiagram(jokeId, algorithmId);
+    }
+
+    @GetMapping(value = "/{algorithm_id}")
+    Iterable<JokeBlockDto> getJokeDiagram(@PathVariable("algorithm_id") int algorithmId){
+        return jokeDiagramService.getJokeDiagram(algorithmId);
     }
 }

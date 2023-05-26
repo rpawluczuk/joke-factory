@@ -9,6 +9,8 @@ interface DiagramRepository extends JpaRepository<DiagramBlock, Long> {
 
     List<DiagramBlock> findDiagramBlocksByAlgorithm_IdOrderByPosition(long structureId);
 
-//    @Query(value = "SELECT db FROM diagram_block db JOIN db.algorithm a JOIN a.jokes j WHERE j.id = ?1")
+    DiagramBlock findDiagramBlockByAlgorithm_IdAndPosition(Long algorithmId, int position);
+
+    //    @Query(value = "SELECT db FROM diagram_block db JOIN db.algorithm a JOIN a.jokes j WHERE j.id = ?1")
 //    List<DiagramBlock> findDiagramBlocksByJoke(long jokeId);
 }

@@ -56,9 +56,13 @@ public class DiagramFacade {
                 });
     }
 
-    DiagramBlock getDiagramBlockById(Long id) {
+    public DiagramBlock getDiagramBlockById(Long id) {
         return diagramRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("No diagram block found with id: " + id));
+    }
+
+    public DiagramBlock getDiagramBlock(Long algorithmId, int position) {
+        return diagramRepository.findDiagramBlockByAlgorithm_IdAndPosition(algorithmId, position);
     }
 
 //    public List<DiagramBlock> getStructureBlocksByJoke(long jokeId) {

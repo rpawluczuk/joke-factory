@@ -12,7 +12,7 @@ public class JokeBlockCreatorDto {
 
     private long id;
     private String jokeSnippet;
-    private DiagramBlockDto structureBlockPresenterDto;
+    private DiagramBlockDto diagramBlockDto;
     private int position;
     private long structureId;
 }

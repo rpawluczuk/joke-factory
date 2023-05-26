@@ -2,6 +2,7 @@ package springapp.jokefactory.joke.dto;
 
 import lombok.Builder;
 import lombok.Data;
+import springapp.jokefactory.algorithm.jokediagram.dto.JokeBlockDto;
 import springapp.jokefactory.author.dto.AuthorItemDto;
 import springapp.jokefactory.jokeblock.dto.JokeBlockCreatorDto;
 import springapp.jokefactory.topic.dto.TopicItemDto;
@@ -21,7 +22,7 @@ public class JokeCreatorDto {
     private TopicItemDto comedyTopic;
     private TopicItemDto ostensibleTopic;
     private List<AlgorithmItemDto> algorithmItemList;
-    private List<JokeBlockCreatorDto> jokeBlockCreatorDtoList;
+    private List<JokeBlockDto> jokeBlockDtoList;
     private List<TopicGroupCreatorDto> topicGroupCreatorList;
     private String title;
     private String content;

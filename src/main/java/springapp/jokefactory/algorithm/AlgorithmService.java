@@ -72,7 +72,13 @@ class AlgorithmService {
 //                .collect(Collectors.toList());
 //    }
 
-    public Iterable<AlgorithmItemDto> getAlgorithmItemListByJokeID(Long jokeID) {
+    public Iterable<AlgorithmItemDto> getAlgorithmItemList() {
+        return algorithmRepository.findAll().stream()
+                .map(algorithmMapper::mapToAlgorithmItemDto)
+                .collect(Collectors.toList());
+    }
+
+    Iterable<AlgorithmItemDto> getAlgorithmItemListByJokeID(Long jokeID) {
         return algorithmRepository.findAlgorithmsByJokeID(jokeID).stream()
                 .map(algorithmMapper::mapToAlgorithmItemDto)
                 .collect(Collectors.toList());

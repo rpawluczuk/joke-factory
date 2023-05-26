@@ -30,11 +30,11 @@ class AlgorithmController {
 //    Iterable<StructurePresenterDto> getStructurePresenterListByName(@RequestParam("name") String name) {
 //        return structureService.getStructurePresenterListByName(name);
 //    }
-//
-//    @GetMapping(value = "/list-items")
-//    Iterable<StructureItemDto> getStructureItemList() {
-//        return structureService.getStructureItemList();
-//    }
+
+    @GetMapping(value = "/item-list")
+    Iterable<AlgorithmItemDto> getAlgorithmItemList(){
+        return algorithmService.getAlgorithmItemList();
+    }
 
     @GetMapping(value = "/{id}")
     AlgorithmDto getAlgorithmDto(@PathVariable("id") Long id){
@@ -42,7 +42,7 @@ class AlgorithmController {
     }
 
     @GetMapping(value = "/pagination")
-    AlgorithmPagination getTopicPagination(){
+    AlgorithmPagination getAlgorithmPagination(){
         return algorithmService.getAlgorithmPagination();
     }
 

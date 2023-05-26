@@ -7,6 +7,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import springapp.jokefactory.algorithm.Algorithm;
+import springapp.jokefactory.algorithm.jokediagram.JokeBlock;
 import springapp.jokefactory.joke.dto.JokeCreatorDto;
 import springapp.jokefactory.joke.dto.JokePresenterDto;
 import springapp.jokefactory.joke.dto.JokeRateDto;
@@ -16,6 +17,7 @@ import springapp.jokefactory.algorithm.AlgorithmFacade;
 //import springapp.jokefactory.topicgroup.TopicGroupFacade;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -30,7 +32,7 @@ class JokeService {
     private AlgorithmFacade structureFacade;
 
     @Autowired
-    private JokeDiagramFacade jokeBlockFacade;
+    private JokeDiagramFacade jokeDiagramFacade;
 
 //    @Autowired
 //    private TopicGroupFacade topicGroupFacade;
@@ -86,19 +88,19 @@ class JokeService {
     void addJoke(JokeCreatorDto jokeCreatorDto) {
         Joke joke = oldJokeMapper.mapJokeCreatorDtoToJoke(jokeCreatorDto);
         if (jokeCreatorDto.getAlgorithmItemList() != null) {
-            Set<Algorithm> structures = jokeCreatorDto.getAlgorithmItemList().stream()
-                    .map(structureItemDto -> structureFacade.getAlgorithmById(structureItemDto.getValue()))
+            Set<Algorithm> algorithms = jokeCreatorDto.getAlgorithmItemList().stream()
+                    .map(algorithmItemDto -> structureFacade.getAlgorithmById(algorithmItemDto.getValue()))
                     .collect(Collectors.toSet());
-            joke.setAlgorithms(structures);
+            joke.setAlgorithms(algorithms);
         }
         jokeRepository.save(joke);
+        if (jokeCreatorDto.getJokeBlockDtoList() != null) {
+            List<JokeBlock> jokeBlockList = jokeDiagramFacade.extractJokeBlockList(jokeCreatorDto.getJokeBlockDtoList(), joke);
+            jokeDiagramFacade.saveJokeBlockList(jokeBlockList);
+        }
 //        if (jokeCreatorDto.getTopicGroupCreatorList() != null) {
 //            List<TopicGroup> topicGroupList = topicGroupFacade.mapTopicGroupCreatorListToTopicGroupList(jokeCreatorDto.getTopicGroupCreatorList(), joke);
 //            topicGroupFacade.saveTopicGroupList(topicGroupList);
-//        }
-//        if (jokeCreatorDto.getJokeBlockCreatorDtoList() != null) {
-//            List<JokeBlock> jokeBlockList = jokeBlockFacade.extractJokeBlockList(jokeCreatorDto.getJokeBlockCreatorDtoList(), joke);
-//            jokeBlockFacade.saveJokeBlockList(jokeBlockList);
 //        }
     }
 
