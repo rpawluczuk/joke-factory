@@ -7,11 +7,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import springapp.jokefactory.algorithm.Algorithm;
-import springapp.jokefactory.algorithm.jokediagram.JokeBlock;
+import springapp.jokefactory.joke.jokeblock.JokeBlock;
 import springapp.jokefactory.joke.dto.JokeCreatorDto;
 import springapp.jokefactory.joke.dto.JokePresenterDto;
 import springapp.jokefactory.joke.dto.JokeRateDto;
-import springapp.jokefactory.algorithm.jokediagram.JokeDiagramFacade;
+import springapp.jokefactory.joke.jokeblock.JokeBlockFacade;
 import springapp.jokefactory.topic.TopicFacade;
 import springapp.jokefactory.algorithm.AlgorithmFacade;
 //import springapp.jokefactory.topicgroup.TopicGroupFacade;
@@ -32,7 +32,7 @@ class JokeService {
     private AlgorithmFacade structureFacade;
 
     @Autowired
-    private JokeDiagramFacade jokeDiagramFacade;
+    private JokeBlockFacade jokeBlockFacade;
 
 //    @Autowired
 //    private TopicGroupFacade topicGroupFacade;
@@ -95,8 +95,8 @@ class JokeService {
         }
         jokeRepository.save(joke);
         if (jokeCreatorDto.getJokeBlockDtoList() != null) {
-            List<JokeBlock> jokeBlockList = jokeDiagramFacade.extractJokeBlockList(jokeCreatorDto.getJokeBlockDtoList(), joke);
-            jokeDiagramFacade.saveJokeBlockList(jokeBlockList);
+            List<JokeBlock> jokeBlockList = jokeBlockFacade.extractJokeBlockList(jokeCreatorDto.getJokeBlockDtoList(), joke);
+            jokeBlockFacade.saveJokeBlockList(jokeBlockList);
         }
 //        if (jokeCreatorDto.getTopicGroupCreatorList() != null) {
 //            List<TopicGroup> topicGroupList = topicGroupFacade.mapTopicGroupCreatorListToTopicGroupList(jokeCreatorDto.getTopicGroupCreatorList(), joke);
@@ -107,16 +107,18 @@ class JokeService {
     void editJoke(JokeCreatorDto jokeCreatorDto) {
         Joke joke = jokeFacade.getJokeById(jokeCreatorDto.getId());
         oldJokeMapper.updateJokeFromJokeCreatorDto(jokeCreatorDto, joke);
-        Set<Algorithm> structures = Optional.ofNullable(jokeCreatorDto.getAlgorithmItemList())
+        Set<Algorithm> algorithms = Optional.ofNullable(jokeCreatorDto.getAlgorithmItemList())
                 .orElse(Collections.emptyList()).stream()
                 .map(structureItemDto -> structureFacade.getAlgorithmById(structureItemDto.getValue()))
                 .collect(Collectors.toSet());
-        joke.setAlgorithms(structures);
-//        List<JokeBlock> jokeBlocks = jokeBlockFacade.extractJokeBlockList(jokeCreatorDto.getJokeBlockCreatorDtoList(), joke);
-//        joke.setJokeBlocks(jokeBlocks);
+        joke.setAlgorithms(algorithms);
+        jokeRepository.save(joke);
+        if (jokeCreatorDto.getJokeBlockDtoList() != null) {
+            List<JokeBlock> jokeBlockList = jokeBlockFacade.extractJokeBlockList(jokeCreatorDto.getJokeBlockDtoList(), joke);
+            jokeBlockFacade.saveJokeBlockList(jokeBlockList);
+        }
 //        List<TopicGroup> topicGroupList = topicGroupFacade.extractTopicGroupList(jokeCreatorDto.getTopicGroupCreatorList(), joke);
 //        joke.setTopicGroups(topicGroupList);
-        jokeRepository.save(joke);
     }
 
     void updatePagination(JokePagination jokePagination){

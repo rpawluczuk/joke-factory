@@ -1,28 +1,28 @@
-package springapp.jokefactory.algorithm.jokediagram;
+package springapp.jokefactory.joke.jokeblock;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import springapp.jokefactory.algorithm.Algorithm;
 import springapp.jokefactory.algorithm.AlgorithmFacade;
-import springapp.jokefactory.algorithm.jokediagram.dto.JokeBlockDto;
+import springapp.jokefactory.joke.jokeblock.dto.JokeBlockDto;
 
 import java.util.stream.Collectors;
 
 @Service
-class JokeDiagramService {
+class JokeBlockService {
 
     @Autowired
-    private JokeDiagramRepository jokeDiagramRepository;
+    private JokeBlockRepository jokeDiagramRepository;
 
     @Autowired
-    private JokeDiagramMapper jokeDiagramMapper;
+    private JokeBlockMapper jokeDiagramMapper;
 
     @Autowired
     private AlgorithmFacade algorithmFacade;
 
     Iterable<JokeBlockDto> getJokeDiagram(Long jokeId, long algorithmId) {
         return jokeDiagramRepository.findBlocksByJoke(jokeId).stream()
-                .filter(jokeBlock -> jokeBlock.getDiagramBlock().getAlgorithm().getId() == algorithmId)
+                .filter(jokeBlock -> jokeBlock.getAlgorithmBlock().getAlgorithm().getId() == algorithmId)
                 .map(jokeDiagramMapper::mapJokeBlockToDto)
                 .collect(Collectors.toList());
     }

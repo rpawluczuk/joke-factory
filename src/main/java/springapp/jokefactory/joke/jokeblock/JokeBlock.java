@@ -1,9 +1,9 @@
-package springapp.jokefactory.algorithm.jokediagram;
+package springapp.jokefactory.joke.jokeblock;
 
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-import springapp.jokefactory.algorithm.diagram.DiagramBlock;
+import springapp.jokefactory.algorithm.algorithmblock.AlgorithmBlock;
 import springapp.jokefactory.joke.Joke;
 
 import javax.persistence.*;
@@ -23,7 +23,7 @@ public class JokeBlock {
 
     @ManyToOne
     @EqualsAndHashCode.Exclude @ToString.Exclude
-    private DiagramBlock diagramBlock;
+    private AlgorithmBlock algorithmBlock;
 
     @ManyToOne(cascade = CascadeType.MERGE)
     @EqualsAndHashCode.Exclude @ToString.Exclude
@@ -45,12 +45,12 @@ public class JokeBlock {
         this.id = id;
     }
 
-    public DiagramBlock getDiagramBlock() {
-        return diagramBlock;
+    public AlgorithmBlock getAlgorithmBlock() {
+        return algorithmBlock;
     }
 
-    public void setDiagramBlock(DiagramBlock structureBlock) {
-        this.diagramBlock = structureBlock;
+    public void setAlgorithmBlock(AlgorithmBlock structureBlock) {
+        this.algorithmBlock = structureBlock;
     }
 
     public Joke getJoke() {

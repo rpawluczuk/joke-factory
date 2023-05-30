@@ -1,10 +1,10 @@
-package springapp.jokefactory.algorithm.diagram;
+package springapp.jokefactory.algorithm.algorithmblock;
 
 import org.springframework.stereotype.Service;
-import springapp.jokefactory.algorithm.diagram.dto.DiagramBlockDto;
+import springapp.jokefactory.algorithm.algorithmblock.dto.AlgorithmBlockDto;
 
 @Service
-class DiagramMapper {
+class AlgorithmBlockMapper {
 
 //    @Mapping(target = "id", source = "structureBlockCreatorDto.id")
 //    @Mapping(target = "description", source = "structureBlockCreatorDto.description")
@@ -13,8 +13,8 @@ class DiagramMapper {
 //
 //    abstract StructureBlockCreatorDto mapStructureBlockToStructureBlockCreatorDto(DiagramBlock structureBlock);
 
-    DiagramBlockDto mapDiagramBlockToPresenterDto(DiagramBlock diagramBlock) {
-        return DiagramBlockDto.builder()
+    AlgorithmBlockDto mapAlgorithmBlockToPresenterDto(AlgorithmBlock diagramBlock) {
+        return AlgorithmBlockDto.builder()
                 .id(diagramBlock.getId())
                 .title(diagramBlock.getTitle())
                 .description(diagramBlock.getDescription())
@@ -22,8 +22,8 @@ class DiagramMapper {
                 .build();
     }
 
-    DiagramBlock mapDtoToDiagramBlock(DiagramBlockDto diagramBlockPresenterDto) {
-        return DiagramBlock.builder()
+    AlgorithmBlock mapDtoToAlgorithmBlock(AlgorithmBlockDto diagramBlockPresenterDto) {
+        return AlgorithmBlock.builder()
                 .id(diagramBlockPresenterDto.getId())
                 .title(diagramBlockPresenterDto.getTitle())
                 .description(diagramBlockPresenterDto.getDescription())
@@ -31,7 +31,7 @@ class DiagramMapper {
                 .build();
     }
 
-    public DiagramBlock updateDiagramBlock(DiagramBlock diagramBlock, DiagramBlockDto diagramBlockDto) {
+    public AlgorithmBlock updateAlgorithmBlock(AlgorithmBlock diagramBlock, AlgorithmBlockDto diagramBlockDto) {
         diagramBlock.setTitle(diagramBlockDto.getTitle());
         diagramBlock.setDescription(diagramBlockDto.getDescription());
         diagramBlock.setPosition(diagramBlockDto.getPosition());

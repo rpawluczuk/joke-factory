@@ -2,7 +2,7 @@ package springapp.jokefactory.algorithm.dto;
 
 import lombok.Builder;
 import lombok.Data;
-import springapp.jokefactory.algorithm.diagram.dto.DiagramBlockDto;
+import springapp.jokefactory.algorithm.algorithmblock.dto.AlgorithmBlockDto;
 
 import java.sql.Timestamp;
 import java.util.List;
@@ -15,5 +15,5 @@ public class AlgorithmDto {
     private String name;
     private String description;
     private Timestamp dateCreated;
-    private List<DiagramBlockDto> diagramBlockList;
+    private List<AlgorithmBlockDto> diagramBlockList;
 }

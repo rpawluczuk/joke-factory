@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import springapp.jokefactory.algorithm.dto.AlgorithmDto;
-import springapp.jokefactory.algorithm.diagram.dto.DiagramBlockDto;
+import springapp.jokefactory.algorithm.algorithmblock.dto.AlgorithmBlockDto;
 import springapp.jokefactory.algorithm.dto.AlgorithmItemDto;
 
 @RestController
@@ -21,8 +21,8 @@ class AlgorithmController {
     }
 
     @GetMapping(value = "/diagram/{algorithm_id}")
-    Iterable<DiagramBlockDto> getAlgorithmDiagram(@PathVariable("algorithm_id") Long algorithmId){
-        return algorithmService.getAlgorithmDiagram(algorithmId);
+    Iterable<AlgorithmBlockDto> getAlgorithmBlockList(@PathVariable("algorithm_id") Long algorithmId){
+        return algorithmService.getAlgorithmBlockList(algorithmId);
     }
 
 //

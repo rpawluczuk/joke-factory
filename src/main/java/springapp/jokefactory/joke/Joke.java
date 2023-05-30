@@ -11,7 +11,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import springapp.jokefactory.algorithm.Algorithm;
-import springapp.jokefactory.algorithm.jokediagram.JokeBlock;
+import springapp.jokefactory.joke.jokeblock.JokeBlock;
 import springapp.jokefactory.author.Author;
 import springapp.jokefactory.topicgroup.TopicGroup;
 

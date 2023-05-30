@@ -1,4 +1,4 @@
-package springapp.jokefactory.algorithm.diagram;
+package springapp.jokefactory.algorithm.algorithmblock;
 
 import java.sql.Timestamp;
 import javax.persistence.*;
@@ -14,7 +14,7 @@ import springapp.jokefactory.algorithm.Algorithm;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class DiagramBlock {
+public class AlgorithmBlock {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

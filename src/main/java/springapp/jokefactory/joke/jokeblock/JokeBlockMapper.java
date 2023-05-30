@@ -1,46 +1,45 @@
-package springapp.jokefactory.algorithm.jokediagram;
+package springapp.jokefactory.joke.jokeblock;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import springapp.jokefactory.algorithm.diagram.DiagramBlock;
-import springapp.jokefactory.algorithm.diagram.DiagramFacade;
-import springapp.jokefactory.algorithm.jokediagram.dto.JokeBlockDto;
+import springapp.jokefactory.algorithm.algorithmblock.AlgorithmBlock;
+import springapp.jokefactory.algorithm.algorithmblock.AlgorithmBlockFacade;
+import springapp.jokefactory.joke.jokeblock.dto.JokeBlockDto;
 import springapp.jokefactory.joke.Joke;
-import springapp.jokefactory.jokeblock.dto.JokeBlockCreatorDto;
 
 @Service
-class JokeDiagramMapper {
+class JokeBlockMapper {
 
     @Autowired
-    DiagramFacade diagramFacade;
+    AlgorithmBlockFacade algorithmFacade;
 
     JokeBlockDto mapJokeBlockToDto(JokeBlock jokeBlock) {
         return JokeBlockDto.builder()
                 .id(jokeBlock.getId())
                 .jokeSnippet(jokeBlock.getJokeSnippet())
-                .title(jokeBlock.getDiagramBlock().getTitle())
-                .description(jokeBlock.getDiagramBlock().getDescription())
-                .position(jokeBlock.getDiagramBlock().getPosition())
-                .algorithmId(jokeBlock.getDiagramBlock().getId())
+                .title(jokeBlock.getAlgorithmBlock().getTitle())
+                .description(jokeBlock.getAlgorithmBlock().getDescription())
+                .position(jokeBlock.getAlgorithmBlock().getPosition())
+                .algorithmId(jokeBlock.getAlgorithmBlock().getAlgorithm().getId())
                 .build();
     }
 
-    JokeBlockDto mapDiagramBlockToJokeBlockDto(DiagramBlock diagramBlock) {
+    JokeBlockDto mapDiagramBlockToJokeBlockDto(AlgorithmBlock algorithmBlock) {
         return JokeBlockDto.builder()
-                .title(diagramBlock.getTitle())
-                .description(diagramBlock.getDescription())
-                .position(diagramBlock.getPosition())
-                .algorithmId(diagramBlock.getAlgorithm().getId())
+                .title(algorithmBlock.getTitle())
+                .description(algorithmBlock.getDescription())
+                .position(algorithmBlock.getPosition())
+                .algorithmId(algorithmBlock.getAlgorithm().getId())
                 .build();
     }
 
     JokeBlock mapDtoToJokeBlock(JokeBlockDto jokeBlockDto, Joke joke) {
-        DiagramBlock diagramBlock = diagramFacade.getDiagramBlock(jokeBlockDto.getAlgorithmId(), jokeBlockDto.getPosition());
+        AlgorithmBlock algorithmBlock = algorithmFacade.getAlgorithmBlock(jokeBlockDto.getAlgorithmId(), jokeBlockDto.getPosition());
         return JokeBlock.builder()
                 .id(jokeBlockDto.getId())
                 .jokeSnippet(jokeBlockDto.getJokeSnippet())
                 .joke(joke)
-                .diagramBlock(diagramBlock)
+                .algorithmBlock(algorithmBlock)
                 .build();
     }
 

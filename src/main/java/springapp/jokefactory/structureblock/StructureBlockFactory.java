@@ -1,14 +1,14 @@
 package springapp.jokefactory.structureblock;
 
-import springapp.jokefactory.algorithm.diagram.DiagramBlock;
+import springapp.jokefactory.algorithm.algorithmblock.AlgorithmBlock;
 import springapp.jokefactory.algorithm.StructureFactory;
 
 public class StructureBlockFactory {
 
     private final StructureFactory structureFactory = new StructureFactory();
 
-    public DiagramBlock createStructureBlock(int index, int position) {
-        return DiagramBlock.builder()
+    public AlgorithmBlock createStructureBlock(int index, int position) {
+        return AlgorithmBlock.builder()
                 .id((long) index)
                 .title("structure block title " + index)
                 .description("structure block description " + index)

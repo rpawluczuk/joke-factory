@@ -1,8 +1,7 @@
-package springapp.jokefactory.algorithm.jokediagram.dto;
+package springapp.jokefactory.joke.jokeblock.dto;
 
 import lombok.Builder;
 import lombok.Data;
-import springapp.jokefactory.algorithm.diagram.dto.DiagramBlockDto;
 
 @Data
 @Builder

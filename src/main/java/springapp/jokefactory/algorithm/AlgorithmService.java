@@ -5,16 +5,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import springapp.jokefactory.algorithm.diagram.DiagramFacade;
-import springapp.jokefactory.algorithm.diagram.dto.DiagramBlockDto;
+import springapp.jokefactory.algorithm.algorithmblock.AlgorithmBlockFacade;
+import springapp.jokefactory.algorithm.algorithmblock.dto.AlgorithmBlockDto;
 import springapp.jokefactory.algorithm.dto.AlgorithmItemDto;
-import springapp.jokefactory.algorithm.jokediagram.JokeBlock;
-import springapp.jokefactory.algorithm.jokediagram.JokeDiagramFacade;
-import springapp.jokefactory.algorithm.jokediagram.dto.JokeBlockDto;
+import springapp.jokefactory.joke.jokeblock.JokeBlockFacade;
 import springapp.jokefactory.joke.JokeFacade;
 import springapp.jokefactory.algorithm.dto.AlgorithmDto;
 
-import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
@@ -27,13 +24,13 @@ class AlgorithmService {
     private AlgorithmPagination algorithmPagination;
 
     @Autowired
-    private AlgorithmFacade algorithmFacade;
+    private springapp.jokefactory.algorithm.AlgorithmFacade algorithmFacade;
 
     @Autowired
-    private DiagramFacade diagramFacade;
+    private AlgorithmBlockFacade algorithmBlockFacade;
 
     @Autowired
-    private JokeDiagramFacade jokeDiagramFacade;
+    private JokeBlockFacade jokeDiagramFacade;
 
     @Autowired
     private JokeFacade jokeFacade;
@@ -57,8 +54,8 @@ class AlgorithmService {
                 .collect(Collectors.toList());
     }
 
-    Iterable<DiagramBlockDto> getAlgorithmDiagram(Long algorithmId) {
-        return diagramFacade.getAlgorithmDiagram(algorithmId);
+    Iterable<AlgorithmBlockDto> getAlgorithmBlockList(Long algorithmId) {
+        return algorithmBlockFacade.getAlgorithmBlockList(algorithmId);
     }
 
 //    Iterable<StructurePresenterDto> getStructurePresenterListByName(String name) {
@@ -91,14 +88,14 @@ class AlgorithmService {
     void addAlgorithm(AlgorithmDto algorithmDto) {
         Algorithm algorithm = algorithmMapper.mapDtoToAlgorithm(algorithmDto);
         algorithm = algorithmRepository.save(algorithm);
-        diagramFacade.saveDiagram(algorithmDto.getDiagramBlockList(), algorithm);
+        algorithmBlockFacade.saveAlgorithmBlockList(algorithmDto.getDiagramBlockList(), algorithm);
     }
 
     void editAlgorithm(AlgorithmDto algorithmDto) {
         Algorithm algorithm = algorithmFacade.getAlgorithmById(algorithmDto.getId());
         Algorithm updatedAlgorithm = algorithmMapper.updateAlgorithm(algorithm, algorithmDto);
         algorithm = algorithmRepository.save(updatedAlgorithm);
-        diagramFacade.updateDiagram(algorithmDto.getDiagramBlockList(), algorithm);
+        algorithmBlockFacade.updateAlgorithmList(algorithmDto.getDiagramBlockList(), algorithm);
     }
 
     void updateAlgorithmPagination(AlgorithmPagination algorithmPagination) {

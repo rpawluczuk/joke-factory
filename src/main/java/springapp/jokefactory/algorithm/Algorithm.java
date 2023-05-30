@@ -3,7 +3,7 @@ package springapp.jokefactory.algorithm;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-import springapp.jokefactory.algorithm.diagram.DiagramBlock;
+import springapp.jokefactory.algorithm.algorithmblock.AlgorithmBlock;
 import springapp.jokefactory.joke.Joke;
 
 import javax.persistence.*;
@@ -32,7 +32,7 @@ public class Algorithm {
 
     @EqualsAndHashCode.Exclude @ToString.Exclude
     @OneToMany(mappedBy = "algorithm", cascade = CascadeType.ALL)
-    private List<DiagramBlock> diagramBlockList;
+    private List<AlgorithmBlock> diagramBlockList;
 
     @CreationTimestamp
     private Timestamp dateCreated;
@@ -85,11 +85,11 @@ public class Algorithm {
         this.description = description;
     }
 
-    public List<DiagramBlock> getDiagramBlockList() {
+    public List<AlgorithmBlock> getDiagramBlockList() {
         return diagramBlockList;
     }
 
-    public void setDiagramBlockList(List<DiagramBlock> structureBlockScheme) {
+    public void setDiagramBlockList(List<AlgorithmBlock> structureBlockScheme) {
         this.diagramBlockList = structureBlockScheme;
     }
 
