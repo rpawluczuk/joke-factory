@@ -21,7 +21,7 @@ class JokeBlockService {
     private AlgorithmFacade algorithmFacade;
 
     Iterable<JokeBlockDto> getJokeDiagram(Long jokeId, long algorithmId) {
-        return jokeDiagramRepository.findBlocksByJoke(jokeId).stream()
+        return jokeDiagramRepository.findJokeBlocksByJoke(jokeId).stream()
                 .filter(jokeBlock -> jokeBlock.getAlgorithmBlock().getAlgorithm().getId() == algorithmId)
                 .map(jokeDiagramMapper::mapJokeBlockToDto)
                 .collect(Collectors.toList());

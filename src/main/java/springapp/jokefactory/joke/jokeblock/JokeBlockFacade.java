@@ -30,13 +30,18 @@ public class JokeBlockFacade {
     }
 
     public List<JokeBlockDto> getJokeBlockDtoList(long jokeId) {
-        return jokeBlockRepository.findBlocksByJoke(jokeId).stream()
+        return jokeBlockRepository.findJokeBlocksByJoke(jokeId).stream()
                 .map(jokeBlockMapper::mapJokeBlockToDto)
                 .collect(Collectors.toList());
     }
 
     public void deleteAllJokeBlockByAlgorithmId(long algorithmId) {
         List<JokeBlock> jokeBlockListToDelete = jokeBlockRepository.findJokeBlocksByAlgorithmId(algorithmId);
+        jokeBlockRepository.deleteAll(jokeBlockListToDelete);
+    }
+
+    public void deleteAllJokeBlockByJokeId(Long jokeId) {
+        List<JokeBlock> jokeBlockListToDelete = jokeBlockRepository.findJokeBlocksByJoke(jokeId);
         jokeBlockRepository.deleteAll(jokeBlockListToDelete);
     }
 }

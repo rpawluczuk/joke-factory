@@ -8,7 +8,7 @@ import java.util.List;
 interface JokeBlockRepository extends JpaRepository<JokeBlock, Long> {
 
     @Query(value = "SELECT jb FROM joke_block jb where jb.joke.id = ?1 order by jb.algorithmBlock.position")
-    List<JokeBlock> findBlocksByJoke(long jokeId);
+    List<JokeBlock> findJokeBlocksByJoke(long jokeId);
 
     @Query(value = "SELECT jb FROM joke_block jb where jb.algorithmBlock.algorithm.id = ?1")
     List<JokeBlock> findJokeBlocksByAlgorithmId(long algorithmId);
