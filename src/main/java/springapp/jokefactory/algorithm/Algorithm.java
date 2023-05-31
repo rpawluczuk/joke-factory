@@ -16,7 +16,6 @@ import java.util.Set;
 @Builder
 @AllArgsConstructor
 @Data
-@Table(name = "structure")
 public class Algorithm {
 
     @Id
@@ -32,7 +31,7 @@ public class Algorithm {
 
     @EqualsAndHashCode.Exclude @ToString.Exclude
     @OneToMany(mappedBy = "algorithm", cascade = CascadeType.ALL)
-    private List<AlgorithmBlock> diagramBlockList;
+    private List<AlgorithmBlock> algorithmBlockList;
 
     @CreationTimestamp
     private Timestamp dateCreated;
@@ -85,12 +84,12 @@ public class Algorithm {
         this.description = description;
     }
 
-    public List<AlgorithmBlock> getDiagramBlockList() {
-        return diagramBlockList;
+    public List<AlgorithmBlock> getAlgorithmBlockList() {
+        return algorithmBlockList;
     }
 
-    public void setDiagramBlockList(List<AlgorithmBlock> structureBlockScheme) {
-        this.diagramBlockList = structureBlockScheme;
+    public void setAlgorithmBlockList(List<AlgorithmBlock> algorithmBlockList) {
+        this.algorithmBlockList = algorithmBlockList;
     }
 
     public Timestamp getDateCreated() {

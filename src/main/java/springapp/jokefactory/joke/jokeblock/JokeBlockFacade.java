@@ -35,12 +35,17 @@ public class JokeBlockFacade {
                 .collect(Collectors.toList());
     }
 
-    public void deleteAllJokeBlockByAlgorithmId(long algorithmId) {
+    public void deleteAllJokeBlocksByAlgorithmId(long algorithmId) {
         List<JokeBlock> jokeBlockListToDelete = jokeBlockRepository.findJokeBlocksByAlgorithmId(algorithmId);
         jokeBlockRepository.deleteAll(jokeBlockListToDelete);
     }
 
-    public void deleteAllJokeBlockByJokeId(Long jokeId) {
+    public void deleteAllJokeBlocksByAlgorithmBlockId(long algorithmBlockId) {
+        List<JokeBlock> jokeBlockListToDelete = jokeBlockRepository.findJokeBlocksByAlgorithmBlockId(algorithmBlockId);
+        jokeBlockRepository.deleteAll(jokeBlockListToDelete);
+    }
+
+    public void deleteAllJokeBlocksByJokeId(Long jokeId) {
         List<JokeBlock> jokeBlockListToDelete = jokeBlockRepository.findJokeBlocksByJoke(jokeId);
         jokeBlockRepository.deleteAll(jokeBlockListToDelete);
     }

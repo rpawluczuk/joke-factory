@@ -108,7 +108,7 @@ class AlgorithmService {
     void deleteAlgorithm(Long id) {
         Algorithm algorithmToDelete = algorithmFacade.getAlgorithmById(id);
         jokeFacade.removeAlgorithmFromJokes(algorithmToDelete);
-        jokeBlockFacade.deleteAllJokeBlockByAlgorithmId(id);
+        jokeBlockFacade.deleteAllJokeBlocksByAlgorithmId(id);
         algorithmBlockFacade.deleteAllAlgorithmBlockByAlgorithmId(id);
         algorithmRepository.delete(algorithmToDelete);
     }

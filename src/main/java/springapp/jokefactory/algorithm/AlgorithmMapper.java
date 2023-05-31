@@ -40,14 +40,4 @@ class AlgorithmMapper {
     public AlgorithmItemDto mapToAlgorithmItemDto(Algorithm algorithm) {
         return new AlgorithmItemDto(algorithm.getName(), algorithm.getId());
     }
-//
-//    abstract Structure mapStructureCreatorDtoToStructure(StructureCreatorDto structureCreatorDto);
-//
-//    abstract StructureCreatorDto mapStructureToStructureCreatorDto(Structure structure);
-//
-//    @Mapping(target = "id", source = "structure.id")
-//    @Mapping(target = "name", source = "structureCreatorDto.name")
-//    @Mapping(target = "description", source = "structureCreatorDto.description")
-//    @Mapping(target = "structureBlockScheme", ignore = true)
-//    abstract Structure updateStructure(Structure structure, StructureCreatorDto structureCreatorDto);
 }

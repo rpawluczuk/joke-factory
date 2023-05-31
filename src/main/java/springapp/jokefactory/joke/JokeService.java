@@ -129,7 +129,7 @@ class JokeService {
     }
 
     void deleteJoke(Long id) {
-        jokeBlockFacade.deleteAllJokeBlockByJokeId(id);
+        jokeBlockFacade.deleteAllJokeBlocksByJokeId(id);
         jokeRepository.delete(jokeFacade.getJokeById(id));
     }
 

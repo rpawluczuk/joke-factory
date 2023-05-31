@@ -6,13 +6,6 @@ import springapp.jokefactory.algorithm.algorithmblock.dto.AlgorithmBlockDto;
 @Service
 class AlgorithmBlockMapper {
 
-//    @Mapping(target = "id", source = "structureBlockCreatorDto.id")
-//    @Mapping(target = "description", source = "structureBlockCreatorDto.description")
-//    @Mapping(target = "structure", source = "structure")
-//    abstract DiagramBlock mapStructureBlockCreatorDtoToStructureBlock(StructureBlockCreatorDto structureBlockCreatorDto, Algorithm structure);
-//
-//    abstract StructureBlockCreatorDto mapStructureBlockToStructureBlockCreatorDto(DiagramBlock structureBlock);
-
     AlgorithmBlockDto mapAlgorithmBlockToPresenterDto(AlgorithmBlock diagramBlock) {
         return AlgorithmBlockDto.builder()
                 .id(diagramBlock.getId())
@@ -38,9 +31,4 @@ class AlgorithmBlockMapper {
         return diagramBlock;
     }
 
-//    @Mapping(target = "id", source = "structureBlockCreatorDto.id")
-//    @Mapping(target = "description", source = "structureBlockCreatorDto.description")
-//    @Mapping(target = "title", source = "structureBlockCreatorDto.title")
-//    @Mapping(target = "position", source = "structureBlockCreatorDto.position")
-//    abstract DiagramBlock updateStructureBlock(DiagramBlock structureBlock, StructureBlockCreatorDto structureBlockCreatorDto);
 }

@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import springapp.jokefactory.algorithm.Algorithm;
 import springapp.jokefactory.algorithm.algorithmblock.dto.AlgorithmBlockDto;
-import springapp.jokefactory.joke.jokeblock.JokeBlock;
+import springapp.jokefactory.joke.jokeblock.JokeBlockFacade;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -17,6 +17,9 @@ public class AlgorithmBlockFacade {
 
     @Autowired
     private AlgorithmBlockMapper algorithmBlockMapper;
+
+    @Autowired
+    private JokeBlockFacade jokeBlockFacade;
 
     public List<AlgorithmBlockDto> getAlgorithmBlockList(long algorithmId) {
         return algorithmBlockRepository.findAlgorithmBlocksByAlgorithm_IdOrderByPosition(algorithmId).stream()
@@ -38,8 +41,11 @@ public class AlgorithmBlockFacade {
         List<AlgorithmBlock> algorithmBlockList = algorithmBlockRepository.findAlgorithmBlocksByAlgorithm_IdOrderByPosition(algorithm.getId());
         algorithmBlockList.forEach(algorithmBlock -> {
             boolean exists = algorithmBlockDtoList.stream()
-                    .anyMatch(algorithmBlockDto -> algorithmBlockDto.getId().equals(algorithmBlock.getId()));
+                    .anyMatch(algorithmBlockDto ->
+                        algorithmBlockDto.getId() != null && algorithmBlockDto.getId().equals(algorithmBlock.getId())
+                    );
             if (!exists) {
+                jokeBlockFacade.deleteAllJokeBlocksByAlgorithmBlockId(algorithmBlock.getId());
                 algorithmBlockRepository.delete(algorithmBlock);
             }
         });

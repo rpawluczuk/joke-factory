@@ -29,7 +29,7 @@ class JokeBlockService {
 
     Iterable<JokeBlockDto> getJokeDiagram(long algorithmId) {
         Algorithm algorithm = algorithmFacade.getAlgorithmById(algorithmId);
-        return algorithm.getDiagramBlockList().stream()
+        return algorithm.getAlgorithmBlockList().stream()
                 .map(jokeDiagramMapper::mapDiagramBlockToJokeBlockDto)
                 .collect(Collectors.toList());
     }

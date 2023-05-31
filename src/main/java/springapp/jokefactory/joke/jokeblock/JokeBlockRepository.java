@@ -12,4 +12,7 @@ interface JokeBlockRepository extends JpaRepository<JokeBlock, Long> {
 
     @Query(value = "SELECT jb FROM joke_block jb where jb.algorithmBlock.algorithm.id = ?1")
     List<JokeBlock> findJokeBlocksByAlgorithmId(long algorithmId);
+
+    @Query(value = "SELECT jb FROM joke_block jb where jb.algorithmBlock.id = ?1")
+    List<JokeBlock> findJokeBlocksByAlgorithmBlockId(long algorithmBlockId);
 }
