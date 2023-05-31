@@ -30,7 +30,7 @@ class AlgorithmService {
     private AlgorithmBlockFacade algorithmBlockFacade;
 
     @Autowired
-    private JokeBlockFacade jokeDiagramFacade;
+    private JokeBlockFacade jokeBlockFacade;
 
     @Autowired
     private JokeFacade jokeFacade;
@@ -107,7 +107,9 @@ class AlgorithmService {
 
     void deleteAlgorithm(Long id) {
         Algorithm algorithmToDelete = algorithmFacade.getAlgorithmById(id);
-//        jokeFacade.removeStructureFromJokes(structureToDelete);
+        jokeFacade.removeAlgorithmFromJokes(algorithmToDelete);
+        jokeBlockFacade.deleteAllJokeBlockByAlgorithmId(id);
+        algorithmBlockFacade.deleteAllAlgorithmBlockByAlgorithmId(id);
         algorithmRepository.delete(algorithmToDelete);
     }
 }

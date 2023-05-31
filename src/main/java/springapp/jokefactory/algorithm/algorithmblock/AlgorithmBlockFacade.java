@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import springapp.jokefactory.algorithm.Algorithm;
 import springapp.jokefactory.algorithm.algorithmblock.dto.AlgorithmBlockDto;
+import springapp.jokefactory.joke.jokeblock.JokeBlock;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -65,32 +66,8 @@ public class AlgorithmBlockFacade {
         return algorithmBlockRepository.findAlgorithmBlockByAlgorithm_IdAndPosition(algorithmId, position);
     }
 
-//    public List<DiagramBlock> getStructureBlocksByJoke(long jokeId) {
-//        return structureBlockRepository.findStructureBlocksByJoke(jokeId);
-//    }
-//
-//    public List<DiagramBlock> extractStructureBlockList(List<StructureBlockCreatorDto> structureBlockCreatorList,
-//                                                        Algorithm structure) {
-//        return structureBlockCreatorList.stream()
-//                .map(structureBlockCreatorDto ->
-//                        structureBlockMapper.mapStructureBlockCreatorDtoToStructureBlock(structureBlockCreatorDto, structure))
-//                .collect(Collectors.toList());
-//    }
-//
-//    public List<DiagramBlock> extractUpdatedStructureBlockList(List<StructureBlockCreatorDto> structureBlockCreatorDtoList,
-//                                                               List<DiagramBlock> structureBlockList,
-//                                                               Algorithm structure) {
-//        return IntStream.range(0, structureBlockCreatorDtoList.size())
-//                .mapToObj(index -> {
-//                    if (index < structureBlockList.size()){
-//                        return structureBlockMapper.updateStructureBlock(structureBlockList.get(index), structureBlockCreatorDtoList.get(index));
-//                    }
-//                    return structureBlockMapper.mapStructureBlockCreatorDtoToStructureBlock(structureBlockCreatorDtoList.get(index), structure);
-//                })
-//                .collect(Collectors.toList());
-//    }
-//
-//    public DiagramBlockPresenterDto extractStructureBlockPresenterDto(DiagramBlock structureBlock) {
-//        return structureBlockMapper.mapStructureBlockToStructureBlockPresenterDto(structureBlock);
-//    }
+    public void deleteAllAlgorithmBlockByAlgorithmId(long algorithmId) {
+        List<AlgorithmBlock> algorithmBlockListToDelete = algorithmBlockRepository.findAlgorithmBlocksByAlgorithm_IdOrderByPosition(algorithmId);
+        algorithmBlockRepository.deleteAll(algorithmBlockListToDelete);
+    }
 }

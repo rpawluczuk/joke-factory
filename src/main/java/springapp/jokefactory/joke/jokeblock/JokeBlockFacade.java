@@ -34,4 +34,9 @@ public class JokeBlockFacade {
                 .map(jokeBlockMapper::mapJokeBlockToDto)
                 .collect(Collectors.toList());
     }
+
+    public void deleteAllJokeBlockByAlgorithmId(long algorithmId) {
+        List<JokeBlock> jokeBlockListToDelete = jokeBlockRepository.findJokeBlocksByAlgorithmId(algorithmId);
+        jokeBlockRepository.deleteAll(jokeBlockListToDelete);
+    }
 }
