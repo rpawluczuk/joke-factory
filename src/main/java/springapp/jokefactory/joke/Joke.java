@@ -27,9 +27,9 @@ public class Joke {
     private Long id;
 
     @ManyToMany()
-    @JoinTable(name = "jokes_structures",
+    @JoinTable(name = "jokes_algorithms",
             joinColumns = {@JoinColumn(name = "joke_id")},
-            inverseJoinColumns = {@JoinColumn(name = "structure_id")}
+            inverseJoinColumns = {@JoinColumn(name = "algorithm_id")}
     )
     private Set<Algorithm> algorithms;
 

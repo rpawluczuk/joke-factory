@@ -1,8 +1,7 @@
 package springapp.jokefactory.joke;
 
-import com.querydsl.core.types.Predicate;
+import com.querydsl.core.BooleanBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.querydsl.binding.QuerydslPredicate;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import springapp.jokefactory.joke.dto.JokeCreatorDto;
@@ -22,9 +21,10 @@ class JokeController {
         return jokeService.getJokePresenterList();
     }
 
-    @GetMapping(params = "query")
-    Iterable<JokePresenterDto> getFilteredJokes(@QuerydslPredicate(root = Joke.class) Predicate predicate) {
-        return jokeService.getFilteredJokePresenterList(predicate);
+    @GetMapping("/filtered")
+    public Iterable<JokePresenterDto> getFilteredJokes(@RequestParam(required = false) Long authorId,
+                                                       @RequestParam(required = false) Long algorithmId) {
+        return jokeService.getFilteredJokePresenterList(authorId, algorithmId);
     }
 
     @GetMapping(value = "/creator/{id}")

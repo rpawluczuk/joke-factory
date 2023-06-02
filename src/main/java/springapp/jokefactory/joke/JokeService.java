@@ -1,5 +1,6 @@
 package springapp.jokefactory.joke;
 
+import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Predicate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -63,7 +64,11 @@ class JokeService {
                 .collect(Collectors.toList());
     }
 
-    Iterable<JokePresenterDto> getFilteredJokePresenterList(Predicate predicate) {
+    Iterable<JokePresenterDto> getFilteredJokePresenterList(Long authorId, Long algorithmId) {
+        QJoke joke = QJoke.joke;
+        BooleanBuilder predicate = new BooleanBuilder();
+        if (authorId != null) predicate.and(joke.author.id.eq(authorId));
+        if (algorithmId != null) predicate.and(joke.algorithms.any().id.eq(algorithmId));
         PageRequest pageRequest = PageRequest.of(jokePagination.getCurrentPage(), jokePagination.getPageSize(),
                 Sort.Direction.DESC, "dateCreated");
         Page<Joke> pageJokes = jokeRepository.findAll(predicate, pageRequest);
