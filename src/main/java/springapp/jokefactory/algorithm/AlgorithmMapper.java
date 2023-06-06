@@ -7,6 +7,7 @@ import springapp.jokefactory.algorithm.algorithmblock.dto.AlgorithmBlockDto;
 import springapp.jokefactory.algorithm.dto.AlgorithmDto;
 import springapp.jokefactory.algorithm.dto.AlgorithmItemDto;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 @Service
@@ -17,11 +18,13 @@ class AlgorithmMapper {
 
     AlgorithmDto mapAlgorithmToDto(Algorithm algorithm) {
         List<AlgorithmBlockDto> diagramBlockList = diagramFacade.getAlgorithmBlockList(algorithm.getId());
+        String dateCreated = new SimpleDateFormat("yyyy-MM-dd").format(algorithm.getDateCreated());
         return AlgorithmDto.builder()
                 .id(algorithm.getId())
                 .name(algorithm.getName())
                 .description(algorithm.getDescription())
                 .diagramBlockList(diagramBlockList)
+                .dateCreated(dateCreated)
                 .build();
     }
 

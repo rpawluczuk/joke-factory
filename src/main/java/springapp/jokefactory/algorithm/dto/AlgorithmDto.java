@@ -4,7 +4,6 @@ import lombok.Builder;
 import lombok.Data;
 import springapp.jokefactory.algorithm.algorithmblock.dto.AlgorithmBlockDto;
 
-import java.sql.Timestamp;
 import java.util.List;
 
 @Data
@@ -14,6 +13,6 @@ public class AlgorithmDto {
     private Long id;
     private String name;
     private String description;
-    private Timestamp dateCreated;
+    private String dateCreated;
     private List<AlgorithmBlockDto> diagramBlockList;
 }
