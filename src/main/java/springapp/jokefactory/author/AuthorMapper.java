@@ -1,28 +1,30 @@
 package springapp.jokefactory.author;
 
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.MappingTarget;
-import org.mapstruct.Named;
-import springapp.jokefactory.author.dto.AuthorCreatorDto;
+import org.springframework.stereotype.Service;
 import springapp.jokefactory.author.dto.AuthorItemDto;
-import springapp.jokefactory.author.dto.AuthorPresenterDto;
+import springapp.jokefactory.author.dto.AuthorDto;
 
-@Mapper(componentModel = "spring")
-abstract class AuthorMapper {
+@Service
+class AuthorMapper {
 
-    abstract AuthorPresenterDto mapAuthorToAuthorPresenterDto(Author author);
-
-    abstract AuthorCreatorDto mapAuthorToAuthorCreatorDto(Author author);
-
-    @Mapping(target = "label", source = "author", qualifiedByName = "extractAuthorItemLabel")
-    @Mapping(target = "value", source = "id")
-    abstract AuthorItemDto mapAuthorToAuthorItemDto(Author author);
-
-    @Named("extractAuthorItemLabel")
-    String extractAuthorItemLabel(Author author) {
-        return author.getName() + " " + author.getSurname();
+    AuthorDto mapAuthorToDto(Author author) {
+        return AuthorDto.builder()
+                .id(author.getId())
+                .name(author.getName())
+                .surname(author.getSurname())
+                .description(author.getDescription())
+                .dateCreated(author.getDateCreated())
+                .build();
     }
 
-    abstract void updateAuthorFromAuthorCreatorDto(AuthorCreatorDto authorCreatorDto, @MappingTarget Author author);
+    AuthorItemDto mapAuthorToAuthorItemDto(Author author) {
+        return new AuthorItemDto(author.getName() + " " + author.getSurname(), author.getId());
+    }
+
+    public Author updateAuthor(AuthorDto authorDto, Author author) {
+        author.setName(authorDto.getName());
+        author.setSurname(authorDto.getSurname());
+        author.setDescription(authorDto.getDescription());
+        return author;
+    }
 }

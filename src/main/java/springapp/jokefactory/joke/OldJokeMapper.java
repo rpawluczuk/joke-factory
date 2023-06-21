@@ -56,7 +56,7 @@ abstract class OldJokeMapper {
 
     @Named("transformAuthorToAuthorItem")
     AuthorItemDto transformAuthorToAuthorItem(Author author) {
-        return new AuthorItemDto(author.getId(), extractAuthor(author));
+        return new AuthorItemDto(extractAuthor(author), author.getId());
     }
 
     @Named("extractStructureItem")

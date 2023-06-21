@@ -3,18 +3,15 @@ package springapp.jokefactory.author;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import springapp.jokefactory.author.dto.AuthorCreatorDto;
 import springapp.jokefactory.author.dto.AuthorItemDto;
 import springapp.jokefactory.author.dto.AuthorPaginationDto;
-import springapp.jokefactory.author.dto.AuthorPresenterDto;
+import springapp.jokefactory.author.dto.AuthorDto;
 import springapp.jokefactory.joke.JokeFacade;
-import springapp.jokefactory.topic.Topic;
-import springapp.jokefactory.topic.dto.TopicPaginationDto;
 
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 class AuthorService {
@@ -31,47 +28,50 @@ class AuthorService {
     @Autowired
     private AuthorPaginationDto authorPaginationDto;
 
-    Iterable<AuthorPresenterDto> getAuthorPresenterList(){
+    Iterable<AuthorDto> getAuthorDtoList() {
         PageRequest pageRequest = PageRequest.of(authorPaginationDto.getCurrentPage(), authorPaginationDto.getPageSize(),
                 Sort.Direction.DESC, "dateCreated");
         Page<Author> authorPage = authorRepository.findAll(pageRequest);
         authorPaginationDto.setTotalPages(authorPage.getTotalPages());
         authorPaginationDto.setTotalItems(authorPage.getTotalElements());
         return authorPage.getContent().stream()
-                .map(authorMapper::mapAuthorToAuthorPresenterDto)
+                .map(authorMapper::mapAuthorToDto)
                 .collect(Collectors.toList());
     }
 
     Iterable<AuthorItemDto> getAuthorItemList() {
-        return authorRepository.findAll().stream()
-                .map(authorMapper::mapAuthorToAuthorItemDto)
-                .collect(Collectors.toList());
+        AuthorItemDto defaultItem = new AuthorItemDto("All", null);
+        return Stream.concat(
+                Stream.of(defaultItem),
+                authorRepository.findAll().stream()
+                        .map(authorMapper::mapAuthorToAuthorItemDto)
+        ).collect(Collectors.toList());
     }
 
-    AuthorCreatorDto getAuthorCreator(Long id){
+    AuthorDto getAuthorDto(Long id) {
         Author author = authorRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("No author found with id: " + id));
-        return authorMapper.mapAuthorToAuthorCreatorDto(author);
+        return authorMapper.mapAuthorToDto(author);
     }
 
     AuthorPaginationDto getAuthorPagination() {
         return authorPaginationDto;
     }
 
-    void addAuthor(AuthorCreatorDto authorCreatorDto){
+    void addAuthor(AuthorDto authorDto) {
         Author author = new Author();
-        authorMapper.updateAuthorFromAuthorCreatorDto(authorCreatorDto, author);
+        author = authorMapper.updateAuthor(authorDto, author);
         authorRepository.save(author);
     }
 
-    void editAuthor(AuthorCreatorDto authorCreatorDto){
-        Author author = authorRepository.findById(authorCreatorDto.getId())
-                .orElseThrow(() -> new IllegalArgumentException("No author found with id: " + authorCreatorDto.getId()));
-        authorMapper.updateAuthorFromAuthorCreatorDto(authorCreatorDto, author);
+    void editAuthor(AuthorDto authorDto) {
+        Author author = authorRepository.findById(authorDto.getId())
+                .orElseThrow(() -> new IllegalArgumentException("No author found with id: " + authorDto.getId()));
+        authorMapper.updateAuthor(authorDto, author);
         authorRepository.save(author);
     }
 
-    void deleteAuthor(Long id){
+    void deleteAuthor(Long id) {
         Author authorToDelete = authorRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("No author found with id: " + id));
         jokeFacade.removeAuthorFromJokes(authorToDelete);

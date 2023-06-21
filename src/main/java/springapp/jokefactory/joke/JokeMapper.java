@@ -33,7 +33,7 @@ class JokeMapper {
 
     JokeCreatorDto mapJokeToJokeCreatorDto(Joke joke) {
         String author = joke.getAuthor().getName() + " " + joke.getAuthor().getSurname();
-        AuthorItemDto authorItemDto = new AuthorItemDto(joke.getAuthor().getId(), author);
+        AuthorItemDto authorItemDto = new AuthorItemDto(author, joke.getAuthor().getId());
         List<AlgorithmItemDto> algorithmItemList = joke.getAlgorithms().stream()
                 .map(algorithm -> new AlgorithmItemDto(algorithm.getName(), algorithm.getId()))
                 .collect(Collectors.toList());

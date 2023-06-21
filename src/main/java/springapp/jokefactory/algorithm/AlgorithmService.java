@@ -13,6 +13,7 @@ import springapp.jokefactory.joke.JokeFacade;
 import springapp.jokefactory.algorithm.dto.AlgorithmDto;
 
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 class AlgorithmService {
@@ -70,9 +71,12 @@ class AlgorithmService {
 //    }
 
     public Iterable<AlgorithmItemDto> getAlgorithmItemList() {
-        return algorithmRepository.findAll().stream()
-                .map(algorithmMapper::mapToAlgorithmItemDto)
-                .collect(Collectors.toList());
+        AlgorithmItemDto defaultItem = new AlgorithmItemDto("All", null);
+        return Stream.concat(
+                Stream.of(defaultItem),
+                algorithmRepository.findAll().stream()
+                        .map(algorithmMapper::mapToAlgorithmItemDto)
+        ).collect(Collectors.toList());
     }
 
     Iterable<AlgorithmItemDto> getAlgorithmItemListByJokeID(Long jokeID) {

@@ -3,11 +3,9 @@ package springapp.jokefactory.author;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import springapp.jokefactory.author.dto.AuthorCreatorDto;
 import springapp.jokefactory.author.dto.AuthorItemDto;
 import springapp.jokefactory.author.dto.AuthorPaginationDto;
-import springapp.jokefactory.author.dto.AuthorPresenterDto;
-import springapp.jokefactory.topic.dto.TopicPaginationDto;
+import springapp.jokefactory.author.dto.AuthorDto;
 
 @RestController
 @RequestMapping("/api/authors")
@@ -18,8 +16,8 @@ class AuthorController {
     private AuthorService authorService;
 
     @GetMapping
-    Iterable<AuthorPresenterDto> getAuthorPresenterList() {
-        return authorService.getAuthorPresenterList();
+    Iterable<AuthorDto> getAuthorDtoList() {
+        return authorService.getAuthorDtoList();
     }
 
     @GetMapping(value = "/list-items")
@@ -28,8 +26,8 @@ class AuthorController {
     }
 
     @GetMapping(value = "/creator/{id}")
-    AuthorCreatorDto getAuthorCreator(@PathVariable("id") Long id) {
-        return authorService.getAuthorCreator(id);
+    AuthorDto getAuthorCreator(@PathVariable("id") Long id) {
+        return authorService.getAuthorDto(id);
     }
 
     @GetMapping(value = "/pagination")
@@ -39,13 +37,13 @@ class AuthorController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    void addAuthor(@RequestBody AuthorCreatorDto authorCreatorDto) {
-        authorService.addAuthor(authorCreatorDto);
+    void addAuthor(@RequestBody AuthorDto authorDto) {
+        authorService.addAuthor(authorDto);
     }
 
     @PutMapping
-    void editAuthor(@RequestBody AuthorCreatorDto authorCreatorDto) {
-        authorService.editAuthor(authorCreatorDto);
+    void editAuthor(@RequestBody AuthorDto authorDto) {
+        authorService.editAuthor(authorDto);
     }
 
     @DeleteMapping(value = "/{id}")
