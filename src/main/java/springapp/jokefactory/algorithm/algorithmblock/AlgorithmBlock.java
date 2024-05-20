@@ -29,6 +29,8 @@ public class AlgorithmBlock {
 //    private List<JokeBlock> jokeBlocks;
 
     private String title;
+
+    @Column(length = 4000)
     private String description;
     private int position;
 

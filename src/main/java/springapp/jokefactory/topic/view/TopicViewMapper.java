@@ -2,10 +2,10 @@ package springapp.jokefactory.topic.view;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import springapp.jokefactory.question.QuestionFacade;
 import springapp.jokefactory.question.dto.QuestionDto;
-import springapp.jokefactory.question.dto.QuestionItemDto;
 import springapp.jokefactory.topic.Topic;
 import springapp.jokefactory.topic.TopicDto;
 import springapp.jokefactory.topic.TopicFacade;
@@ -23,23 +23,20 @@ class TopicViewMapper {
     @Autowired
     private QuestionFacade questionFacade;
 
-    TopicViewDto mapViewToDto(TopicView topicView) {
-        List<TopicPresenterDto> content = topicView.getTopicPage().getContent().stream()
-                .map(this::mapTopicToDto)
-                .collect(Collectors.toList());
+    TopicViewDto mapViewToDto(Page<Topic> page) {
+        Page<TopicPresenterDto> presenterPage = page.map(this::mapToDto);;
 
         return TopicViewDto.builder()
-                .content(content)
-                .number(topicView.getTopicPage().getNumber())
-                .size(topicView.getTopicPage().getSize())
-                .totalPages(topicView.getTopicPage().getTotalPages())
-                .totalElements(topicView.getTopicPage().getTotalElements())
-                .categoryFilter(topicView.isCategoryFilter())
+                .content(presenterPage.getContent())
+                .number(presenterPage.getNumber())
+                .size(presenterPage.getSize())
+                .totalPages(presenterPage.getTotalPages())
+                .totalElements(presenterPage.getTotalElements())
+//                .categoryFilter(topicView.isCategoryFilter())
                 .build();
     }
 
-
-    TopicPresenterDto mapTopicToDto(Topic topic) {
+    TopicPresenterDto mapToDto(Topic topic) {
         List<TopicDto> connectedTopicList = topicFacade.getConnectedTopicsList(topic.getId());
         List<String> connectedTopicNameList = connectedTopicList
                 .stream()
@@ -57,6 +54,20 @@ class TopicViewMapper {
                 .isCategory(topic.isCategory())
                 .questions(questions)
                 .dateCreated(new SimpleDateFormat("yyyy-MM-dd").format(topic.getDateCreated()))
+                .build();
+    }
+
+    private TopicPresenterDto mapToPresenterDto(TopicDto topicDto) {
+        List<String> childrenNames = topicDto.getChildren().stream()
+                .map(TopicDto::getName)
+                .collect(Collectors.toList());
+
+        return TopicPresenterDto.builder()
+                .id(topicDto.getId())
+                .name(topicDto.getName())
+                .children(childrenNames)
+                .isCategory(topicDto.isCategory())
+                .dateCreated(new SimpleDateFormat("yyyy-MM-dd").format(topicDto.getDateCreated()))
                 .build();
     }
 }

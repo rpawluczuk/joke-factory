@@ -8,6 +8,7 @@ import springapp.jokefactory.topicgroup.TopicGroup;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.LinkedList;
 import java.util.List;
@@ -20,7 +21,7 @@ import java.util.Set;
 @EqualsAndHashCode
 @RequiredArgsConstructor
 @AllArgsConstructor
-public class Topic {
+public class Topic implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

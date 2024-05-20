@@ -27,6 +27,8 @@ public class Algorithm {
     private Set<Joke> jokes;
 
     private String name;
+
+    @Column(length = 4000)
     private String description;
 
     @EqualsAndHashCode.Exclude @ToString.Exclude

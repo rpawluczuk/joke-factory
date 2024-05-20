@@ -16,16 +16,18 @@ import java.util.List;
 @CrossOrigin("http://localhost:3000")
 class TopicPanelController {
 
-    @Autowired
-    private TopicPanelService topicPanelService;
+    private final TopicPanelService topicPanelService;
+    private final TopicPanelPersistenceService topicPanelPersistenceService;
+    private final TopicPanelMapper topicPanelMapper;
 
     @Autowired
-    private TopicPanelPersistenceService topicPanelPersistenceService;
-
-    @Autowired
-    private TopicPanelMapper topicPanelMapper;
-
-    private static final PageRequest BASIC_PAGE_REQUEST = PageRequest.of(0, 20, Sort.Direction.ASC, "name");
+    public TopicPanelController(TopicPanelService topicPanelService,
+                                TopicPanelPersistenceService topicPanelPersistenceService,
+                                TopicPanelMapper topicPanelMapper) {
+        this.topicPanelService = topicPanelService;
+        this.topicPanelPersistenceService = topicPanelPersistenceService;
+        this.topicPanelMapper = topicPanelMapper;
+    }
 
     @GetMapping(value = "/{initialId}")
     TopicPanelDto getTopicPanel(@PathVariable("initialId") Long initialId) {

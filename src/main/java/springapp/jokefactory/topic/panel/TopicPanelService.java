@@ -10,7 +10,6 @@ import springapp.jokefactory.question.QuestionFacade;
 import springapp.jokefactory.question.dto.QuestionDto;
 import springapp.jokefactory.question.dto.QuestionItemDto;
 import springapp.jokefactory.topic.*;
-import springapp.jokefactory.topic.view.TopicViewDto;
 
 import java.util.Collection;
 import java.util.List;
@@ -51,7 +50,7 @@ class TopicPanelService {
 
     TopicPack getTopicPack(Long parentId, PageRequest pageRequest) {
         TopicDto topicParent = topicFacade.getTopicDtoById(parentId);
-        Page<TopicDto> topicPage = topicFacade.getConnectedTopicsPage(parentId, pageRequest);
+        Page<TopicDto> topicPage = topicFacade.Depracated_getConnectedTopicsPage(parentId, pageRequest);
         Page<TopicBlock> topicBlockPage = topicPanelMapper.mapTopicDtoPageToTopicBlockPage(topicPage, parentId, pageRequest);
         TopicBlock topicBlockParent = TopicBlock.builder()
                 .topic(topicParent)
@@ -70,14 +69,14 @@ class TopicPanelService {
         Page<TopicDto> topicPage;
         if (topicPack.getTopicBlockSecondParent() != null && topicPack.getCategoryFilter() != null) {
             Long categoryId = topicPack.getCategoryFilter().getId();
-            topicPage = topicFacade.getConnectedTopicsPage(parentId, topicPack.getSecondParentId(), categoryId, pageRequest);
+            topicPage = topicFacade.Depracated_getConnectedTopicsPage(parentId, topicPack.getSecondParentId(), categoryId, pageRequest);
         } else if (topicPack.getTopicBlockSecondParent() != null) {
-            topicPage =  topicFacade.getConnectedTopicsPage(parentId, topicPack.getSecondParentId(), pageRequest);
+            topicPage =  topicFacade.Depracated_getConnectedTopicsPage(parentId, topicPack.getSecondParentId(), pageRequest);
         } else if (topicPack.getCategoryFilter() != null) {
             Long categoryId = topicPack.getCategoryFilter().getId();
             topicPage = topicFacade.getConnectedTopicsByCategory(parentId, categoryId, pageRequest);
         } else {
-            topicPage = topicFacade.getConnectedTopicsPage(parentId, pageRequest);
+            topicPage = topicFacade.Depracated_getConnectedTopicsPage(parentId, pageRequest);
         }
         Page<TopicBlock> topicBlockPage = topicPanelMapper.mapTopicDtoPageToTopicBlockPage(topicPage, parentId, pageRequest);
         topicBlockPage.getContent().forEach(topicBlock -> topicBlock.setTopicPackIndex(topicPackIndex));
@@ -88,7 +87,7 @@ class TopicPanelService {
     }
 
     TopicPack getTopicPack(Long parentId, Long secondParentId, PageRequest pageRequest) {
-        Page<TopicDto> topicPage = topicFacade.getConnectedTopicsPage(parentId, secondParentId, pageRequest);
+        Page<TopicDto> topicPage = topicFacade.Depracated_getConnectedTopicsPage(parentId, secondParentId, pageRequest);
         Page<TopicBlock> topicBlockPage = topicPanelMapper.mapTopicDtoPageToTopicBlockPage(topicPage, parentId, pageRequest);
         TopicDto topicParent = topicFacade.getTopicDtoById(parentId);
         TopicBlock topicBlockParent = TopicBlock.builder()

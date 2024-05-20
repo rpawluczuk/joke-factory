@@ -13,36 +13,51 @@ import java.util.stream.Collectors;
 @Service
 class TopicMapper {
 
-    TopicItemDto mapTopicToTopicItemDto(Topic topic) {
+    TopicItemDto toItemDto(Topic topic) {
         return new TopicItemDto(topic.getName(), topic.getId());
     }
 
-    TopicDto mapTopicToDto (Topic topic){
-        List<TopicDto> categoriesDto = null;
-        if (topic.getCategories() != null) {
-            categoriesDto = topic.getCategories().stream()
-                    .map(TopicCategory::getCategory)
-                    .map(this::mapTopicToDto)
-                    .collect(Collectors.toList());
-        }
+    TopicDto toDto(Topic topic) {
+        List<TopicDto> categoriesDto = topic.getCategories() == null ?
+                List.of() :
+                topic.getCategories().stream()
+                        .map(TopicCategory::getCategory)
+                        .map(this::toDtoWithoutRelations)
+                        .collect(Collectors.toList());
+
+        List<TopicDto> childrenDto = topic.getChildren() == null ?
+                List.of() :
+                topic.getChildren().stream()
+                        .map(TopicRelation::getTopicChild)
+                        .map(this::toDtoWithoutRelations)
+                        .collect(Collectors.toList());
         return TopicDto.builder()
                 .id(topic.getId())
                 .name(topic.getName())
                 .categories(categoriesDto)
+                .children(childrenDto)
                 .isCategory(topic.isCategory())
+                .dateCreated(topic.getDateCreated())
                 .build();
     }
 
-    Page<TopicDto> mapTopicPageToDto(Page<Topic> topicPage, PageRequest pageRequest) {
-        return new PageImpl<>(
-                topicPage.getContent().stream()
-                        .map(this::mapTopicToDto)
-                        .collect(Collectors.toList()),
-                pageRequest, topicPage.getTotalElements()
-        );
+    private TopicDto toDtoWithoutRelations(Topic topic) {
+        return TopicDto.builder()
+                .id(topic.getId())
+                .name(topic.getName())
+                .isCategory(topic.isCategory())
+                .dateCreated(topic.getDateCreated())
+                .build();
     }
 
-    Topic dtoToTopic(TopicDto topicDto) {
+    Page<TopicDto> toDtoPage(Page<Topic> topicPage, PageRequest pageRequest) {
+        List<TopicDto> content = topicPage.getContent().stream()
+                .map(this::toDto)
+                .collect(Collectors.toList());
+        return new PageImpl<>(content, pageRequest, topicPage.getTotalElements());
+    }
+
+    Topic fromDto(TopicDto topicDto) {
         return Topic.builder()
                 .name(topicDto.getName())
                 .build();

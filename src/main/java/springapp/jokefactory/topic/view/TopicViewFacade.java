@@ -21,19 +21,19 @@ public class TopicViewFacade {
     @Autowired
     private TopicViewMapper topicViewMapper;
 
-    @Transactional
-    public TopicViewDto updateTopicViewPage(PageRequest pageRequest) {
-        Page<Topic> topicPage;
-        if (topicView.isCategoryFilter()) {
-            topicPage = topicFacade.getAllCategoryTopicsPage(pageRequest);
-        } else if (topicView.getNameFilter() != null) {
-            topicPage = topicFacade.getTopicPageByName(topicView.getNameFilter(), pageRequest);
-        } else {
-            topicPage = topicFacade.getTopicPage(pageRequest);
-        }
-        topicView.setTopicPage(topicPage);
-        return topicViewMapper.mapViewToDto(topicView);
-    }
+//    @Transactional
+//    public TopicViewDto updateTopicViewPage(PageRequest pageRequest) {
+//        Page<Topic> topicPage;
+//        if (topicView.isCategoryFilter()) {
+//            topicPage = topicFacade.getAllCategoryTopicsPage(pageRequest);
+//        } else if (topicView.getNameFilter() != null) {
+//            topicPage = topicFacade.getTopicPageByName(topicView.getNameFilter(), pageRequest);
+//        } else {
+//            topicPage = topicFacade.getTopicPage(pageRequest);
+//        }
+//        topicView.setTopicPage(topicPage);
+//        return topicViewMapper.mapViewToDto(topicView);
+//    }
 
     public void refreshTopicView() {
         PageRequest pageRequest = PageRequest.of(
@@ -41,6 +41,6 @@ public class TopicViewFacade {
                 topicView.getTopicPage().getSize(),
                 Sort.Direction.DESC, "dateCreated"
         );
-        updateTopicViewPage(pageRequest);
+//        updateTopicViewPage(pageRequest);
     }
 }

@@ -28,6 +28,8 @@ public class Author {
 
     private String name;
     private String surname;
+
+    @Column(length = 4000)
     private String description;
 
     @CreationTimestamp

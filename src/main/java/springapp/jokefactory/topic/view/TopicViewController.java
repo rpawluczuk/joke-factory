@@ -9,11 +9,16 @@ import springapp.jokefactory.topic.dto.*;
 @CrossOrigin("http://localhost:3000")
 class TopicViewController {
 
-    @Autowired
-    private TopicViewService topicViewService;
+    private final TopicViewService topicViewService;
+
+    private final TopicViewPersistenceService topicViewPersistenceService;
 
     @Autowired
-    private TopicViewPersistenceService topicViewPersistenceService;
+    public TopicViewController(TopicViewService topicViewService,
+                               TopicViewPersistenceService topicViewPersistenceService) {
+        this.topicViewService = topicViewService;
+        this.topicViewPersistenceService = topicViewPersistenceService;
+    }
 
     @GetMapping
     TopicViewDto getTopicView() {
@@ -21,25 +26,25 @@ class TopicViewController {
     }
 
 
-    @GetMapping(value = "/change-page")
-    TopicViewDto changePageNumber(@RequestParam("pageNumber") int pageNumber) {
-        return topicViewService.changePage(pageNumber);
-    }
-
-    @GetMapping(value = "/change-size")
-    TopicViewDto changePageSize(@RequestParam("pageSize") int pageSize) {
-        return topicViewService.changeSize(pageSize);
-    }
-
-    @GetMapping(value = "/by-name", params = "name")
-    TopicViewDto getTopicViewByName(@RequestParam("name") String name) {
-        return topicViewService.getTopicViewByName(name);
-    }
-
-    @GetMapping(value = "/category-filter")
-    TopicViewDto getViewByCategorySwitch() {
-        return topicViewService.changeCategoryFilter();
-    }
+//    @GetMapping(value = "/change-page")
+//    TopicViewDto changePageNumber(@RequestParam("pageNumber") int pageNumber) {
+//        return topicViewService.changePage(pageNumber);
+//    }
+//
+//    @GetMapping(value = "/change-size")
+//    TopicViewDto changePageSize(@RequestParam("pageSize") int pageSize) {
+//        return topicViewService.changeSize(pageSize);
+//    }
+//
+//    @GetMapping(value = "/by-name", params = "name")
+//    TopicViewDto getTopicViewByName(@RequestParam("name") String name) {
+//        return topicViewService.getTopicViewByName(name);
+//    }
+//
+//    @GetMapping(value = "/category-filter")
+//    TopicViewDto getViewByCategorySwitch() {
+//        return topicViewService.changeCategoryFilter();
+//    }
 
     @GetMapping(value = "/list-items")
     Iterable<TopicItemDto> getTopicItemList() {
@@ -51,11 +56,11 @@ class TopicViewController {
         return topicViewService.getCategoryItemList();
     }
 
-    @DeleteMapping(value = "/{id}")
-    TopicViewDto deleteTopic(@PathVariable("id") Long id) {
-        topicViewPersistenceService.deleteTopic(id);
-        return topicViewService.refreshTopicView();
-    }
+//    @DeleteMapping(value = "/{id}")
+//    TopicViewDto deleteTopic(@PathVariable("id") Long id) {
+//        topicViewPersistenceService.deleteTopic(id);
+//        return topicViewService.refreshTopicView();
+//    }
 
 //    @GetMapping(value = "/{id}")
 //    TopicBlockDto getTopic(@PathVariable("id") Long id) {
@@ -80,11 +85,8 @@ class TopicViewController {
 //        topicService.editTopicName(topicCreatorDTO);
 //    }
 //
-//    @PatchMapping(value = "/changeCategoryStatus/{id}")
-//    void changeCategoryStatus(@PathVariable Long id) {
-//        topicService.changeCategoryStatus(id);
-//    }
-//
-//
-
+    @PatchMapping(value = "/changeCategoryStatus/{id}")
+    void changeCategoryStatus(@PathVariable Long id) {
+        topicViewService.changeCategoryStatus(id);
+    }
 }
