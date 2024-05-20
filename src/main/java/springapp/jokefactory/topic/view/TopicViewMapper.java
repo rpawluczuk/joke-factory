@@ -9,6 +9,7 @@ import springapp.jokefactory.question.dto.QuestionDto;
 import springapp.jokefactory.topic.Topic;
 import springapp.jokefactory.topic.TopicDto;
 import springapp.jokefactory.topic.TopicFacade;
+import springapp.jokefactory.topic.TopicRelation;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -37,10 +38,10 @@ class TopicViewMapper {
     }
 
     TopicPresenterDto mapToDto(Topic topic) {
-        List<TopicDto> connectedTopicList = topicFacade.getConnectedTopicsList(topic.getId());
-        List<String> connectedTopicNameList = connectedTopicList
+        List<String> connectedTopicNameList = topic.getChildren()
                 .stream()
-                .map(TopicDto::getName)
+                .map(TopicRelation::getTopicChild)
+                .map(Topic::getName)
                 .collect(Collectors.toList());
 
         List<QuestionDto> questions = topic.getQuestionsBySource().stream()
