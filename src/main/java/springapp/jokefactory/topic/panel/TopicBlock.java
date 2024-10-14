@@ -12,7 +12,8 @@ import springapp.jokefactory.topic.TopicDto;
 @Scope("prototype")
 public class TopicBlock {
 
-    private TopicDto topic;
+    private TopicDto Deprecated_topic;
+    private String name;
     private boolean isSecondParent;
     private boolean isSelected;
     private Integer topicPackIndex;

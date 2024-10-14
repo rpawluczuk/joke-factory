@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import springapp.jokefactory.topic.dto.*;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping("/api/topics/view")
 @CrossOrigin("http://localhost:3000")
@@ -20,16 +22,11 @@ class TopicViewController {
         this.topicViewPersistenceService = topicViewPersistenceService;
     }
 
-    @GetMapping
-    TopicViewDto getTopicView() {
-        return topicViewService.getTopicView();
+    @PostMapping
+    TopicViewDto getTopicView(@Valid @RequestBody ViewRequest viewRequest) {
+        return topicViewService.getTopicView(viewRequest);
     }
 
-
-//    @GetMapping(value = "/change-page")
-//    TopicViewDto changePageNumber(@RequestParam("pageNumber") int pageNumber) {
-//        return topicViewService.changePage(pageNumber);
-//    }
 //
 //    @GetMapping(value = "/change-size")
 //    TopicViewDto changePageSize(@RequestParam("pageSize") int pageSize) {

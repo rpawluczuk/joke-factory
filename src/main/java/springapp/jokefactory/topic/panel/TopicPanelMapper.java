@@ -21,7 +21,7 @@ class TopicPanelMapper {
     TopicFacade topicFacade;
 
     TopicPanelDto mapTopicPanelToDto(TopicPanel topicPanel) {
-        TopicBlockDto initialTopic = mapTopicBlockToDto(topicPanel.getInitialTopicBlock());
+        TopicBlockDto initialTopic = Depracated_mapTopicBlockToDto(topicPanel.getInitialTopicBlock());
         List<TopicPackDto> topicPackList = topicPanel.getTopicPackList().stream()
                 .map(this::mapTopicPackToDto)
                 .collect(Collectors.toList());
@@ -33,8 +33,8 @@ class TopicPanelMapper {
     }
 
     TopicPackDto mapTopicPackToDto(TopicPack topicPack) {
-        TopicBlockDto topicParent = mapTopicBlockToDto(topicPack.getTopicBlockParent());
-        TopicBlockDto topicSecondParent = mapTopicBlockToDto(topicPack.getTopicBlockSecondParent());
+        TopicBlockDto topicParent = Depracated_mapTopicBlockToDto(topicPack.getTopicBlockParent());
+        TopicBlockDto topicSecondParent = Depracated_mapTopicBlockToDto(topicPack.getTopicBlockSecondParent());
         TopicPageDto topicPage = mapPageToDto(topicPack.getTopicBlockPage());
         TopicItemDto categoryFilter = null;
         if (topicPack.getCategoryFilter() != null) {
@@ -43,7 +43,6 @@ class TopicPanelMapper {
         return TopicPackDto.builder()
                 .topicBlockParent(topicParent)
                 .topicBlockSecondParent(topicSecondParent)
-                .topicBlockPage(topicPage)
                 .categoryFilter(categoryFilter)
                 .isAnySelection(topicPack.isAnySelection())
                 .topicPackIndex(topicPack.getTopicPackIndex())
@@ -52,7 +51,7 @@ class TopicPanelMapper {
 
     TopicPageDto mapPageToDto(Page<TopicBlock> topicPage) {
         List<TopicBlockDto> content = topicPage.getContent().stream()
-                .map(this::mapTopicBlockToDto)
+                .map(this::Depracated_mapTopicBlockToDto)
                 .collect(Collectors.toList());
 
         return TopicPageDto.builder()
@@ -64,18 +63,18 @@ class TopicPanelMapper {
                 .build();
     }
 
-    TopicBlockDto mapTopicBlockToDto(TopicBlock topicBlock) {
+    TopicBlockDto Depracated_mapTopicBlockToDto(TopicBlock topicBlock) {
         if (topicBlock == null) return null;
         List<TopicItemDto> categories = null;
-        if (!topicBlock.getTopic().isCategory()) {
-            categories = topicBlock.getTopic().getCategories().stream()
+        if (!topicBlock.getDeprecated_topic().isCategory()) {
+            categories = topicBlock.getDeprecated_topic().getCategories().stream()
                     .map(this::mapTopicDtoToTopicItemDto)
                     .collect(Collectors.toList());
         }
         return TopicBlockDto.builder()
-                .id(topicBlock.getTopic().getId())
-                .name(topicBlock.getTopic().getName())
-                .isCategory(topicBlock.getTopic().isCategory())
+                .id(topicBlock.getDeprecated_topic().getId())
+                .name(topicBlock.getDeprecated_topic().getName())
+                .isCategory(topicBlock.getDeprecated_topic().isCategory())
                 .isSelected(topicBlock.isSelected())
                 .isSecondParent(topicBlock.isSecondParent())
                 .topicPackIndex(topicBlock.getTopicPackIndex())
@@ -84,7 +83,7 @@ class TopicPanelMapper {
                 .build();
     }
 
-    Topic mapTopicBlockDtoToTopic(TopicBlockDto topicBlockDto) {
+    Topic toTopic(TopicBlockDto topicBlockDto) {
         return Topic.builder()
                 .name(topicBlockDto.getName())
                 .build();
@@ -100,24 +99,57 @@ class TopicPanelMapper {
                 .build();
     }
 
-    TopicBlock mapTopicToTopicBlock(TopicDto topicDto) {
+    TopicBlock Depracated_toTopicBlock(TopicDto topic) {
         return TopicBlock.builder()
-                .topic(topicDto)
+                .name(topic.getName())
                 .build();
     }
 
-    Page<TopicBlock> mapTopicDtoPageToTopicBlockPage(Page<TopicDto> topicPage, Long parentId, PageRequest pageRequest) {
+    TopicBlock toTopicBlock(Topic topic) {
+        return TopicBlock.builder()
+                .name(topic.getName())
+                .build();
+    }
+
+    Page<TopicBlock> Depracated_mapToTopicBlockPage(Page<TopicDto> topicPage, Long parentId, PageRequest pageRequest) {
         return new PageImpl<>(
                 topicPage.getContent().stream()
                         .map(topicDto ->
                                 TopicBlock.builder()
-                                        .topic(topicDto)
                                         .parentId(parentId)
                                         .build()
                         )
                         .collect(Collectors.toList()),
                 pageRequest, topicPage.getTotalElements()
         );
+    }
+
+    Page<TopicBlock> Depracated_toTopicBlockPage(Page<Topic> topicPage, Long parentId, PageRequest pageRequest) {
+        return new PageImpl<>(
+                topicPage.getContent().stream()
+                        .map(this::toTopicBlock)
+                        .peek(tb -> tb.setParentId(parentId))
+                        .collect(Collectors.toList()),
+                pageRequest, topicPage.getTotalElements()
+        );
+    }
+
+    Page<TopicBlockDto> toBlockPageDto(Page<Topic> topicPage, Long parentId, PageRequest pageRequest) {
+        return new PageImpl<>(
+                topicPage.getContent().stream()
+                        .map(this::toBlockDto)
+                        .peek(tb -> tb.setParentId(parentId))
+                        .collect(Collectors.toList()),
+                pageRequest, topicPage.getTotalElements()
+        );
+    }
+
+    TopicBlockDto toBlockDto(Topic topic) {
+        return TopicBlockDto.builder()
+                .id(topic.getId())
+                .name(topic.getName())
+                .isCategory(topic.isCategory())
+                .build();
     }
 
     TopicDto mapTopicItemDtoToTopicDto(TopicItemDto topicItemDto) {

@@ -41,22 +41,61 @@ class TopicPanelService {
         return getFilteredPackByCategory(categoryId, topicPackIndex, BASIC_PAGE_REQUEST);
     }
 
-    TopicPanelDto initializeTopicPanel(Long initialId) {
-        topicPanel.clearPanel();
-        TopicPack topicPack = getTopicPack(initialId, BASIC_PAGE_REQUEST);
-        topicPanel.addTopicPack(topicPack);
-        return topicPanelMapper.mapTopicPanelToDto(topicPanel);
+    TopicPackDto addTopic(TopicBlockDto topicBlockDto) {
+        Topic topic = topicPanelMapper.toTopic(topicBlockDto);
+        Topic savedTopic = topicFacade.addTopicWithoutParent(topic);
+        TopicBlockDto topicBlockParent = topicPanelMapper.toBlockDto(savedTopic);
+        PageRequest pageRequest = PageRequest.of(
+                0, 23, Sort.Direction.ASC, "name");
+        Page<Topic> topicPage = topicFacade.getConnectedTopicsPage(topicBlockParent.getId(), pageRequest);
+        Page<TopicBlockDto> topicBlockPage = topicPanelMapper.toBlockPageDto(topicPage, topicBlockDto.getId(), pageRequest);
+        return TopicPackDto.builder()
+                .topicBlockParent(topicBlockParent)
+                .topicBlockPage(topicBlockPage)
+                .build();
     }
 
     TopicPack getTopicPack(Long parentId, PageRequest pageRequest) {
         TopicDto topicParent = topicFacade.getTopicDtoById(parentId);
-        Page<TopicDto> topicPage = topicFacade.Depracated_getConnectedTopicsPage(parentId, pageRequest);
-        Page<TopicBlock> topicBlockPage = topicPanelMapper.mapTopicDtoPageToTopicBlockPage(topicPage, parentId, pageRequest);
-        TopicBlock topicBlockParent = TopicBlock.builder()
-                .topic(topicParent)
+        Page<Topic> topicPage = topicFacade.getConnectedTopicsPage(parentId, pageRequest);
+        Page<TopicBlockDto> topicBlockPage = topicPanelMapper.toBlockPageDto(topicPage, parentId, pageRequest);
+        TopicBlockDto topicBlockParent = TopicBlockDto.builder()
+                .name(topicParent.getName())
                 .topicPackIndex(null)
                 .build();
         return TopicPack.builder()
+                .build();
+    }
+
+    TopicBlockDto getTopicBlock(Long id){
+        Topic topic = topicFacade.getTopicById(id);
+        return topicPanelMapper.toBlockDto(topic);
+    }
+
+    TopicPackDto getPack(PackRequest request) {
+        PageRequest pageRequest = PageRequest.of(
+                request.getPageNumber(), request.getPageSize(), Sort.Direction.ASC, "name");
+        if (request.getParentId() == null) {
+            return TopicPackDto.builder()
+                    .topicBlockParent(
+                            TopicBlockDto.builder()
+                                    .isCategory(false)
+                                    .build()
+                    )
+                    .topicBlockPage(null)
+                    .build();
+        }
+        Topic topicParent = topicFacade.getTopicById(request.getParentId());
+        TopicBlockDto topicBlockParent = topicPanelMapper.toBlockDto(topicParent);
+        Page<Topic> topicPage = topicFacade.getConnectedTopicsPage(request.getParentId(), pageRequest);
+        Page<TopicBlockDto> topicBlockPage = topicPanelMapper.toBlockPageDto(topicPage, request.getParentId(), pageRequest);
+        if (request.getSelectedId() != null) {
+            topicBlockPage.getContent().stream()
+                    .filter(topicBlockDto -> topicBlockDto.getId().equals(request.getSelectedId()))
+                    .findFirst()
+                    .ifPresent(topicBlockDto -> topicBlockDto.setSelected(true));
+        }
+        return TopicPackDto.builder()
                 .topicBlockParent(topicBlockParent)
                 .topicBlockPage(topicBlockPage)
                 .build();
@@ -65,7 +104,7 @@ class TopicPanelService {
     TopicPack getNewTopicPack(int topicPackIndex, PageRequest pageRequest) {
         TopicPack topicPack = topicPanel.getTopicPackList().get(topicPackIndex);
         TopicBlock topicBlockParent = topicPack.getTopicBlockParent();
-        Long parentId = topicBlockParent.getTopic().getId();
+        Long parentId = topicBlockParent.getDeprecated_topic().getId();
         Page<TopicDto> topicPage;
         if (topicPack.getTopicBlockSecondParent() != null && topicPack.getCategoryFilter() != null) {
             Long categoryId = topicPack.getCategoryFilter().getId();
@@ -78,7 +117,7 @@ class TopicPanelService {
         } else {
             topicPage = topicFacade.Depracated_getConnectedTopicsPage(parentId, pageRequest);
         }
-        Page<TopicBlock> topicBlockPage = topicPanelMapper.mapTopicDtoPageToTopicBlockPage(topicPage, parentId, pageRequest);
+        Page<TopicBlock> topicBlockPage = topicPanelMapper.Depracated_mapToTopicBlockPage(topicPage, parentId, pageRequest);
         topicBlockPage.getContent().forEach(topicBlock -> topicBlock.setTopicPackIndex(topicPackIndex));
         return TopicPack.builder()
                 .topicBlockParent(topicBlockParent)
@@ -88,10 +127,10 @@ class TopicPanelService {
 
     TopicPack getTopicPack(Long parentId, Long secondParentId, PageRequest pageRequest) {
         Page<TopicDto> topicPage = topicFacade.Depracated_getConnectedTopicsPage(parentId, secondParentId, pageRequest);
-        Page<TopicBlock> topicBlockPage = topicPanelMapper.mapTopicDtoPageToTopicBlockPage(topicPage, parentId, pageRequest);
+        Page<TopicBlock> topicBlockPage = topicPanelMapper.Depracated_mapToTopicBlockPage(topicPage, parentId, pageRequest);
         TopicDto topicParent = topicFacade.getTopicDtoById(parentId);
         TopicBlock topicBlockParent = TopicBlock.builder()
-                .topic(topicParent)
+                .Deprecated_topic(topicParent)
                 .build();
         return TopicPack.builder()
                 .topicBlockParent(topicBlockParent)
@@ -123,7 +162,7 @@ class TopicPanelService {
         topicPanel.selectSecondParentTopic(topicPackIndex, secondParentId);
         TopicBlock selectedTopicBlock = topicPanel.findSelectedTopicBlock(topicPackIndex)
                 .orElseThrow(() -> new IllegalArgumentException("no selection found"));
-        Long parentId = selectedTopicBlock.getTopic().getId();
+        Long parentId = selectedTopicBlock.getDeprecated_topic().getId();
         TopicPack topicPackChildren = getTopicPack(parentId, secondParentId, BASIC_PAGE_REQUEST);
         topicPanel.addTopicPack(topicPackChildren, topicPackIndex);
         topicPanelMapper.mapTopicPackToDto(topicPanel.getTopicPackList().get(topicPackIndex + 1));
@@ -138,7 +177,7 @@ class TopicPanelService {
         PageRequest pageRequest = PageRequest.of(randomPageNumber, oldTopicPage.getSize(), Sort.Direction.ASC, "name");
         TopicPack randomTopicPack = getNewTopicPack(topicPackIndex, pageRequest);
         int randomIndex = RANDOM.nextInt(randomTopicPack.getTopicBlockPage().getContent().size());
-        Long randomTopicId = randomTopicPack.getTopicBlockPage().getContent().get(randomIndex).getTopic().getId();
+        Long randomTopicId = randomTopicPack.getTopicBlockPage().getContent().get(randomIndex).getDeprecated_topic().getId();
         TopicPack topicPackChildren = getTopicPack(randomTopicId, BASIC_PAGE_REQUEST);
         topicPanel.selectTopic(topicPackIndex, topicPackChildren.getParentId());
         topicPanel.addTopicPack(topicPackChildren, topicPackIndex);
@@ -150,8 +189,8 @@ class TopicPanelService {
 
     TopicPack getFilteredPackByCategory(Long categoryId, int topicPackIndex, PageRequest pageRequest) {
         TopicBlock topicBlockParent = topicPanel.getTopicBlockParent(topicPackIndex);
-        Page<TopicDto> topicPage = topicFacade.getConnectedTopicsByCategory(topicBlockParent.getTopic().getId(), categoryId, pageRequest);
-        Page<TopicBlock> topicBlockPage = topicPanelMapper.mapTopicDtoPageToTopicBlockPage(topicPage, topicBlockParent.getParentId(), pageRequest);
+        Page<TopicDto> topicPage = topicFacade.getConnectedTopicsByCategory(topicBlockParent.getDeprecated_topic().getId(), categoryId, pageRequest);
+        Page<TopicBlock> topicBlockPage = topicPanelMapper.Depracated_mapToTopicBlockPage(topicPage, topicBlockParent.getParentId(), pageRequest);
         topicBlockPage.getContent().forEach(topicBlock -> topicBlock.setTopicPackIndex(topicPackIndex));
         return topicPanel.changeTopicPage(topicPackIndex, topicBlockPage);
     }
@@ -164,10 +203,10 @@ class TopicPanelService {
         return getFilteredPackByCategory(category.getId(), topicPackIndex, BASIC_PAGE_REQUEST);
     }
 
-    Iterable<QuestionItemDto> getQuestionItemList(int topicPackIndex) {
-        TopicBlock topicBlockParent = topicPanel.getTopicBlockParent(topicPackIndex);
+    Iterable<QuestionItemDto> getQuestionItemList(Long topicId) {
+        Topic topicParent = topicFacade.getTopicById(topicId);
         List<Question> questionList =
-                topicFacade.getConnectedTopicsList(topicBlockParent.getTopic().getId()).stream()
+                topicFacade.getConnectedTopicsList(topicParent.getId()).stream()
                         .filter(TopicDto::isCategory)
                         .map((TopicDto sourceCategory) -> questionFacade.getQuestionListBySourceCategory(sourceCategory.getId()))
                         .flatMap(Collection::stream)
@@ -187,10 +226,10 @@ class TopicPanelService {
                         Optional<TopicBlock> selectedAsSecondParent = topicPack.getSelectedAsSecondParent();
                         newTopicBlockPage.getContent().forEach(topicBlock -> {
                             topicBlock.setTopicPackIndex(topicPack.getTopicPackIndex());
-                            if (selectedAsFirstParentId.isPresent() && selectedAsFirstParentId.get().getTopic().getId().equals(topicBlock.getTopic().getId())) {
+                            if (selectedAsFirstParentId.isPresent() && selectedAsFirstParentId.get().getDeprecated_topic().getId().equals(topicBlock.getDeprecated_topic().getId())) {
                                 topicBlock.setSelected(true);
                             }
-                            if (selectedAsSecondParent.isPresent() && selectedAsSecondParent.get().getTopic().getId().equals(topicBlock.getTopic().getId())) {
+                            if (selectedAsSecondParent.isPresent() && selectedAsSecondParent.get().getDeprecated_topic().getId().equals(topicBlock.getDeprecated_topic().getId())) {
                                 topicBlock.setSecondParent(true);
                             }
                         });
@@ -201,7 +240,7 @@ class TopicPanelService {
                 });
 
         return topicPanel.getTopicPackList().stream()
-                .filter(tp -> tp.getTopicBlockParent().getTopic().getId() == parentId)
+                .filter(tp -> tp.getTopicBlockParent().getDeprecated_topic().getId() == parentId)
                 .map(tp -> topicPanelMapper.mapTopicPackToDto(tp))
                 .collect(Collectors.toList());
     }

@@ -7,8 +7,6 @@ import org.springframework.stereotype.Service;
 import springapp.jokefactory.question.QuestionFacade;
 import springapp.jokefactory.question.dto.QuestionDto;
 import springapp.jokefactory.topic.Topic;
-import springapp.jokefactory.topic.TopicDto;
-import springapp.jokefactory.topic.TopicFacade;
 import springapp.jokefactory.topic.TopicRelation;
 
 import java.text.SimpleDateFormat;
@@ -17,9 +15,6 @@ import java.util.stream.Collectors;
 
 @Service
 class TopicViewMapper {
-
-    @Autowired
-    private TopicFacade topicFacade;
 
     @Autowired
     private QuestionFacade questionFacade;
@@ -55,20 +50,6 @@ class TopicViewMapper {
                 .isCategory(topic.isCategory())
                 .questions(questions)
                 .dateCreated(new SimpleDateFormat("yyyy-MM-dd").format(topic.getDateCreated()))
-                .build();
-    }
-
-    private TopicPresenterDto mapToPresenterDto(TopicDto topicDto) {
-        List<String> childrenNames = topicDto.getChildren().stream()
-                .map(TopicDto::getName)
-                .collect(Collectors.toList());
-
-        return TopicPresenterDto.builder()
-                .id(topicDto.getId())
-                .name(topicDto.getName())
-                .children(childrenNames)
-                .isCategory(topicDto.isCategory())
-                .dateCreated(new SimpleDateFormat("yyyy-MM-dd").format(topicDto.getDateCreated()))
                 .build();
     }
 }

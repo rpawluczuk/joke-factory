@@ -1,8 +1,6 @@
 package springapp.jokefactory.topic.panel;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 import springapp.jokefactory.question.dto.QuestionItemDto;
 
@@ -29,9 +27,9 @@ class TopicPanelController {
         this.topicPanelMapper = topicPanelMapper;
     }
 
-    @GetMapping(value = "/{initialId}")
-    TopicPanelDto getTopicPanel(@PathVariable("initialId") Long initialId) {
-        return topicPanelService.initializeTopicPanel(initialId);
+    @GetMapping(value = "/{id}")
+    TopicBlockDto getTopicPanel(@PathVariable("id") Long id) {
+        return topicPanelService.getTopicBlock(id);
     }
 
     @GetMapping(value = "/get-pack-by-page")
@@ -44,6 +42,11 @@ class TopicPanelController {
     List<TopicPackDto> showChildren(@RequestParam("topicPackIndex") int topicPackIndex,
                                     @RequestParam("parentId") Long parentId) {
         return topicPanelService.showChildren(topicPackIndex, parentId);
+    }
+
+    @PostMapping(value = "/get-pack")
+    TopicPackDto getPack(@Valid @RequestBody PackRequest request) {
+        return topicPanelService.getPack(request);
     }
 
     @GetMapping(value = "/second-parent")
@@ -72,8 +75,8 @@ class TopicPanelController {
     }
 
     @GetMapping(value = "/question-list")
-    Iterable<QuestionItemDto> getQuestionItemList(@RequestParam("topicPackIndex") int topicPackIndex) {
-        return topicPanelService.getQuestionItemList(topicPackIndex);
+    Iterable<QuestionItemDto> getQuestionItemList(@RequestParam("topicId") Long topicId) {
+        return topicPanelService.getQuestionItemList(topicId);
     }
 
     @GetMapping(value = "/change-size")
@@ -83,17 +86,8 @@ class TopicPanelController {
     }
 
     @PostMapping
-    List<TopicPackDto> addTopic(@Valid @RequestBody TopicBlockDto topicBlockDto) {
-        if (topicBlockDto.getParentId() == null) {
-            TopicBlock initialTopicBlock = topicPanelPersistenceService.addTopic(topicBlockDto);
-            topicPanelService.initializeTopicPanel(initialTopicBlock.getTopic().getId());
-            List<TopicPackDto> list = new LinkedList<>();
-            list.add(topicPanelService.getTopicPack(0));
-            return list;
-        } else {
-            topicPanelPersistenceService.addTopicChild(topicBlockDto);
-            return topicPanelService.refreshTopicPack(topicBlockDto.getParentId());
-        }
+    TopicPackDto addTopic(@Valid @RequestBody TopicBlockDto topicBlockDto) {
+        return topicPanelService.addTopic(topicBlockDto);
     }
 
     @DeleteMapping(value = "/remove-relation")

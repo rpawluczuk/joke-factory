@@ -19,7 +19,6 @@ class TopicViewService {
     private final TopicFacade topicFacade;
     private final TopicViewMapper topicViewMapper;
     private final TopicViewFacade topicViewFacade;
-    private static final PageRequest BASIC_TOPIC_VIEW_PAGE_REQUEST = PageRequest.of(0, 10, Sort.Direction.ASC, "name");
 
     @Autowired
     public TopicViewService(TopicView topicView, TopicFacade topicFacade,
@@ -30,10 +29,10 @@ class TopicViewService {
         this.topicViewFacade = topicViewFacade;
     }
 
-    TopicViewDto getTopicView() {
-        Page<Topic> topicPage = topicFacade.getConnectedTopicsPage(0L, BASIC_TOPIC_VIEW_PAGE_REQUEST);
-        TopicViewDto view = topicViewMapper.mapViewToDto(topicPage);
-        return view;
+    TopicViewDto getTopicView(ViewRequest request) {
+        PageRequest pageRequest = PageRequest.of(request.getPageNumber(), request.getPageSize(), Sort.Direction.ASC, "name");
+        Page<Topic> topicPage = topicFacade.getTopicPage(pageRequest);
+        return topicViewMapper.mapViewToDto(topicPage);
     }
 
     void changeCategoryStatus(Long id) {

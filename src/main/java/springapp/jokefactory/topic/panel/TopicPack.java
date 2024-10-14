@@ -6,7 +6,6 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
-import springapp.jokefactory.question.Question;
 import springapp.jokefactory.question.dto.QuestionDto;
 import springapp.jokefactory.topic.TopicDto;
 
@@ -27,12 +26,12 @@ public class TopicPack {
     private int topicPackIndex;
 
     Long getParentId() {
-        return getTopicBlockParent().getTopic().getId();
+        return getTopicBlockParent().getDeprecated_topic().getId();
     }
 
     Long getSecondParentId() {
         if (getTopicBlockSecondParent() != null) {
-            return getTopicBlockSecondParent().getTopic().getId();
+            return getTopicBlockSecondParent().getDeprecated_topic().getId();
         } else {
             throw new IllegalArgumentException("The pack does not contain second parent");
         }

@@ -15,11 +15,6 @@ class TopicPanelPersistenceService {
     @Autowired
     TopicFacade topicFacade;
 
-    TopicBlock addTopic(TopicBlockDto topicBlockDto) {
-        Topic topic = topicPanelMapper.mapTopicBlockDtoToTopic(topicBlockDto);
-        TopicDto savedTopic = topicFacade.addTopicWithoutParent(topic);
-        return topicPanelMapper.mapTopicToTopicBlock(savedTopic);
-    }
 
     void addTopicChild(TopicBlockDto topicBlockDto) {
         TopicDto topicChild = topicPanelMapper.mapTopicBlockDtoToTopicDto(topicBlockDto);

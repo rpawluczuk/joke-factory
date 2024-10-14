@@ -4,7 +4,6 @@ import lombok.Data;
 import org.springframework.context.annotation.Scope;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
-import springapp.jokefactory.question.Question;
 import springapp.jokefactory.question.dto.QuestionDto;
 import springapp.jokefactory.topic.TopicDto;
 
@@ -22,7 +21,7 @@ public class TopicPanel {
 
     public void clearPanel() {
         this.initialTopicBlock = TopicBlock.builder()
-                .topic(TopicDto.getBasicTopic())
+                .Deprecated_topic(TopicDto.getBasicTopic())
                 .build();
         this.topicPackList = new LinkedList<>();
     }
@@ -45,7 +44,7 @@ public class TopicPanel {
     public TopicPack changeTopicPage(int topicPackIndex, Page<TopicBlock> topicPage) {
         topicPackList.get(topicPackIndex).setTopicBlockPage(topicPage);
         if (topicPackList.size() > topicPackIndex + 1) {
-            Long selectedTopicId = topicPackList.get(topicPackIndex + 1).getTopicBlockParent().getTopic().getId();
+            Long selectedTopicId = topicPackList.get(topicPackIndex + 1).getTopicBlockParent().getDeprecated_topic().getId();
             selectTopic(topicPackIndex, selectedTopicId);
         }
         return topicPackList.get(topicPackIndex);
@@ -70,7 +69,7 @@ public class TopicPanel {
     void selectTopic(int topicPackIndex, Long topicIdToSelect) {
         deselectTopic(topicPackIndex);
         topicPackList.get(topicPackIndex).getTopicBlockPage().getContent().stream()
-                .filter(topicBlock -> topicBlock.getTopic().getId().equals(topicIdToSelect))
+                .filter(topicBlock -> topicBlock.getDeprecated_topic().getId().equals(topicIdToSelect))
                 .findAny()
                 .ifPresent(topic -> {
                     topic.setSelected(true);
@@ -104,7 +103,7 @@ public class TopicPanel {
     void selectSecondParentTopic(int topicPackIndex, Long secondParentTopicId) {
         deselectPreviousSecondParentTopic(topicPackIndex);
         topicPackList.get(topicPackIndex).getTopicBlockPage().getContent().stream()
-                .filter(topicBlock -> topicBlock.getTopic().getId().equals(secondParentTopicId))
+                .filter(topicBlock -> topicBlock.getDeprecated_topic().getId().equals(secondParentTopicId))
                 .findAny()
                 .ifPresent(topic -> topic.setSecondParent(true));
     }

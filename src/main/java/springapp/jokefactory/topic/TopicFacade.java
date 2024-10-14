@@ -132,9 +132,8 @@ public class TopicFacade {
         topicRepository.save(orginalTopic);
     }
 
-    public TopicDto addTopicWithoutParent(Topic topic) {
-        Topic savedTopic = topicRepository.save(topic);
-        return topicMapper.toDto(savedTopic);
+    public Topic addTopicWithoutParent(Topic topic) {
+        return topicRepository.save(topic);
     }
 
     public TopicDto addTopicChild(TopicDto topicChildDto, Long parentId) {
