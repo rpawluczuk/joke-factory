@@ -9,11 +9,11 @@ import springapp.jokefactory.topic.dto.TopicItemDto;
 @Data
 @Builder
 public class TopicPackDto {
-    private Page<TopicBlockDto> topicBlockPage;
     private TopicBlockDto topicBlockParent;
     private TopicBlockDto topicBlockSecondParent;
+    private Page<TopicBlockDto> topicBlockPage;
     private TopicItemDto categoryFilter;
     private QuestionItemDto questionFilter;
     private boolean isAnySelection;
-    private int topicPackIndex;
+    private Integer topicPackIndex;
 }

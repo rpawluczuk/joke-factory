@@ -49,9 +49,13 @@ class TopicPanelService {
                 0, 23, Sort.Direction.ASC, "name");
         Page<Topic> topicPage = topicFacade.getConnectedTopicsPage(topicBlockParent.getId(), pageRequest);
         Page<TopicBlockDto> topicBlockPage = topicPanelMapper.toBlockPageDto(topicPage, topicBlockDto.getId(), pageRequest);
+        Integer topicPackIndex = topicBlockDto.getTopicPackIndex() != null
+                ? topicBlockDto.getTopicPackIndex() + 1
+                : null;
         return TopicPackDto.builder()
                 .topicBlockParent(topicBlockParent)
                 .topicBlockPage(topicBlockPage)
+                .topicPackIndex(topicPackIndex)
                 .build();
     }
 

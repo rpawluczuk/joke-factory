@@ -1,11 +1,15 @@
 package springapp.jokefactory.topic.panel;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import springapp.jokefactory.question.dto.QuestionItemDto;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 
 import javax.validation.Valid;
-import java.util.LinkedList;
 import java.util.List;
 
 
@@ -14,9 +18,14 @@ import java.util.List;
 @CrossOrigin("http://localhost:3000")
 class TopicPanelController {
 
+    private static final Logger logger = LoggerFactory.getLogger(TopicPanelController.class);
+    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper()
+            .enable(SerializationFeature.INDENT_OUTPUT);
+
     private final TopicPanelService topicPanelService;
     private final TopicPanelPersistenceService topicPanelPersistenceService;
     private final TopicPanelMapper topicPanelMapper;
+
 
     @Autowired
     public TopicPanelController(TopicPanelService topicPanelService,
@@ -86,8 +95,10 @@ class TopicPanelController {
     }
 
     @PostMapping
-    TopicPackDto addTopic(@Valid @RequestBody TopicBlockDto topicBlockDto) {
-        return topicPanelService.addTopic(topicBlockDto);
+    TopicPackDto addTopic(@Valid @RequestBody TopicBlockDto topicBlockDto) throws JsonProcessingException {
+        TopicPackDto  response =  topicPanelService.addTopic(topicBlockDto);
+        logger.info("Response sent: {}", OBJECT_MAPPER.writeValueAsString(response));
+        return response;
     }
 
     @DeleteMapping(value = "/remove-relation")
