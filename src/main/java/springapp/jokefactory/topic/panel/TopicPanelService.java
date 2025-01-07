@@ -42,15 +42,22 @@ class TopicPanelService {
     }
 
     TopicPackDto addTopic(TopicBlockDto topicBlockDto) {
+        TopicBlockDto topicBlockParent;
         Topic topic = topicPanelMapper.toTopic(topicBlockDto);
-        Topic savedTopic = topicFacade.addTopicWithoutParent(topic);
-        TopicBlockDto topicBlockParent = topicPanelMapper.toBlockDto(savedTopic);
+        if (topicBlockDto.getParentId() == null) {
+            Topic savedTopic = topicFacade.addTopicWithoutParent(topic);
+            topicBlockParent = topicPanelMapper.toBlockDto(savedTopic);
+        } else {
+            topicFacade.addTopicChild(topic, topicBlockDto.getParentId());
+            Topic topicParent = topicFacade.getTopicById(topicBlockDto.getParentId());
+            topicBlockParent = topicPanelMapper.toBlockDto(topicParent);
+        }
         PageRequest pageRequest = PageRequest.of(
                 0, 23, Sort.Direction.ASC, "name");
         Page<Topic> topicPage = topicFacade.getConnectedTopicsPage(topicBlockParent.getId(), pageRequest);
         Page<TopicBlockDto> topicBlockPage = topicPanelMapper.toBlockPageDto(topicPage, topicBlockDto.getId(), pageRequest);
         Integer topicPackIndex = topicBlockDto.getTopicPackIndex() != null
-                ? topicBlockDto.getTopicPackIndex() + 1
+                ? topicBlockDto.getTopicPackIndex()
                 : null;
         return TopicPackDto.builder()
                 .topicBlockParent(topicBlockParent)

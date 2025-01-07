@@ -136,26 +136,25 @@ public class TopicFacade {
         return topicRepository.save(topic);
     }
 
-    public TopicDto addTopicChild(TopicDto topicChildDto, Long parentId) {
+    public Topic addTopicChild(Topic topicChild, Long parentId) {
         Topic topicParent = findByIdOrThrowException(parentId);
-        Topic topicChild = topicMapper.fromDto(topicChildDto);
-        Topic savedTopicChild = tryToFindTopicByName(topicChildDto.getName())
+        Topic savedTopicChild = tryToFindTopicByName(topicChild.getName())
                 .orElseGet(() -> topicRepository.save(topicChild));
         topicRelationRepository.save(new TopicRelation(topicParent, savedTopicChild));
         topicRelationRepository.save(new TopicRelation(savedTopicChild, topicParent));
-        if (savedTopicChild.isCategory()) {
-            topicCategoryRepository.save(new TopicCategory(topicParent, savedTopicChild));
-        } else if (topicParent.isCategory()) {
-            topicCategoryRepository.save(new TopicCategory(savedTopicChild, topicParent));
-        }
-        Optional<TopicDto> connectedCategoryDto = topicChildDto.getCategories().stream().findFirst();
-        if (connectedCategoryDto.isPresent() && connectedCategoryDto.get().getId() != 0){
-            Topic connectedCategory = findByIdOrThrowException(connectedCategoryDto.get().getId());
-            topicCategoryRepository.save(new TopicCategory(savedTopicChild, connectedCategory));
-            topicRelationRepository.save(new TopicRelation(savedTopicChild, connectedCategory));
-            topicRelationRepository.save(new TopicRelation(connectedCategory, savedTopicChild));
-        }
-        return topicMapper.toDto(savedTopicChild);
+//        if (savedTopicChild.isCategory()) {
+//            topicCategoryRepository.save(new TopicCategory(topicParent, savedTopicChild));
+//        } else if (topicParent.isCategory()) {
+//            topicCategoryRepository.save(new TopicCategory(savedTopicChild, topicParent));
+//        }
+//        Optional<TopicDto> connectedCategoryDto = topicChild.getCategories().stream().findFirst();
+//        if (connectedCategoryDto.isPresent() && connectedCategoryDto.get().getId() != 0){
+//            Topic connectedCategory = findByIdOrThrowException(connectedCategoryDto.get().getId());
+//            topicCategoryRepository.save(new TopicCategory(savedTopicChild, connectedCategory));
+//            topicRelationRepository.save(new TopicRelation(savedTopicChild, connectedCategory));
+//            topicRelationRepository.save(new TopicRelation(connectedCategory, savedTopicChild));
+//        }
+        return savedTopicChild;
     }
 
     public Page<TopicDto> getConnectedTopicsByCategory(Long parentId, Long categoryId, PageRequest pageRequest) {

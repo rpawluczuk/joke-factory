@@ -16,13 +16,13 @@ class TopicPanelPersistenceService {
     TopicFacade topicFacade;
 
 
-    void addTopicChild(TopicBlockDto topicBlockDto) {
-        TopicDto topicChild = topicPanelMapper.mapTopicBlockDtoToTopicDto(topicBlockDto);
-        topicFacade.addTopicChild(topicChild, topicBlockDto.getParentId());
-        if (topicBlockDto.getSecondParentId() != null){
-            topicFacade.addTopicChild(topicChild, topicBlockDto.getSecondParentId());
-        }
-    }
+//    void addTopicChild(TopicBlockDto topicBlockDto) {
+//        TopicDto topicChild = topicPanelMapper.mapTopicBlockDtoToTopicDto(topicBlockDto);
+//        topicFacade.addTopicChild(topicChild, topicBlockDto.getParentId());
+//        if (topicBlockDto.getSecondParentId() != null){
+//            topicFacade.addTopicChild(topicChild, topicBlockDto.getSecondParentId());
+//        }
+//    }
 
     void deleteTopicRelation(Long topicParentId, Long topicChildId) {
         topicFacade.deleteTopicRelation(topicParentId, topicChildId);
