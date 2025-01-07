@@ -13,4 +13,5 @@ public class PackRequest {
     private Long selectedId;
     private Integer pageNumber;
     private Integer pageSize;
+    private Integer topicPackIndex;
 }

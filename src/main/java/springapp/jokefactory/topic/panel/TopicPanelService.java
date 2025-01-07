@@ -52,17 +52,12 @@ class TopicPanelService {
             Topic topicParent = topicFacade.getTopicById(topicBlockDto.getParentId());
             topicBlockParent = topicPanelMapper.toBlockDto(topicParent);
         }
-        PageRequest pageRequest = PageRequest.of(
-                0, 23, Sort.Direction.ASC, "name");
-        Page<Topic> topicPage = topicFacade.getConnectedTopicsPage(topicBlockParent.getId(), pageRequest);
-        Page<TopicBlockDto> topicBlockPage = topicPanelMapper.toBlockPageDto(topicPage, topicBlockDto.getId(), pageRequest);
-        Integer topicPackIndex = topicBlockDto.getTopicPackIndex() != null
-                ? topicBlockDto.getTopicPackIndex()
-                : null;
+        Page<Topic> topicPage = topicFacade.getConnectedTopicsPage(topicBlockParent.getId(), BASIC_PAGE_REQUEST);
+        Page<TopicBlockDto> topicBlockPage = topicPanelMapper.toBlockPageDto(topicPage, topicBlockDto.getId(), BASIC_PAGE_REQUEST);
         return TopicPackDto.builder()
                 .topicBlockParent(topicBlockParent)
                 .topicBlockPage(topicBlockPage)
-                .topicPackIndex(topicPackIndex)
+                .topicPackIndex(topicBlockDto.getTopicPackIndex())
                 .build();
     }
 
@@ -84,8 +79,6 @@ class TopicPanelService {
     }
 
     TopicPackDto getPack(PackRequest request) {
-        PageRequest pageRequest = PageRequest.of(
-                request.getPageNumber(), request.getPageSize(), Sort.Direction.ASC, "name");
         if (request.getParentId() == null) {
             return TopicPackDto.builder()
                     .topicBlockParent(
@@ -98,8 +91,8 @@ class TopicPanelService {
         }
         Topic topicParent = topicFacade.getTopicById(request.getParentId());
         TopicBlockDto topicBlockParent = topicPanelMapper.toBlockDto(topicParent);
-        Page<Topic> topicPage = topicFacade.getConnectedTopicsPage(request.getParentId(), pageRequest);
-        Page<TopicBlockDto> topicBlockPage = topicPanelMapper.toBlockPageDto(topicPage, request.getParentId(), pageRequest);
+        Page<Topic> topicPage = topicFacade.getConnectedTopicsPage(request.getParentId(), BASIC_PAGE_REQUEST);
+        Page<TopicBlockDto> topicBlockPage = topicPanelMapper.toBlockPageDto(topicPage, request.getParentId(), BASIC_PAGE_REQUEST);
         if (request.getSelectedId() != null) {
             topicBlockPage.getContent().stream()
                     .filter(topicBlockDto -> topicBlockDto.getId().equals(request.getSelectedId()))
@@ -109,6 +102,7 @@ class TopicPanelService {
         return TopicPackDto.builder()
                 .topicBlockParent(topicBlockParent)
                 .topicBlockPage(topicBlockPage)
+                .topicPackIndex(request.getTopicPackIndex() + 1)
                 .build();
     }
 
