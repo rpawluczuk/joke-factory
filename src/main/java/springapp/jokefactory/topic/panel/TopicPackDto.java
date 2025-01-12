@@ -15,5 +15,6 @@ public class TopicPackDto {
     private TopicItemDto categoryFilter;
     private QuestionItemDto questionFilter;
     private boolean isAnySelection;
+    private Long selectedId;
     private Integer topicPackIndex;
 }

@@ -53,7 +53,7 @@ class TopicPanelService {
             topicBlockParent = topicPanelMapper.toBlockDto(topicParent);
         }
         Page<Topic> topicPage = topicFacade.getConnectedTopicsPage(topicBlockParent.getId(), BASIC_PAGE_REQUEST);
-        Page<TopicBlockDto> topicBlockPage = topicPanelMapper.toBlockPageDto(topicPage, topicBlockDto.getId(), BASIC_PAGE_REQUEST);
+        Page<TopicBlockDto> topicBlockPage = topicPanelMapper.toBlockPageDto(topicPage, topicBlockParent.getId(), BASIC_PAGE_REQUEST);
         return TopicPackDto.builder()
                 .topicBlockParent(topicBlockParent)
                 .topicBlockPage(topicBlockPage)

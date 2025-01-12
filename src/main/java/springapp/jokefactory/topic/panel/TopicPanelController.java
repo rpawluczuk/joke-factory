@@ -102,9 +102,8 @@ class TopicPanelController {
     }
 
     @DeleteMapping(value = "/remove-relation")
-    List<TopicPackDto> deleteTopicRelation(@RequestParam("topic-parent-id") Long topicParentId,
-                                           @RequestParam("topic-child-id") Long topicChildId) {
+    void deleteTopicRelation(@RequestParam("topic-parent-id") Long topicParentId,
+                             @RequestParam("topic-child-id") Long topicChildId) {
         topicPanelPersistenceService.deleteTopicRelation(topicParentId, topicChildId);
-        return topicPanelService.refreshTopicPack(topicParentId);
     }
 }

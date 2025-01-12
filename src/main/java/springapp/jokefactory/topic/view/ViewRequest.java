@@ -9,6 +9,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class ViewRequest {
 
+    private String nameFilter;
     private Integer pageNumber;
     private Integer pageSize;
 }

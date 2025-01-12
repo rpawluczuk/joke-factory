@@ -53,11 +53,10 @@ class TopicViewController {
         return topicViewService.getCategoryItemList();
     }
 
-//    @DeleteMapping(value = "/{id}")
-//    TopicViewDto deleteTopic(@PathVariable("id") Long id) {
-//        topicViewPersistenceService.deleteTopic(id);
-//        return topicViewService.refreshTopicView();
-//    }
+    @DeleteMapping(value = "/{id}")
+    void deleteTopic(@PathVariable("id") Long id) {
+        topicViewPersistenceService.deleteTopic(id);
+    }
 
 //    @GetMapping(value = "/{id}")
 //    TopicBlockDto getTopic(@PathVariable("id") Long id) {

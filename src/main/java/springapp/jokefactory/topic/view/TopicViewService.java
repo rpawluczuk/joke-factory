@@ -15,15 +15,13 @@ import springapp.jokefactory.topic.dto.TopicItemDto;
 @Service
 class TopicViewService {
 
-    private final TopicView topicView;
     private final TopicFacade topicFacade;
     private final TopicViewMapper topicViewMapper;
     private final TopicViewFacade topicViewFacade;
 
     @Autowired
-    public TopicViewService(TopicView topicView, TopicFacade topicFacade,
+    public TopicViewService(TopicFacade topicFacade,
                             TopicViewMapper topicViewMapper, TopicViewFacade topicViewFacade) {
-        this.topicView = topicView;
         this.topicFacade = topicFacade;
         this.topicViewMapper = topicViewMapper;
         this.topicViewFacade = topicViewFacade;
@@ -31,7 +29,12 @@ class TopicViewService {
 
     TopicViewDto getTopicView(ViewRequest request) {
         PageRequest pageRequest = PageRequest.of(request.getPageNumber(), request.getPageSize(), Sort.Direction.ASC, "name");
-        Page<Topic> topicPage = topicFacade.getTopicPage(pageRequest);
+        Page<Topic> topicPage;
+        if (request.getNameFilter() != null) {
+            topicPage = topicFacade.getTopicPageByName(request.getNameFilter(), pageRequest);
+        } else {
+            topicPage = topicFacade.getTopicPage(pageRequest);
+        }
         return topicViewMapper.mapViewToDto(topicPage);
     }
 
@@ -53,14 +56,6 @@ class TopicViewService {
 //                Sort.Direction.ASC, "name");
 //        return topicViewFacade.updateTopicViewPage(pageRequest);
 //    }
-//
-//    TopicViewDto getTopicViewByName(String name) {
-//        topicView.setNameFilter(name);
-//        topicView.setCategoryFilter(false);
-//        PageRequest pageRequest = PageRequest.of(0, topicView.getTopicPage().getSize(),
-//                Sort.Direction.DESC, "dateCreated");
-//        return topicViewFacade.updateTopicViewPage(pageRequest);
-//    }
 
 //    TopicViewDto changeCategoryFilter() {
 //        topicView.setCategoryFilter(!topicView.isCategoryFilter());
@@ -78,7 +73,6 @@ class TopicViewService {
         return topicFacade.getCategoryItemList();
     }
 
-//    @Transactional
 //    TopicViewDto refreshTopicView() {
 //        PageRequest pageRequest = PageRequest.of(
 //                topicView.getTopicPage().getNumber(),
