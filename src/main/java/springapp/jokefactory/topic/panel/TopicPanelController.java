@@ -88,12 +88,6 @@ class TopicPanelController {
         return topicPanelService.getQuestionItemList(topicId);
     }
 
-    @GetMapping(value = "/change-size")
-    TopicPackDto changePageSize(@RequestParam("pageSize") int pageSize,
-                                @RequestParam("topicPackIndex") int topicPackIndex) {
-        return topicPanelService.changeSize(pageSize, topicPackIndex);
-    }
-
     @PostMapping
     TopicPackDto addTopic(@Valid @RequestBody TopicBlockDto topicBlockDto) throws JsonProcessingException {
         TopicPackDto  response =  topicPanelService.addTopic(topicBlockDto);
