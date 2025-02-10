@@ -33,11 +33,11 @@ class TopicViewMapper {
     }
 
     TopicPresenterDto mapToDto(Topic topic) {
-        List<String> connectedTopicNameList = topic.getChildren()
-                .stream()
-                .map(TopicRelation::getTopicChild)
-                .map(Topic::getName)
-                .collect(Collectors.toList());
+//        List<String> connectedTopicNameList = topic.getChildren()
+//                .stream()
+//                .map(TopicRelation::getTopicChild)
+//                .map(Topic::getName)
+//                .collect(Collectors.toList());
 
         List<QuestionDto> questions = topic.getQuestionsBySource().stream()
                 .map(q -> questionFacade.mapQuestionToDto(q))
@@ -46,7 +46,7 @@ class TopicViewMapper {
         return TopicPresenterDto.builder()
                 .id(topic.getId())
                 .name(topic.getName())
-                .children(connectedTopicNameList)
+//                .children(connectedTopicNameList)
                 .isCategory(topic.isCategory())
                 .questions(questions)
                 .dateCreated(new SimpleDateFormat("yyyy-MM-dd").format(topic.getDateCreated()))

@@ -67,7 +67,7 @@ public class TopicFacade {
             topicPage = topicRepository.findAll(pageRequest);
         } else {
             Topic topicParent = findByIdOrThrowException(parentId);
-            topicPage = topicRepository.findConnectedTopics(topicParent, pageRequest);
+            topicPage = topicRepository.findConnectedTopics(topicParent.getId(), pageRequest);
         }
         return topicMapper.toDtoPage(topicPage, pageRequest);
     }
@@ -77,7 +77,7 @@ public class TopicFacade {
             return topicRepository.findAll(pageRequest);
         } else {
             Topic topicParent = findByIdOrThrowException(parentId);
-            return topicRepository.findConnectedTopics(topicParent, pageRequest);
+            return topicRepository.findConnectedTopics(topicParent.getId(), pageRequest);
         }
     }
 
@@ -108,7 +108,7 @@ public class TopicFacade {
 
     public List<TopicDto> getConnectedTopicsList(Long parentId) {
         Topic topicParent = findByIdOrThrowException(parentId);
-        List<Topic> connectedTopicList = topicRepository.findAllConnectedTopics(topicParent);
+        List<Topic> connectedTopicList = topicRepository.findConnectedTopics(topicParent.getId());
         return connectedTopicList.stream()
                 .map(topic -> topicMapper.toDto(topic))
                 .collect(Collectors.toList());
@@ -118,11 +118,17 @@ public class TopicFacade {
         return topicRepository.findTopicByNameContaining(name, pageRequest);
     }
 
+    public Topic updateName(Long topicId, String newName) {
+        Topic originalTopic = findByIdOrThrowException(topicId);
+        originalTopic.setName(newName);
+        return topicRepository.save(originalTopic);
+    }
+
     public void updateBy(Topic editedTopic) {
         Topic orginalTopic = findByIdOrThrowException(editedTopic.getId());
         if (orginalTopic.isCategory() != editedTopic.isCategory()) {
             if (editedTopic.isCategory()){
-                topicRepository.findAllConnectedTopics(orginalTopic)
+                topicRepository.findConnectedTopics(orginalTopic.getId())
                         .forEach(connectedTopic -> topicCategoryRepository.save(new TopicCategory(connectedTopic, editedTopic)));
             } else {
                 topicCategoryRepository.deleteTopicCategoriesByCategory_Id(editedTopic.getId());
@@ -157,17 +163,17 @@ public class TopicFacade {
         return savedTopicChild;
     }
 
-    public Page<TopicDto> getConnectedTopicsByCategory(Long parentId, Long categoryId, PageRequest pageRequest) {
-        Topic parentTopic = findByIdOrThrowException(parentId);
-        if (categoryId != 0) {
-            Topic categoryTopic = findByIdOrThrowException(categoryId);
-            Page<Topic> topicPage = topicRepository.findConnectedTopicsByCategory(parentTopic, categoryTopic, pageRequest);
-            return topicMapper.toDtoPage(topicPage, pageRequest);
-        } else {
-            Page<Topic> topicPage = topicRepository.findConnectedTopics(parentTopic, pageRequest);
-            return topicMapper.toDtoPage(topicPage, pageRequest);
-        }
-    }
+//    public Page<TopicDto> getConnectedTopicsByCategory(Long parentId, Long categoryId, PageRequest pageRequest) {
+//        Topic parentTopic = findByIdOrThrowException(parentId);
+//        if (categoryId != 0) {
+//            Topic categoryTopic = findByIdOrThrowException(categoryId);
+//            Page<Topic> topicPage = topicRepository.findConnectedTopicsByCategory(parentTopic, categoryTopic, pageRequest);
+//            return topicMapper.toDtoPage(topicPage, pageRequest);
+//        } else {
+//            Page<Topic> topicPage = topicRepository.findConnectedTopics(parentTopic, pageRequest);
+//            return topicMapper.toDtoPage(topicPage, pageRequest);
+//        }
+//    }
 
 //    public Optional<Topic> tryToGetTopicByTopicCreator(TopicCreatorDto topicCreatorDto) {
 //        if (topicCreatorDto != null && topicCreatorDto.getId() != null) {

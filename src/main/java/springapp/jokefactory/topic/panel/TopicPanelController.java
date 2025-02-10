@@ -58,41 +58,46 @@ class TopicPanelController {
         return topicPanelService.getPack(request);
     }
 
-    @GetMapping(value = "/second-parent")
-    List<TopicPackDto> secondParent(@RequestParam("topicPackIndex") int topicPackIndex,
-                                    @RequestParam("secondParentId") Long secondParentId) {
-        return topicPanelService.secondParent(topicPackIndex, secondParentId);
-    }
+//    @GetMapping(value = "/second-parent")
+//    List<TopicPackDto> secondParent(@RequestParam("topicPackIndex") int topicPackIndex,
+//                                    @RequestParam("secondParentId") Long secondParentId) {
+//        return topicPanelService.secondParent(topicPackIndex, secondParentId);
+//    }
 
-    @GetMapping(value = "/random")
-    List<TopicPackDto> getRandomTopicResponse(@RequestParam("topicPackIndex") int topicPackIndex) {
-        return topicPanelService.getRandomTopicPack(topicPackIndex);
-    }
+//    @GetMapping(value = "/random")
+//    List<TopicPackDto> getRandomTopicResponse(@RequestParam("topicPackIndex") int topicPackIndex) {
+//        return topicPanelService.getRandomTopicPack(topicPackIndex);
+//    }
 
-    @GetMapping(value = "/pack-filter")
-    TopicPackDto getFilteredTopicPack(@RequestParam("categoryId") Long categoryId,
-                                      @RequestParam("topicPackIndex") int topicPackIndex) {
-        TopicPack topicPack = topicPanelService.changeCategoryFilter(categoryId, topicPackIndex);
-        return topicPanelMapper.mapTopicPackToDto(topicPack);
-    }
+//    @GetMapping(value = "/pack-filter")
+//    TopicPackDto getFilteredTopicPack(@RequestParam("categoryId") Long categoryId,
+//                                      @RequestParam("topicPackIndex") int topicPackIndex) {
+//        TopicPack topicPack = topicPanelService.changeCategoryFilter(categoryId, topicPackIndex);
+//        return topicPanelMapper.mapTopicPackToDto(topicPack);
+//    }
 
-    @GetMapping(value = "/pack-filter/by-question")
-    TopicPackDto getFilterPackByQuestion(@RequestParam("questionId") Long questionId,
-                                         @RequestParam("topicPackIndex") int topicPackIndex) {
-        TopicPack topicPack = topicPanelService.getFilterPackByQuestion(questionId, topicPackIndex);
-        return topicPanelMapper.mapTopicPackToDto(topicPack);
-    }
+//    @GetMapping(value = "/pack-filter/by-question")
+//    TopicPackDto getFilterPackByQuestion(@RequestParam("questionId") Long questionId,
+//                                         @RequestParam("topicPackIndex") int topicPackIndex) {
+//        TopicPack topicPack = topicPanelService.getFilterPackByQuestion(questionId, topicPackIndex);
+//        return topicPanelMapper.mapTopicPackToDto(topicPack);
+//    }
 
-    @GetMapping(value = "/question-list")
-    Iterable<QuestionItemDto> getQuestionItemList(@RequestParam("topicId") Long topicId) {
-        return topicPanelService.getQuestionItemList(topicId);
-    }
+//    @GetMapping(value = "/question-list")
+//    Iterable<QuestionItemDto> getQuestionItemList(@RequestParam("topicId") Long topicId) {
+//        return topicPanelService.getQuestionItemList(topicId);
+//    }
 
     @PostMapping
     TopicPackDto addTopic(@Valid @RequestBody TopicBlockDto topicBlockDto) throws JsonProcessingException {
         TopicPackDto  response =  topicPanelService.addTopic(topicBlockDto);
         logger.info("Response sent: {}", OBJECT_MAPPER.writeValueAsString(response));
         return response;
+    }
+
+    @PatchMapping
+    TopicPackDto editTopic(@Valid @RequestBody TopicBlockDto topicBlockDto) {
+        return topicPanelService.editTopic(topicBlockDto);
     }
 
     @DeleteMapping(value = "/remove-relation")

@@ -25,17 +25,17 @@ class TopicMapper {
                         .map(this::toDtoWithoutRelations)
                         .collect(Collectors.toList());
 
-        List<TopicDto> childrenDto = topic.getChildren() == null ?
-                List.of() :
-                topic.getChildren().stream()
-                        .map(TopicRelation::getTopicChild)
-                        .map(this::toDtoWithoutRelations)
-                        .collect(Collectors.toList());
+//        List<TopicDto> childrenDto = topic.getChildren() == null ?
+//                List.of() :
+//                topic.getChildren().stream()
+//                        .map(TopicRelation::getTopicChild)
+//                        .map(this::toDtoWithoutRelations)
+//                        .collect(Collectors.toList());
         return TopicDto.builder()
                 .id(topic.getId())
                 .name(topic.getName())
                 .categories(categoriesDto)
-                .children(childrenDto)
+//                .children(childrenDto)
                 .isCategory(topic.isCategory())
                 .dateCreated(topic.getDateCreated())
                 .build();

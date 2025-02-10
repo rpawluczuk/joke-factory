@@ -7,7 +7,6 @@ import org.springframework.stereotype.Component;
 import springapp.jokefactory.question.dto.QuestionDto;
 import springapp.jokefactory.topic.TopicDto;
 
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,20 +17,6 @@ public class TopicPanel {
 
     private TopicBlock initialTopicBlock;
     private List<TopicPack> topicPackList;
-
-    public void clearPanel() {
-        this.initialTopicBlock = TopicBlock.builder()
-                .Deprecated_topic(TopicDto.getBasicTopic())
-                .build();
-        this.topicPackList = new LinkedList<>();
-    }
-
-    public void addTopicPack(TopicPack topicPack) {
-        if (topicPackList.isEmpty()) {
-            setInitialTopicBlock(topicPack.getTopicBlockParent());
-        }
-        topicPackList.add(topicPack);
-    }
 
     public void addTopicPack(TopicPack topicPack, int topicPackIndex) {
         topicPack.setTopicPackIndex(topicPackIndex + 1);
@@ -108,9 +93,4 @@ public class TopicPanel {
                 .ifPresent(topic -> topic.setSecondParent(true));
     }
 
-    Optional<TopicBlock> findSecondParentTopicBlock(int topicPackIndex) {
-        return topicPackList.get(topicPackIndex).getTopicBlockPage().getContent().stream()
-                .filter(TopicBlock::isSecondParent)
-                .findAny();
-    }
 }

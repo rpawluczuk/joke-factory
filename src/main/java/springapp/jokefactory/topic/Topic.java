@@ -44,16 +44,6 @@ public class Topic implements Serializable {
 
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    @OneToMany(mappedBy = "topicParent", cascade = CascadeType.MERGE)
-    private Set<TopicRelation> children;
-
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    @OneToMany(mappedBy = "topicChild", cascade = CascadeType.MERGE)
-    private Set<TopicRelation> parents;
-
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
     @OneToMany(mappedBy = "topic", cascade = CascadeType.MERGE)
     private Set<TopicCategory> categories;
 

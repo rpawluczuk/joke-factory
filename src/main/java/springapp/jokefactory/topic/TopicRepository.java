@@ -21,35 +21,53 @@ interface TopicRepository extends JpaRepository<Topic, Long> {
     @Query(value = "SELECT t FROM Topic t WHERE t.isCategory = true")
     Page<Topic> getAllCategoryTopicsPage(Pageable pageable);
 
-    @Query(value = "SELECT DISTINCT t FROM Topic t " +
-            "LEFT JOIN t.parents parents " +
-            "LEFT JOIN t.children children " +
-            "WHERE parents.topicParent = :topic OR children.topicChild = :topic " +
-            "ORDER BY t.name")
-    List<Topic> findAllConnectedTopics(@Param("topic") Topic topic);
+//    @Query(value = "SELECT DISTINCT t FROM Topic t " +
+//            "LEFT JOIN t.parents parents " +
+//            "LEFT JOIN t.children children " +
+//            "WHERE parents.topicParent = :topic OR children.topicChild = :topic " +
+//            "ORDER BY t.name")
+    @Query(value =
+        "SELECT * FROM topic t " +
+            "WHERE id IN " +
+            "(" +
+            "SELECT id FROM topic " +
+            "LEFT JOIN topic_relation on id = topic_relation.topic_child_id " +
+            "WHERE topic_relation.topic_parent_id = :parentid" +
+            ") "
+        , nativeQuery = true)
+    List<Topic> findConnectedTopics(@Param("parentid") Long parentId);
 
-    @Query(value = "SELECT DISTINCT t FROM Topic t " +
-            "LEFT JOIN t.parents parents " +
-            "LEFT JOIN t.children children " +
-            "WHERE parents.topicParent = :topic OR children.topicChild = :topic " +
-            "ORDER BY t.name")
-    Page<Topic> findAllConnectedTopics(@Param("topic") Topic topic, Pageable pageable);
+//    @Query(value = "SELECT DISTINCT t FROM Topic t " +
+//            "LEFT JOIN t.parents parents " +
+//            "LEFT JOIN t.children children " +
+//            "WHERE parents.topicParent = :topic OR children.topicChild = :topic " +
+//            "ORDER BY t.name")
+    @Query(value =
+        "SELECT * FROM topic t " +
+        "WHERE id IN " +
+        "(" +
+        "SELECT id FROM topic " +
+        "LEFT JOIN topic_relation on id = topic_relation.topic_child_id " +
+        "WHERE topic_relation.topic_parent_id = :parentid" +
+        ") "
+    , nativeQuery = true)
+    Page<Topic> findConnectedTopics(@Param("parentid") Long parentId, Pageable pageable);
 
-    @Query(value = "SELECT DISTINCT t FROM Topic t " +
-            "LEFT JOIN t.parents parents " +
-            "LEFT JOIN t.children children " +
-            "LEFT JOIN t.categories categories " +
-            "WHERE (parents.topicParent = :topic OR children.topicChild = :topic) AND categories.category = :category " +
-            "ORDER BY t.name")
-    Page<Topic> findConnectedTopicsByCategory(@Param("topic") Topic topic, @Param("category") Topic category, Pageable pageable);
+//    @Query(value = "SELECT DISTINCT t FROM Topic t " +
+//            "LEFT JOIN t.parents parents " +
+//            "LEFT JOIN t.children children " +
+//            "LEFT JOIN t.categories categories " +
+//            "WHERE (parents.topicParent = :topic OR children.topicChild = :topic) AND categories.category = :category " +
+//            "ORDER BY t.name")
+//    Page<Topic> findConnectedTopicsByCategory(@Param("topic") Topic topic, @Param("category") Topic category, Pageable pageable);
 
     Page<Topic> findTopicByNameContaining(@RequestParam("name") String name, Pageable pageable);
 
-    @Query(value = "SELECT DISTINCT t FROM Topic t " +
-            "LEFT JOIN t.parents parents " +
-            "WHERE parents.topicParent = :topic " +
-            "ORDER BY t.name")
-    Page<Topic> findConnectedTopics(@Param("topic") Topic topic, Pageable pageable);
+//    @Query(value = "SELECT DISTINCT t FROM Topic t " +
+//            "LEFT JOIN t.parents parents " +
+//            "WHERE parents.topicParent = :topic " +
+//            "ORDER BY t.name")
+//    Page<Topic> findConnectedTopics(@Param("topic") Topic topic, Pageable pageable);
 
     @Query(value =
             "SELECT * FROM topic t " +

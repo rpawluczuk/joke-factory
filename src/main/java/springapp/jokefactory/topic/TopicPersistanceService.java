@@ -70,7 +70,7 @@ class TopicPersistanceService {
                 .orElseThrow(() -> new IllegalArgumentException("No topic found with id: " + id));
         topicToEdit.setCategory(!topicToEdit.isCategory());
         if (topicToEdit.isCategory()){
-            topicRepository.findAllConnectedTopics(topicToEdit)
+            topicRepository.findConnectedTopics(topicToEdit.getId())
                     .forEach(connectedTopic -> topicCategoryRepository.save(new TopicCategory(connectedTopic, topicToEdit)));
         } else {
             topicCategoryRepository.deleteTopicCategoriesByCategory_Id(topicToEdit.getId());
