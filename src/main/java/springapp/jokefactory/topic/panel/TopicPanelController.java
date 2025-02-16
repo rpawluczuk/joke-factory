@@ -24,7 +24,6 @@ class TopicPanelController {
 
     private final TopicPanelService topicPanelService;
     private final TopicPanelPersistenceService topicPanelPersistenceService;
-    private final TopicPanelMapper topicPanelMapper;
 
 
     @Autowired
@@ -33,7 +32,6 @@ class TopicPanelController {
                                 TopicPanelMapper topicPanelMapper) {
         this.topicPanelService = topicPanelService;
         this.topicPanelPersistenceService = topicPanelPersistenceService;
-        this.topicPanelMapper = topicPanelMapper;
     }
 
     @GetMapping(value = "/{id}")
@@ -64,10 +62,10 @@ class TopicPanelController {
 //        return topicPanelService.secondParent(topicPackIndex, secondParentId);
 //    }
 
-//    @GetMapping(value = "/random")
-//    List<TopicPackDto> getRandomTopicResponse(@RequestParam("topicPackIndex") int topicPackIndex) {
-//        return topicPanelService.getRandomTopicPack(topicPackIndex);
-//    }
+    @GetMapping(value = "/random")
+    List<TopicPackDto> getRandomTopicResponse(@RequestParam("topicPackIndex") int topicPackIndex) {
+        return topicPanelService.getRandomTopicPack(topicPackIndex);
+    }
 
 //    @GetMapping(value = "/pack-filter")
 //    TopicPackDto getFilteredTopicPack(@RequestParam("categoryId") Long categoryId,

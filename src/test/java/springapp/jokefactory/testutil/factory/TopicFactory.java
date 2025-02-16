@@ -37,6 +37,10 @@ public class TopicFactory {
 
     public static Page<Topic> createChildTopicsPage(int count, Topic... predefinedTopics) {
         Pageable pageable = PageRequest.of(0, 23, Sort.Direction.ASC, "name");
+        return createChildTopicsPage(count, pageable, predefinedTopics);
+    }
+
+    public static Page<Topic> createChildTopicsPage(int count, Pageable pageable, Topic... predefinedTopics) {
         List<Topic> childTopics = IntStream.range(0, count)
             .mapToObj(i -> {
                 if (i < predefinedTopics.length) {

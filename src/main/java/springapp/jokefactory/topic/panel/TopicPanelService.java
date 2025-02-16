@@ -3,16 +3,17 @@ package springapp.jokefactory.topic.panel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import springapp.jokefactory.question.Question;
 import springapp.jokefactory.question.QuestionFacade;
-import springapp.jokefactory.question.dto.QuestionDto;
 import springapp.jokefactory.question.dto.QuestionItemDto;
 import springapp.jokefactory.topic.*;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 import java.util.stream.Collectors;
 
@@ -43,35 +44,28 @@ class TopicPanelService {
     TopicPackDto addTopic(TopicBlockDto topicBlockDto) {
         Topic parentTopic = topicFacade.tryToFindTopicByName(topicBlockDto.getName())
                 .orElseGet(() -> createNewTopic(topicBlockDto));
-        return buildTopicPackResponse(parentTopic, topicBlockDto.getTopicPackIndex());
+        return TopicPackDtoBuilder
+            .builder(topicFacade, topicPanelMapper)
+            .withParent(parentTopic)
+            .withTopicPackIndex(topicBlockDto.getTopicPackIndex())
+            .build();
     }
 
     TopicPackDto editTopic(TopicBlockDto topicBlockDto) {
-        Topic topic = topicFacade.updateName(topicBlockDto.getId(), topicBlockDto.getName());
+        var topic = topicFacade.updateName(topicBlockDto.getId(), topicBlockDto.getName());
+        var responseBuilder = TopicPackDtoBuilder
+            .builder(topicFacade, topicPanelMapper)
+            .withTopicPackIndex(topicBlockDto.getTopicPackIndex());
         if (topicBlockDto.getParentId() == null) {
-            return buildTopicPackResponse(topic, topicBlockDto.getTopicPackIndex());
+            return responseBuilder
+                .withParent(topic)
+                .build();
         } else {
             Topic topicParent = topicFacade.getTopicById(topicBlockDto.getParentId());
-            return buildTopicPackResponse(topicParent, topicBlockDto.getTopicPackIndex());
-        }
-    }
-
-    private TopicPackDto buildTopicPackResponse(Topic topicParent, Integer topicPackIndex) {
-        TopicBlockDto topicBlockParent = topicPanelMapper.toBlockDto(topicParent);
-        Page<Topic> topicPage = topicFacade.getConnectedTopicsPage(
-                topicBlockParent.getId(),
-                BASIC_PAGE_REQUEST
-        );
-        Page<TopicBlockDto> topicBlockPage = topicPanelMapper.toBlockPageDto(
-                topicPage,
-                topicBlockParent.getId(),
-                BASIC_PAGE_REQUEST
-        );
-        return TopicPackDto.builder()
-                .topicBlockParent(topicBlockParent)
-                .topicBlockPage(topicBlockPage)
-                .topicPackIndex(topicPackIndex)
+            return responseBuilder
+                .withParent(topicParent)
                 .build();
+        }
     }
 
     private Topic createNewTopic(TopicBlockDto topicBlockDto) {
@@ -103,29 +97,31 @@ class TopicPanelService {
 
     TopicPackDto getPack(PackRequest request) {
         if (request.getParentId() == null) {
-            return TopicPackDto.builder()
-                    .topicBlockParent(
-                            TopicBlockDto.builder()
-                                    .isCategory(false)
-                                    .build()
-                    )
-                    .topicBlockPage(null)
-                    .build();
+            return createInitialPackDto();
         }
         Topic topicParent = topicFacade.getTopicById(request.getParentId());
-        TopicBlockDto topicBlockParent = topicPanelMapper.toBlockDto(topicParent);
-        Page<Topic> topicPage = topicFacade.getConnectedTopicsPage(request.getParentId(), BASIC_PAGE_REQUEST);
-        Page<TopicBlockDto> topicBlockPage = topicPanelMapper.toBlockPageDto(topicPage, request.getParentId(), BASIC_PAGE_REQUEST);
-        if (request.getSelectedId() != null) {
-            topicBlockPage.getContent().stream()
-                    .filter(topicBlockDto -> topicBlockDto.getId().equals(request.getSelectedId()))
-                    .findFirst()
-                    .ifPresent(topicBlockDto -> topicBlockDto.setSelected(true));
-        }
+        var pageRequest = createPageRequest(request.getPageNumber());
+        return TopicPackDtoBuilder
+            .builder(topicFacade, topicPanelMapper)
+            .withParent(topicParent)
+            .withTopicPackIndex(request.getTopicPackIndex() + 1)
+            .withPageRequest(pageRequest)
+            .withSelectedId(request.getSelectedId())
+            .build();
+    }
+
+    private PageRequest createPageRequest(int pageNumber) {
+        return PageRequest.of(pageNumber, 23, Sort.Direction.ASC, "name");
+    }
+
+    private TopicPackDto createInitialPackDto() {
         return TopicPackDto.builder()
-                .topicBlockParent(topicBlockParent)
-                .topicBlockPage(topicBlockPage)
-                .topicPackIndex(request.getTopicPackIndex() + 1)
+                .topicBlockParent(
+                        TopicBlockDto.builder()
+                                .isCategory(false)
+                                .build()
+                )
+                .topicBlockPage(null)
                 .build();
     }
 
@@ -197,6 +193,11 @@ class TopicPanelService {
         return List.of(
                 topicPanelMapper.mapTopicPackToDto(topicPanel.getTopicPackList().get(topicPackIndex)),
                 topicPanelMapper.mapTopicPackToDto(topicPackChildren));
+    }
+
+    List<TopicPackDto> getRandomTopicPack(int topicPackIndex) {
+
+        return List.of();
     }
 
 //    List<TopicPackDto> getRandomTopicPack(int topicPackIndex) {

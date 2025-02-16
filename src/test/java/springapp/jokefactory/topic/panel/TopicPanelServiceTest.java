@@ -5,6 +5,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import springapp.jokefactory.testutil.factory.PackRequestFactory;
 import springapp.jokefactory.testutil.factory.TopicBlockDtoFactory;
 import springapp.jokefactory.testutil.factory.TopicFactory;
 import springapp.jokefactory.topic.TopicFacade;
@@ -27,6 +30,48 @@ class TopicPanelServiceTest {
 
     @InjectMocks
     private TopicPanelService topicPanelService;
+
+    @Test
+    void getInitialTopicPack() {
+        // GIVEN
+        var initialPackRequest = PackRequestFactory.createInitialRequest();
+
+        // WHEN
+        var result = topicPanelService.getPack(initialPackRequest);
+
+        // THEN
+        assertNull(result.getTopicBlockParent().getId());
+        assertNull(result.getTopicBlockPage());
+        assertNull(result.getTopicPackIndex());
+        assertNull(result.getSelectedId());
+    }
+
+    @Test
+    void changeTopicPackByPageWhenIsAnySelection() {
+        // GIVEN
+        var newPageNumber = 1;
+        var packRequest = PackRequestFactory
+            .createStandardRequest(request -> request.setPageNumber(newPageNumber));
+        var parentTopic = TopicFactory.createParentTopic();
+        var pageRequest = PageRequest.of(1, 23, Sort.Direction.ASC, "name");
+        var childTopicsPage = TopicFactory.createChildTopicsPage(3, pageRequest);
+
+        when(topicFacade.getTopicById(packRequest.getParentId()))
+            .thenReturn(parentTopic);
+        when(topicFacade.getConnectedTopicsPage(eq(packRequest.getParentId()), any()))
+            .thenReturn(childTopicsPage);
+
+        // WHEN
+        var result = topicPanelService.getPack(packRequest);
+
+        // THEN
+        verify(topicFacade).getTopicById(packRequest.getParentId());
+        verify(topicFacade).getConnectedTopicsPage(eq(packRequest.getParentId()), any());
+
+        assertEquals(packRequest.getParentId(), result.getTopicBlockParent().getId());
+        assertEquals(newPageNumber, result.getTopicBlockPage().getNumber());
+        assertNull(result.getSelectedId());
+    }
 
     @Test
     void addTopicWithoutParent() {
